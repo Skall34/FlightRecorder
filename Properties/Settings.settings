@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FlightRecorder.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="callsign" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GoogleFormUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ</Value>
+    </Setting>
+    <Setting Name="callsign_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.875291795</Value>
+    </Setting>
+    <Setting Name="startIata_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.354262163</Value>
+    </Setting>
+    <Setting Name="startFuel_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.1974689794</Value>
+    </Setting>
+    <Setting Name="startTime_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.1603698953</Value>
+    </Setting>
+    <Setting Name="endIata_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.864236608</Value>
+    </Setting>
+    <Setting Name="endFuel_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.789000913</Value>
+    </Setting>
+    <Setting Name="endTime_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.1547789562</Value>
+    </Setting>
+    <Setting Name="pax_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.941405603</Value>
+    </Setting>
+    <Setting Name="cargo_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.704113444</Value>
+    </Setting>
+    <Setting Name="aircraft_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.793899725</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
