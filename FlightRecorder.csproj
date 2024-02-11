@@ -10,6 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FlightRecorderTestsProject\**" />
+    <EmbeddedResource Remove="FlightRecorderTestsProject\**" />
+    <None Remove="FlightRecorderTestsProject\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="GlobalUsings.cs" />
+    <Compile Remove="UnitTest1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FSUIPCClientDLL" Version="3.3.9" />
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.66.0.3148" />
   </ItemGroup>

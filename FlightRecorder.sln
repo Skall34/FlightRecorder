@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightRecorder", "FlightRecorder.csproj", "{AC689816-0CBE-4CDE-BDEE-F874DB888583}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightRecorderTestsProject", "FlightRecorderTestsProject\FlightRecorderTestsProject.csproj", "{42034660-60C1-4D16-9E50-CBDB33FC819E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AC689816-0CBE-4CDE-BDEE-F874DB888583}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC689816-0CBE-4CDE-BDEE-F874DB888583}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC689816-0CBE-4CDE-BDEE-F874DB888583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
