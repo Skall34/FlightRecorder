@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FlightRecorder
 {
 
-    internal class airport
+    public class airport
     {
         public string Name { get; set; }
         public string Ident { get; set; }
@@ -52,16 +52,45 @@ namespace FlightRecorder
             return Math.PI * angle / 180.0;
         }
     }
-    internal class airportsMgr
+    public class airportsMgr
     {
         private List<airport> airports;
 
         public IReadOnlyList<airport> Airports => airports;
 
+        public airportsMgr()
+        {
+            airports = new List<airport>();
+        }
+
         public airportsMgr(string filePath)
         {
             airports = new List<airport>();
             LoadAirportsFromCsv(filePath);
+        }
+
+        public bool addAirport(airport newAirport)
+        {
+            bool result = false;
+            if (airports.Count > 0)
+            {
+                airport closest = FindClosestAirport(newAirport.Latitude, newAirport.Longitude);
+                if (closest != null)
+                {
+                    double dist = closest.DistanceTo(newAirport.Latitude, newAirport.Longitude);
+                    //Do NOT add an airport which would too close to another airport
+                    if (dist > 8)
+                    {
+                        airports.Add(newAirport);
+                        result = true;
+                    }
+                }
+            }
+            else
+            {
+                airports.Add(newAirport);
+            }
+            return result;
         }
 
         public airport FindClosestAirport(double targetLatitude, double targetLongitude)
@@ -82,7 +111,7 @@ namespace FlightRecorder
             return closestAirport;
         }
 
-        private void LoadAirportsFromCsv(string filePath)
+        public void LoadAirportsFromCsv(string filePath)
         {
             try
             {
