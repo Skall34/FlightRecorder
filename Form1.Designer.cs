@@ -54,7 +54,7 @@
             tbStartIata = new TextBox();
             tbEndIata = new TextBox();
             label10 = new Label();
-            tbATCFlightNumber = new TextBox();
+            tbImmatriculation = new TextBox();
             label11 = new Label();
             tbCallsign = new TextBox();
             btnSaveSettings = new Button();
@@ -63,18 +63,27 @@
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            tbDesignationAvion = new TextBox();
             btnRefresh = new Button();
             btnSettings = new Button();
+            groupBox4 = new GroupBox();
+            tbPax = new TextBox();
+            label13 = new Label();
+            cbNote = new ComboBox();
+            label2 = new Label();
+            tbCommentaires = new TextBox();
+            label12 = new Label();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 476);
+            statusStrip.Location = new Point(0, 574);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 23, 0);
             statusStrip.Size = new Size(584, 22);
@@ -298,16 +307,16 @@
             label10.TabIndex = 31;
             label10.Text = "Aircraft";
             // 
-            // tbATCFlightNumber
+            // tbImmatriculation
             // 
-            tbATCFlightNumber.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            tbATCFlightNumber.Location = new Point(119, 56);
-            tbATCFlightNumber.Margin = new Padding(4);
-            tbATCFlightNumber.Name = "tbATCFlightNumber";
-            tbATCFlightNumber.ReadOnly = true;
-            tbATCFlightNumber.Size = new Size(281, 26);
-            tbATCFlightNumber.TabIndex = 32;
-            tbATCFlightNumber.TextAlign = HorizontalAlignment.Right;
+            tbImmatriculation.Font = new Font("Arial", 12F, FontStyle.Bold);
+            tbImmatriculation.Location = new Point(110, 56);
+            tbImmatriculation.Margin = new Padding(4);
+            tbImmatriculation.Name = "tbImmatriculation";
+            tbImmatriculation.ReadOnly = true;
+            tbImmatriculation.RightToLeft = RightToLeft.No;
+            tbImmatriculation.Size = new Size(140, 26);
+            tbImmatriculation.TabIndex = 32;
             // 
             // label11
             // 
@@ -332,6 +341,7 @@
             // btnSaveSettings
             // 
             btnSaveSettings.Enabled = false;
+            btnSaveSettings.ForeColor = Color.Gray;
             btnSaveSettings.Location = new Point(411, 19);
             btnSaveSettings.Margin = new Padding(4);
             btnSaveSettings.Name = "btnSaveSettings";
@@ -343,7 +353,8 @@
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(457, 436);
+            btnSubmit.ForeColor = Color.Gray;
+            btnSubmit.Location = new Point(457, 538);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(107, 29);
@@ -355,7 +366,7 @@
             // llManualSave
             // 
             llManualSave.AutoSize = true;
-            llManualSave.Location = new Point(270, 441);
+            llManualSave.Location = new Point(270, 543);
             llManualSave.Margin = new Padding(4, 0, 4, 0);
             llManualSave.Name = "llManualSave";
             llManualSave.Size = new Size(162, 19);
@@ -379,7 +390,7 @@
             groupBox1.Controls.Add(tbStartTime);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
-            groupBox1.Location = new Point(12, 238);
+            groupBox1.Location = new Point(12, 340);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(558, 191);
             groupBox1.TabIndex = 39;
@@ -401,11 +412,12 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(tbDesignationAvion);
             groupBox3.Controls.Add(btnRefresh);
             groupBox3.Controls.Add(btnSaveSettings);
             groupBox3.Controls.Add(tbCallsign);
             groupBox3.Controls.Add(label11);
-            groupBox3.Controls.Add(tbATCFlightNumber);
+            groupBox3.Controls.Add(tbImmatriculation);
             groupBox3.Controls.Add(label10);
             groupBox3.Controls.Add(tbCargo);
             groupBox3.Controls.Add(label9);
@@ -416,9 +428,21 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
+            // tbDesignationAvion
+            // 
+            tbDesignationAvion.Font = new Font("Arial", 12F, FontStyle.Bold);
+            tbDesignationAvion.Location = new Point(260, 56);
+            tbDesignationAvion.Margin = new Padding(4);
+            tbDesignationAvion.Name = "tbDesignationAvion";
+            tbDesignationAvion.ReadOnly = true;
+            tbDesignationAvion.Size = new Size(258, 26);
+            tbDesignationAvion.TabIndex = 40;
+            tbDesignationAvion.TextAlign = HorizontalAlignment.Right;
+            // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(411, 73);
+            btnRefresh.ForeColor = Color.Gray;
+            btnRefresh.Location = new Point(411, 90);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(107, 26);
             btnRefresh.TabIndex = 39;
@@ -428,8 +452,9 @@
             // 
             // btnSettings
             // 
-            btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
-            btnSettings.Location = new Point(12, 435);
+            btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
+            btnSettings.ForeColor = Color.Gray;
+            btnSettings.Location = new Point(12, 537);
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(118, 31);
             btnSettings.TabIndex = 42;
@@ -437,12 +462,86 @@
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btnSettings_Click;
             // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(tbPax);
+            groupBox4.Controls.Add(label13);
+            groupBox4.Controls.Add(cbNote);
+            groupBox4.Controls.Add(label2);
+            groupBox4.Controls.Add(tbCommentaires);
+            groupBox4.Controls.Add(label12);
+            groupBox4.Location = new Point(12, 234);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(558, 98);
+            groupBox4.TabIndex = 43;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Flight data";
+            // 
+            // tbPax
+            // 
+            tbPax.Location = new Point(404, 62);
+            tbPax.Margin = new Padding(6, 4, 6, 4);
+            tbPax.Name = "tbPax";
+            tbPax.Size = new Size(91, 26);
+            tbPax.TabIndex = 19;
+            tbPax.TextAlign = HorizontalAlignment.Right;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(348, 64);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(38, 19);
+            label13.TabIndex = 18;
+            label13.Text = "Pax";
+            // 
+            // cbNote
+            // 
+            cbNote.FormattingEnabled = true;
+            cbNote.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
+            cbNote.Location = new Point(259, 61);
+            cbNote.MaxDropDownItems = 10;
+            cbNote.Name = "cbNote";
+            cbNote.Size = new Size(73, 27);
+            cbNote.TabIndex = 17;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(11, 64);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(96, 19);
+            label2.TabIndex = 16;
+            label2.Text = "Note du vol";
+            // 
+            // tbCommentaires
+            // 
+            tbCommentaires.Location = new Point(259, 23);
+            tbCommentaires.Margin = new Padding(6, 4, 6, 4);
+            tbCommentaires.Name = "tbCommentaires";
+            tbCommentaires.Size = new Size(286, 26);
+            tbCommentaires.TabIndex = 9;
+            tbCommentaires.TextAlign = HorizontalAlignment.Right;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(11, 27);
+            label12.Margin = new Padding(6, 0, 6, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(120, 19);
+            label12.TabIndex = 7;
+            label12.Text = "Commentaires";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(584, 498);
+            ClientSize = new Size(584, 596);
+            Controls.Add(groupBox4);
             Controls.Add(btnSettings);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
@@ -450,7 +549,7 @@
             Controls.Add(llManualSave);
             Controls.Add(btnSubmit);
             Controls.Add(statusStrip);
-            Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            Font = new Font("Arial", 12F, FontStyle.Bold);
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(6, 4, 6, 4);
@@ -467,6 +566,8 @@
             groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -497,7 +598,7 @@
         private TextBox tbStartIata;
         private TextBox tbEndIata;
         private Label label10;
-        private TextBox tbATCFlightNumber;
+        private TextBox tbImmatriculation;
         private Label label11;
         private TextBox tbCallsign;
         private Button btnSaveSettings;
@@ -508,6 +609,15 @@
         private GroupBox groupBox3;
         private Button btnSettings;
         private Button btnRefresh;
+        private GroupBox groupBox4;
+        private TextBox textBox1;
+        private Label label2;
+        private TextBox tbCommentaires;
+        private Label label12;
+        private ComboBox cbNote;
+        private Label label13;
+        private TextBox tbPax;
+        private TextBox tbDesignationAvion;
     }
 }
 

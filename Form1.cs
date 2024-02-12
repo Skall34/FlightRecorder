@@ -24,6 +24,9 @@ namespace FlightRecorder
         private bool atLeastOneEngineFiring;
         private double _startFuel;
         private double _endFuel;
+        private string commentaires;
+        private int noteDuVol;
+        private int pax;
 
         private DateTime _startTime;
         private DateTime _endTime;
@@ -49,6 +52,8 @@ namespace FlightRecorder
             _endTime = DateTime.Now;
             _startFuel = 0;
             _endFuel = 0;
+            commentaires = string.Empty;
+            noteDuVol = 5;
 
             //recupere le callsign qui a été sauvegardé en settings de l'application
             this.tbCallsign.Text = Settings.Default.callsign;
@@ -68,8 +73,9 @@ namespace FlightRecorder
             //commence à lire qq variables du simu : fuel & cargo, immat avion...
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
             this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
-            this.tbATCFlightNumber.Text = _simData.getAircraftType();
+            this.tbDesignationAvion.Text = _simData.getAircraftType();
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
+            this.tbImmatriculation.Text = _simData.getTailNumber();
         }
         // appelé chaque 1s par le timer de connection
         private void timerConnection_Tick(object sender, EventArgs e)
@@ -247,17 +253,21 @@ namespace FlightRecorder
 
             //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
             values.Add(Settings.Default.callsign_entry, tbCallsign.Text);
+            values.Add(Settings.Default.aircraft_entry, tbImmatriculation.Text);
+
             values.Add(Settings.Default.startIata_entry, tbStartIata.Text);
             values.Add(Settings.Default.startFuel_entry, tbStartFuel.Text);
-
             values.Add(Settings.Default.startTime_entry, tbStartTime.Text);
+
             values.Add(Settings.Default.endIata_entry, tbEndIata.Text);
             values.Add(Settings.Default.endFuel_entry, tbEndFuel.Text);
-
             values.Add(Settings.Default.endTime_entry, tbEndTime.Text);
-            values.Add(Settings.Default.pax_entry, "0");
+
+            values.Add(Settings.Default.pax_entry, tbPax.Text);
             values.Add(Settings.Default.cargo_entry, tbCargo.Text);
-            values.Add(Settings.Default.aircraft_entry, tbATCFlightNumber.Text);
+            
+            values.Add(Settings.Default.commentaires_entry, tbCommentaires.Text);
+            values.Add(Settings.Default.noteDuVol_entry, cbNote.Text);
 
             //attribute les valeurs à l'object gerant la requete.
             gform.SetFieldValues(values);
@@ -318,5 +328,7 @@ namespace FlightRecorder
             //update the static values
             readStaticValues();
         }
+
+
     }
 }

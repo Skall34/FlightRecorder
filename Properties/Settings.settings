@@ -6,37 +6,43 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="GoogleFormUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ</Value>
+      <Value Profile="(Default)">https://docs.google.com/forms/d/1UcaY66JJZS_x7VhyKNKpfHSAsicOmfZk-Eqd75k84OA</Value>
     </Setting>
     <Setting Name="callsign_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.875291795</Value>
+      <Value Profile="(Default)">entry.338426599</Value>
     </Setting>
     <Setting Name="startIata_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.354262163</Value>
+      <Value Profile="(Default)">entry.1206632170</Value>
     </Setting>
     <Setting Name="startFuel_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.1974689794</Value>
+      <Value Profile="(Default)">entry.2122251018</Value>
     </Setting>
     <Setting Name="startTime_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.1603698953</Value>
+      <Value Profile="(Default)">entry.866846136</Value>
     </Setting>
     <Setting Name="endIata_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.864236608</Value>
+      <Value Profile="(Default)">entry.1434303808</Value>
     </Setting>
     <Setting Name="endFuel_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.789000913</Value>
+      <Value Profile="(Default)">entry.1246669828</Value>
     </Setting>
     <Setting Name="endTime_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.1547789562</Value>
+      <Value Profile="(Default)">entry.1305759358</Value>
     </Setting>
     <Setting Name="pax_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.941405603</Value>
+      <Value Profile="(Default)">entry.750791914</Value>
     </Setting>
     <Setting Name="cargo_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.704113444</Value>
+      <Value Profile="(Default)">entry.2006049487</Value>
     </Setting>
     <Setting Name="aircraft_entry" Type="System.String" Scope="User">
-      <Value Profile="(Default)">entry.793899725</Value>
+      <Value Profile="(Default)">entry.1184138656</Value>
+    </Setting>
+    <Setting Name="commentaires_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.607952088</Value>
+    </Setting>
+    <Setting Name="noteDuVol_entry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">entry.652005461</Value>
     </Setting>
   </Settings>
 </SettingsFile>

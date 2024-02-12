@@ -37,8 +37,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_Rhs" +
-            "GV5MXU9AQ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://docs.google.com/forms/d/1UcaY66JJZS_x7VhyKNKpfHSAsicOmfZk-Eqd75k84OA")]
         public string GoogleFormUrl {
             get {
                 return ((string)(this["GoogleFormUrl"]));
@@ -50,7 +49,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.875291795")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.338426599")]
         public string callsign_entry {
             get {
                 return ((string)(this["callsign_entry"]));
@@ -62,7 +61,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.354262163")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.1206632170")]
         public string startIata_entry {
             get {
                 return ((string)(this["startIata_entry"]));
@@ -74,7 +73,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.1974689794")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.2122251018")]
         public string startFuel_entry {
             get {
                 return ((string)(this["startFuel_entry"]));
@@ -86,7 +85,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.1603698953")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.866846136")]
         public string startTime_entry {
             get {
                 return ((string)(this["startTime_entry"]));
@@ -98,7 +97,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.864236608")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.1434303808")]
         public string endIata_entry {
             get {
                 return ((string)(this["endIata_entry"]));
@@ -110,7 +109,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.789000913")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.1246669828")]
         public string endFuel_entry {
             get {
                 return ((string)(this["endFuel_entry"]));
@@ -122,7 +121,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.1547789562")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.1305759358")]
         public string endTime_entry {
             get {
                 return ((string)(this["endTime_entry"]));
@@ -134,7 +133,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.941405603")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.750791914")]
         public string pax_entry {
             get {
                 return ((string)(this["pax_entry"]));
@@ -146,7 +145,7 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.704113444")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.2006049487")]
         public string cargo_entry {
             get {
                 return ((string)(this["cargo_entry"]));
@@ -158,13 +157,37 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("entry.793899725")]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.1184138656")]
         public string aircraft_entry {
             get {
                 return ((string)(this["aircraft_entry"]));
             }
             set {
                 this["aircraft_entry"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.607952088")]
+        public string commentaires_entry {
+            get {
+                return ((string)(this["commentaires_entry"]));
+            }
+            set {
+                this["commentaires_entry"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("entry.652005461")]
+        public string noteDuVol_entry {
+            get {
+                return ((string)(this["noteDuVol_entry"]));
+            }
+            set {
+                this["noteDuVol_entry"] = value;
             }
         }
     }
