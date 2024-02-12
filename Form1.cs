@@ -75,7 +75,6 @@ namespace FlightRecorder
             this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
             this.tbDesignationAvion.Text = _simData.getAircraftType();
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
-            this.tbImmatriculation.Text = _simData.getTailNumber();
         }
         // appelé chaque 1s par le timer de connection
         private void timerConnection_Tick(object sender, EventArgs e)
@@ -253,7 +252,7 @@ namespace FlightRecorder
 
             //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
             values.Add(Settings.Default.callsign_entry, tbCallsign.Text);
-            values.Add(Settings.Default.aircraft_entry, tbImmatriculation.Text);
+            values.Add(Settings.Default.aircraft_entry, cbImmat.Text);
 
             values.Add(Settings.Default.startIata_entry, tbStartIata.Text);
             values.Add(Settings.Default.startFuel_entry, tbStartFuel.Text);
@@ -328,7 +327,6 @@ namespace FlightRecorder
             //update the static values
             readStaticValues();
         }
-
 
     }
 }

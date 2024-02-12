@@ -44,5 +44,83 @@
     <Setting Name="noteDuVol_entry" Type="System.String" Scope="User">
       <Value Profile="(Default)">entry.652005461</Value>
     </Setting>
+    <Setting Name="immat1" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-HXBV</Value>
+    </Setting>
+    <Setting Name="immat2" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-GDRU</Value>
+    </Setting>
+    <Setting Name="immat3" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D-HOAE</Value>
+    </Setting>
+    <Setting Name="immat4" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-HMRE</Value>
+    </Setting>
+    <Setting Name="immat5" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HB-HYPE</Value>
+    </Setting>
+    <Setting Name="immat6" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-BTLE</Value>
+    </Setting>
+    <Setting Name="immat7" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C-FWQY</Value>
+    </Setting>
+    <Setting Name="immat8" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-GOPG</Value>
+    </Setting>
+    <Setting Name="immat9" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">N412UM</Value>
+    </Setting>
+    <Setting Name="immat10" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">N172SP</Value>
+    </Setting>
+    <Setting Name="immat11" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">N45XS</Value>
+    </Setting>
+    <Setting Name="immat12" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-DVL2</Value>
+    </Setting>
+    <Setting Name="immat13" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-HBGD</Value>
+    </Setting>
+    <Setting Name="immat14" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HB-VDH</Value>
+    </Setting>
+    <Setting Name="immat15" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">EZ090</Value>
+    </Setting>
+    <Setting Name="immat16" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-GNSS</Value>
+    </Setting>
+    <Setting Name="immat17" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-HGCO</Value>
+    </Setting>
+    <Setting Name="immat18" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">VH-HMV</Value>
+    </Setting>
+    <Setting Name="immat19" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">N8029B</Value>
+    </Setting>
+    <Setting Name="immat20" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-GCQL</Value>
+    </Setting>
+    <Setting Name="immat21" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-GPAP</Value>
+    </Setting>
+    <Setting Name="immat22" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-FUFU</Value>
+    </Setting>
+    <Setting Name="immat23" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-HYBN</Value>
+    </Setting>
+    <Setting Name="immat24" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-DVL1</Value>
+    </Setting>
+    <Setting Name="immat25" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-GRHU</Value>
+    </Setting>
+    <Setting Name="immat26" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">F-HBNK</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,4 +1,7 @@
-﻿namespace FlightRecorder
+﻿using FlightRecorder.Properties;
+using Newtonsoft.Json.Linq;
+
+namespace FlightRecorder
 {
     partial class Form1
     {
@@ -54,7 +57,6 @@
             tbStartIata = new TextBox();
             tbEndIata = new TextBox();
             label10 = new Label();
-            tbImmatriculation = new TextBox();
             label11 = new Label();
             tbCallsign = new TextBox();
             btnSaveSettings = new Button();
@@ -63,6 +65,7 @@
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            cbImmat = new ComboBox();
             tbDesignationAvion = new TextBox();
             btnRefresh = new Button();
             btnSettings = new Button();
@@ -307,17 +310,6 @@
             label10.TabIndex = 31;
             label10.Text = "Aircraft";
             // 
-            // tbImmatriculation
-            // 
-            tbImmatriculation.Font = new Font("Arial", 12F, FontStyle.Bold);
-            tbImmatriculation.Location = new Point(110, 56);
-            tbImmatriculation.Margin = new Padding(4);
-            tbImmatriculation.Name = "tbImmatriculation";
-            tbImmatriculation.ReadOnly = true;
-            tbImmatriculation.RightToLeft = RightToLeft.No;
-            tbImmatriculation.Size = new Size(140, 26);
-            tbImmatriculation.TabIndex = 32;
-            // 
             // label11
             // 
             label11.AutoSize = true;
@@ -412,12 +404,12 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(cbImmat);
             groupBox3.Controls.Add(tbDesignationAvion);
             groupBox3.Controls.Add(btnRefresh);
             groupBox3.Controls.Add(btnSaveSettings);
             groupBox3.Controls.Add(tbCallsign);
             groupBox3.Controls.Add(label11);
-            groupBox3.Controls.Add(tbImmatriculation);
             groupBox3.Controls.Add(label10);
             groupBox3.Controls.Add(tbCargo);
             groupBox3.Controls.Add(label9);
@@ -427,6 +419,16 @@
             groupBox3.TabIndex = 41;
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
+            // 
+            // cbImmat
+            // 
+            cbImmat.FormattingEnabled = true;
+            cbImmat.Items.AddRange(new object[] { "C-FWQY", "D-HOAE", "EZ090", "F-BTLE", "F-DVL1", "F-DVL2", "F-FUFU", "F-GCQL", "F-GDRU", "F-GNSS", "F-GOPG", "F-GPAP", "F-GRHU", "F-HBGD", "F-HBNK", "F-HGCO", "F-HMRE", "F-HXBV", "F-HYBN", "HB-HYPE", "HB-VDH", "N172SP", "N412UM", "N45XS", "N8029B", "VH-HMV" });
+            cbImmat.Location = new Point(132, 56);
+            cbImmat.Name = "cbImmat";
+            cbImmat.Size = new Size(121, 27);
+            cbImmat.Sorted = true;
+            cbImmat.TabIndex = 41;
             // 
             // tbDesignationAvion
             // 
@@ -598,7 +600,6 @@
         private TextBox tbStartIata;
         private TextBox tbEndIata;
         private Label label10;
-        private TextBox tbImmatriculation;
         private Label label11;
         private TextBox tbCallsign;
         private Button btnSaveSettings;
@@ -618,6 +619,7 @@
         private Label label13;
         private TextBox tbPax;
         private TextBox tbDesignationAvion;
+        private ComboBox cbImmat;
     }
 }
 
