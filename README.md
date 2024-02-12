@@ -25,6 +25,6 @@ Thus there is a manual configuration to setup the sheet and the form :
 6) Past the link in the advanced setting form in the FilghtRecorder. Each field of the form should be extracted and associated to the corresponding fields in the FligheRecorder. If necessary, edit the messing entry fields manually.
 
 7) Click the "Save & close" button to apply the new settings.
-8) In the form's reponse tabs, verify that the responses go in a googhe sheet.
+8) In the form's reponse tabs, verify that the responses go in a google sheet.
    
 
