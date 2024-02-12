@@ -33,10 +33,14 @@ namespace FlightRecorder
 
         private airportsMgr airportsDatabase;
         private simData _simData;
+        private SettingsMgr settingsMgr;
 
         public Form1()
         {
             InitializeComponent();
+
+            //load the settings
+            settingsMgr = new SettingsMgr("settings.json");
 
             //charge la bas de données des aéroports
             this.lblConnectionStatus.Text = "Loading Airport database";
@@ -65,7 +69,6 @@ namespace FlightRecorder
 
             //demarre le timer de connection (fait un essai de connexion toutes les 1000ms)
             this.timerConnection.Start();
-
         }
 
         private void readStaticValues()
@@ -73,9 +76,14 @@ namespace FlightRecorder
             //commence à lire qq variables du simu : fuel & cargo, immat avion...
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
             this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
-            this.tbDesignationAvion.Text = _simData.getAircraftType();
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
+            //recupere le type d'avion donné par le simu.
+            this.tbDesignationAvion.Text = _simData.getAircraftType();
+            //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
+            // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
+            // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
         }
+
         // appelé chaque 1s par le timer de connection
         private void timerConnection_Tick(object sender, EventArgs e)
         {
@@ -245,28 +253,28 @@ namespace FlightRecorder
             //crée un dictionnaire des valeurs à envoyer
             Dictionary<string, string> values = new Dictionary<string, string>();
 
-            GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(Settings.Default.GoogleFormUrl + "/formResponse");
+            GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
             //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.875291795=callSign&entry.354262163=lfmt&entry.1974689794=300&entry.1603698953=22:22&entry.864236608=LFMT&entry.789000913=200&entry.1547789562=23:23&entry.941405603=0&entry.704113444=300
             //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
             //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
 
             //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
-            values.Add(Settings.Default.callsign_entry, tbCallsign.Text);
-            values.Add(Settings.Default.aircraft_entry, cbImmat.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"),tbCallsign.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"),cbImmat.Text);
 
-            values.Add(Settings.Default.startIata_entry, tbStartIata.Text);
-            values.Add(Settings.Default.startFuel_entry, tbStartFuel.Text);
-            values.Add(Settings.Default.startTime_entry, tbStartTime.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("startTime_entry"), tbStartTime.Text);
 
-            values.Add(Settings.Default.endIata_entry, tbEndIata.Text);
-            values.Add(Settings.Default.endFuel_entry, tbEndFuel.Text);
-            values.Add(Settings.Default.endTime_entry, tbEndTime.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("endIata_entry"), tbEndIata.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("endFuel_entry"), tbEndFuel.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("endTime_entry"), tbEndTime.Text);
 
-            values.Add(Settings.Default.pax_entry, tbPax.Text);
-            values.Add(Settings.Default.cargo_entry, tbCargo.Text);
-            
-            values.Add(Settings.Default.commentaires_entry, tbCommentaires.Text);
-            values.Add(Settings.Default.noteDuVol_entry, cbNote.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("pax_entry"), tbPax.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("cargo_entry"), tbCargo.Text);
+
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("commentaires_entry"), tbCommentaires.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("noteDuVol_entry"), cbNote.Text);
 
             //attribute les valeurs à l'object gerant la requete.
             gform.SetFieldValues(values);
@@ -298,7 +306,7 @@ namespace FlightRecorder
             try
             {
                 // Navigate to a URL.
-                System.Diagnostics.Process.Start(new ProcessStartInfo(Settings.Default.GoogleFormUrl + "/viewform") { UseShellExecute = true });
+                System.Diagnostics.Process.Start(new ProcessStartInfo(settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.GFORMURL) + "/viewform") { UseShellExecute = true });
 
                 // Specify that the link was visited.
                 this.llManualSave.LinkVisited = true;
