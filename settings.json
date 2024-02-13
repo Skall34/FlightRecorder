@@ -1,0 +1,125 @@
+{
+  "gformSettings": {
+    "Setting": {
+      "callsign_entry": "entry.338426599",
+      "aircraft_entry": "entry.1184138656",
+      "pax_entry": "entry.750791914",
+      "cargo_entry": "entry.2006049487",
+      "startIata_entry": "entry.1206632170",
+      "startFuel_entry": "entry.2122251018",
+      "startTime_entry": "entry.866846136",
+      "endIata_entry": "entry.1434303808",
+      "endFuel_entry": "entry.1246669828",
+      "endTime_entry": "entry.1305759358",
+      "GoogleFormUrl": "https://docs.google.com/forms/d/1UcaY66JJZS_x7VhyKNKpfHSAsicOmfZk-Eqd75k84OA",
+      "flightNote_entry": "entry.1305759358",
+      "comment_entry": "entry.1305759358"
+    }
+  },
+  "fleet": {
+    "AircraftModels": [
+      "model1",
+      "model2",
+      "Cessna 172",
+      "R44",
+      "H145",
+      "H160",
+      "B407",
+      "EC135 V5\u002B",
+      "B412",
+      "PA24",
+      "C172",
+      "BE58",
+      "Tecnam P2006",
+      "TBM 850",
+      "Cessna T310",
+      "KODIAK",
+      "BE9L",
+      "Tecnam P2006T",
+      "C210",
+      "C414",
+      "DR401",
+      "A321",
+      "A32NX",
+      "A319",
+      "A320"
+    ],
+    "Immats": {
+      "Cessna 172": [
+        "N45XS",
+        "N46XS"
+      ],
+      "R44": [
+        "F-GDRU"
+      ],
+      "H145": [
+        "D-HOAE",
+        "F-BTLE",
+        "HB-HYPE"
+      ],
+      "H160": [
+        "F-HMRE"
+      ],
+      "B407": [
+        "C-FWQY"
+      ],
+      "EC135 V5\u002B": [
+        "F-GOPG"
+      ],
+      "B412": [
+        "N412UM"
+      ],
+      "PA24": [
+        "F-HXBV"
+      ],
+      "C172": [
+        "N172SP"
+      ],
+      "BE58": [
+        "N45XS",
+        "VH-HMV",
+        "F-FUFU",
+        "testBE58"
+      ],
+      "Tecnam P2006": [
+        "F-DVL2"
+      ],
+      "TBM 850": [
+        "F-HBGD"
+      ],
+      "Cessna T310": [
+        "HB-VDH"
+      ],
+      "KODIAK": [
+        "EZ090"
+      ],
+      "BE9L": [
+        "F-GNSS"
+      ],
+      "Tecnam P2006T": [
+        "F-HGCO"
+      ],
+      "C210": [
+        "N8029B"
+      ],
+      "C414": [
+        "F-GCQL"
+      ],
+      "DR401": [
+        "F-GPAP"
+      ],
+      "A321": [
+        "F-HYBN"
+      ],
+      "A32NX": [
+        "F-DVL1"
+      ],
+      "A319": [
+        "F-GRHU"
+      ],
+      "A320": [
+        "F-HBNK"
+      ]
+    }
+  }
+}

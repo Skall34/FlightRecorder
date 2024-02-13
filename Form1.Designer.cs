@@ -65,7 +65,7 @@ namespace FlightRecorder
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
-            cbImmat = new ComboBox();
+            tbImmat = new TextBox();
             tbDesignationAvion = new TextBox();
             btnRefresh = new Button();
             btnSettings = new Button();
@@ -76,6 +76,7 @@ namespace FlightRecorder
             label2 = new Label();
             tbCommentaires = new TextBox();
             label12 = new Label();
+            toolTip1 = new ToolTip(components);
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -404,7 +405,7 @@ namespace FlightRecorder
             // 
             // groupBox3
             // 
-            groupBox3.Controls.Add(cbImmat);
+            groupBox3.Controls.Add(tbImmat);
             groupBox3.Controls.Add(tbDesignationAvion);
             groupBox3.Controls.Add(btnRefresh);
             groupBox3.Controls.Add(btnSaveSettings);
@@ -420,15 +421,14 @@ namespace FlightRecorder
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
-            // cbImmat
+            // tbImmat
             // 
-            cbImmat.FormattingEnabled = true;
-            cbImmat.Items.AddRange(new object[] { "C-FWQY", "D-HOAE", "EZ090", "F-BTLE", "F-DVL1", "F-DVL2", "F-FUFU", "F-GCQL", "F-GDRU", "F-GNSS", "F-GOPG", "F-GPAP", "F-GRHU", "F-HBGD", "F-HBNK", "F-HGCO", "F-HMRE", "F-HXBV", "F-HYBN", "HB-HYPE", "HB-VDH", "N172SP", "N412UM", "N45XS", "N8029B", "VH-HMV" });
-            cbImmat.Location = new Point(132, 56);
-            cbImmat.Name = "cbImmat";
-            cbImmat.Size = new Size(121, 27);
-            cbImmat.Sorted = true;
-            cbImmat.TabIndex = 41;
+            tbImmat.Location = new Point(132, 56);
+            tbImmat.Name = "tbImmat";
+            tbImmat.Size = new Size(121, 26);
+            tbImmat.TabIndex = 42;
+            toolTip1.SetToolTip(tbImmat, "Set plane immat.\r\nIn xplane : Menu Plugins->XPUIPC->ATC Menu\r\nIn MS FS : Edit airplane aircraft.cfg");
+            tbImmat.MouseHover += tbImmat_MouseHover;
             // 
             // tbDesignationAvion
             // 
@@ -619,7 +619,8 @@ namespace FlightRecorder
         private Label label13;
         private TextBox tbPax;
         private TextBox tbDesignationAvion;
-        private ComboBox cbImmat;
+        private TextBox tbImmat;
+        private ToolTip toolTip1;
     }
 }
 

@@ -79,6 +79,7 @@ namespace FlightRecorder
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
             //recupere le type d'avion donné par le simu.
             this.tbDesignationAvion.Text = _simData.getAircraftType();
+            this.tbImmat.Text = _simData.getTailNumber();
             //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
             // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
             // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
@@ -259,8 +260,8 @@ namespace FlightRecorder
             //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
 
             //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"),tbCallsign.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"),cbImmat.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), tbImmat.Text);
 
             values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
             values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
@@ -336,5 +337,11 @@ namespace FlightRecorder
             readStaticValues();
         }
 
+        private void tbImmat_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.ToolTipTitle = "Set plane immat.";
+            string tip = toolTip1.GetToolTip(this);
+            toolTip1.Show(tip, this, 5000);
+        }
     }
 }
