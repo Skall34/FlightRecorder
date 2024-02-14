@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FSUIPC;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace FlightRecorder
 {
@@ -19,16 +21,24 @@ namespace FlightRecorder
         //private Offset<byte> navLights = new Offset<byte>(0x0280);
         //private Offset<byte> beaconStrobe = new Offset<byte>(0x0281);
         //private Offset<byte> landingLights = new Offset<byte>(0x02BC);
-        //private Offset<uint> verticalSpeed = new Offset<uint>(0x02C8);
 
-        //private Offset<byte> stallWarning = new Offset<byte>(0x036C);
+        //30C Vertical speed, copy of offset 02C8 whilst airborne, not updated
+        //whilst the “on ground” flag(0366) is set.Can be used to check
+        //hardness of touchdown(but watch out for bounces which may
+        //change this). 
+        private Offset<short> onGround = new Offset<short>(0x0366);
+        private Offset<uint> verticalSpeed = new Offset<uint>(0x02C8);
+
+        private Offset<byte> stallWarning = new Offset<byte>(0x036C);
+        private Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
+        private Offset<short> crashed = new Offset<short>(0x0840);
+        private Offset<short> offRunwayCrashed = new Offset<short>(0x0848);
 
         //private Offset<long> altitude = new Offset<long>(0x0570);
         //private Offset<uint> pitch = new Offset<uint>(0x0578);
         //private Offset<uint> bank = new Offset<uint>(0x057C);
         //private Offset<uint> heading = new Offset<uint>(0x0580);
 
-        //private Offset<short> crashed = new Offset<short>(0x0840);
 
         private Offset<short> engineNumber = new Offset<short>(0x0AEC);
 
@@ -50,6 +60,8 @@ namespace FlightRecorder
 
         private Offset<uint> payloadNumber = new Offset<uint>(0x13FC);
         //private Offset<FsPayloadStation> payloads = new Offset<FsPayloadStation>(0x1400, 48);
+
+        private Offset<string> aircraftModel = new Offset<string>(0x3500, 24);
 
         private Offset<string> aircraftType = new Offset<string>(0x3D00, 256);
         private Offset<string> flightNumber = new Offset<string>(0x3130, 12);
@@ -90,6 +102,11 @@ namespace FlightRecorder
             return result;
         }
 
+        public short getOnground()
+        {
+            return onGround.Value;
+        }
+
         public Double getCargoWeight()
         {
             double result = 0;
@@ -100,6 +117,31 @@ namespace FlightRecorder
         public double getAirSpeed()
         {
             return (double)this.airspeed.Value / 128d;
+        }
+
+        public double getVerticalSpeed()
+        {
+            return ((double)verticalSpeed.Value)  / 256;
+        }
+
+        public byte getStallWarning()
+        {
+            return stallWarning.Value;
+        }
+
+        public byte getOverspeedWarning()
+        {
+            return overSpeedWarning.Value;
+        }
+
+        public short getCrashedFlag()
+        {
+            return crashed.Value;
+        }
+
+        public short getOffRunwayCrashed()
+        {
+            return offRunwayCrashed.Value;
         }
 
         public bool isAtLeastOneEngineFiring()
@@ -142,6 +184,10 @@ namespace FlightRecorder
         {
             return aircraftType.Value;
         }
+        public string getAircraftModel ()
+        {
+            return aircraftModel.Value;
+        }
 
         public string getFlightNumber()
         {
@@ -158,5 +204,7 @@ namespace FlightRecorder
         {
             return payloadServices.PayloadWeightKgs;
         }
+
+
     }
 }

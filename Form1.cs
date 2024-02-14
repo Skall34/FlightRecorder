@@ -35,6 +35,14 @@ namespace FlightRecorder
         private simData _simData;
         private SettingsMgr settingsMgr;
 
+        private bool stallWarning;
+        private bool crashed;
+        private bool overRunwayCrashed;
+        private bool overspeed;
+        private bool onGround;
+        private double currentVSpeed;
+        private double touchDownVSpeed;
+
         public Form1()
         {
             InitializeComponent();
@@ -58,6 +66,15 @@ namespace FlightRecorder
             _endFuel = 0;
             commentaires = string.Empty;
             noteDuVol = 5;
+            onGround = true;
+
+            touchDownVSpeed = 0;
+            currentVSpeed = 0;
+
+            overspeed = false;
+            crashed = false;
+            overRunwayCrashed = false;
+            stallWarning = false;
 
             //recupere le callsign qui a été sauvegardé en settings de l'application
             this.tbCallsign.Text = Settings.Default.callsign;
@@ -83,6 +100,7 @@ namespace FlightRecorder
             //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
             // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
             // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
+
         }
 
         // appelé chaque 1s par le timer de connection
@@ -122,12 +140,51 @@ namespace FlightRecorder
                 //rafraichis les données venant du simu
                 _simData.refresh();
 
-
+                currentVSpeed = _simData.getVerticalSpeed();
+                tbVSpeed.Text = currentVSpeed.ToString();
                 // Update the information on the form
+                //check if we are in the air
+                if (_simData.getOnground()==0)
+                {
+                    //keep memory that we're airborn
+                    onGround = false;
+                }
+                else //we're on ground !
+                {
+                    //if we weren't on ground last time, get the V speed !
+                    if (!onGround)
+                    {
+                        //keep the VSpeed we had just before touching the ground.
+                        if (currentVSpeed > touchDownVSpeed)
+                        {
+                            //even in case of multiple bounces, get the greatest...
+                            touchDownVSpeed = currentVSpeed;
+                        }
+                    }
+                }
+
+
 
                 // Airspeed
                 double airspeedKnots = _simData.getAirSpeed();
                 this.txtAirspeed.Text = airspeedKnots.ToString("F0");
+
+                if (_simData.getOverspeedWarning() != 0)
+                {
+                    overspeed = true;
+                }
+                if (_simData.getOffRunwayCrashed() != 0)
+                {
+                    overRunwayCrashed = true;
+                }
+                if (_simData.getCrashedFlag() != 0)
+                {
+                    crashed = true;
+                }
+                if (_simData.getStallWarning() != 0)
+                {
+                    stallWarning = true;
+                }
 
                 //affiche en live le niveau de barburant
                 //0.00 => only keep 2 decimals for the fuel
@@ -180,6 +237,9 @@ namespace FlightRecorder
                     this.tbEndTime.Text = _endTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
                     this.tbEndFuel.Text = _endFuel.ToString("0.00");
+
+                    //compute the note of the flight
+                    analyseFlight();
                 }
 
             }
@@ -342,6 +402,44 @@ namespace FlightRecorder
             toolTip1.ToolTipTitle = "Set plane immat.";
             string tip = toolTip1.GetToolTip(this);
             toolTip1.Show(tip, this, 5000);
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private int analyseFlight()
+        {
+            int note = 10;
+            tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed + " m/s";
+
+            if (overspeed) note -= 2;
+            if (stallWarning) note -= 2;
+            if (overRunwayCrashed) note = 2;
+            if (crashed) note = 0;
+
+            cbNote.Text = note.ToString();
+
+            return note;
+        }
+        private void cbNote_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.ToolTipTitle = "Flight details";
+            string tipText = "";
+            if (overspeed) tipText += "Overspeed detected \n";
+            if (stallWarning) tipText += "Stall warning detected \n";
+            if (overRunwayCrashed) tipText += "Over runway crashed \n";
+            if (crashed) tipText += "Crashed \n";
+            tipText += "vertical speed at touchdown: " + touchDownVSpeed + " m/s";
+
+            toolTip1.SetToolTip((Control)sender, tipText);
+
+            toolTip1.Show(tipText, this, 5000);
+        }
+
+        private void cbNote_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

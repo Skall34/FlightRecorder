@@ -77,6 +77,8 @@ namespace FlightRecorder
             tbCommentaires = new TextBox();
             label12 = new Label();
             toolTip1 = new ToolTip(components);
+            label14 = new Label();
+            tbVSpeed = new TextBox();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -102,16 +104,15 @@ namespace FlightRecorder
             // 
             // timerMain
             // 
-            timerMain.Interval = 500;
             timerMain.Tick += timerMain_Tick;
             // 
             // txtAirspeed
             // 
-            txtAirspeed.Location = new Point(259, 23);
+            txtAirspeed.Location = new Point(215, 24);
             txtAirspeed.Margin = new Padding(6, 4, 6, 4);
             txtAirspeed.Name = "txtAirspeed";
             txtAirspeed.ReadOnly = true;
-            txtAirspeed.Size = new Size(141, 26);
+            txtAirspeed.Size = new Size(82, 26);
             txtAirspeed.TabIndex = 9;
             txtAirspeed.TextAlign = HorizontalAlignment.Right;
             // 
@@ -182,11 +183,11 @@ namespace FlightRecorder
             // 
             // tbCurrentFuel
             // 
-            tbCurrentFuel.Location = new Point(259, 60);
+            tbCurrentFuel.Location = new Point(215, 61);
             tbCurrentFuel.Margin = new Padding(4);
             tbCurrentFuel.Name = "tbCurrentFuel";
             tbCurrentFuel.ReadOnly = true;
-            tbCurrentFuel.Size = new Size(141, 26);
+            tbCurrentFuel.Size = new Size(82, 26);
             tbCurrentFuel.TabIndex = 17;
             tbCurrentFuel.TextAlign = HorizontalAlignment.Right;
             // 
@@ -392,6 +393,8 @@ namespace FlightRecorder
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(tbVSpeed);
+            groupBox2.Controls.Add(label14);
             groupBox2.Controls.Add(tbCurrentFuel);
             groupBox2.Controls.Add(label5);
             groupBox2.Controls.Add(txtAirspeed);
@@ -507,7 +510,8 @@ namespace FlightRecorder
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(73, 27);
             cbNote.TabIndex = 17;
-            cbNote.SelectedItem = "5";
+            cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
+            cbNote.MouseHover += cbNote_MouseHover;
             // 
             // label2
             // 
@@ -521,10 +525,10 @@ namespace FlightRecorder
             // 
             // tbCommentaires
             // 
-            tbCommentaires.Location = new Point(259, 23);
+            tbCommentaires.Location = new Point(132, 20);
             tbCommentaires.Margin = new Padding(6, 4, 6, 4);
             tbCommentaires.Name = "tbCommentaires";
-            tbCommentaires.Size = new Size(286, 26);
+            tbCommentaires.Size = new Size(413, 26);
             tbCommentaires.TabIndex = 9;
             // 
             // label12
@@ -536,6 +540,22 @@ namespace FlightRecorder
             label12.Size = new Size(120, 19);
             label12.TabIndex = 7;
             label12.Text = "Commentaires";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(338, 27);
+            label14.Name = "label14";
+            label14.Size = new Size(69, 19);
+            label14.TabIndex = 18;
+            label14.Text = "VSpeed";
+            // 
+            // tbVSpeed
+            // 
+            tbVSpeed.Location = new Point(418, 25);
+            tbVSpeed.Name = "tbVSpeed";
+            tbVSpeed.Size = new Size(100, 26);
+            tbVSpeed.TabIndex = 19;
             // 
             // Form1
             // 
@@ -622,6 +642,8 @@ namespace FlightRecorder
         private TextBox tbDesignationAvion;
         private TextBox tbImmat;
         private ToolTip toolTip1;
+        private TextBox tbVSpeed;
+        private Label label14;
     }
 }
 
