@@ -507,6 +507,7 @@ namespace FlightRecorder
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(73, 27);
             cbNote.TabIndex = 17;
+            cbNote.SelectedItem = "5";
             // 
             // label2
             // 
@@ -525,7 +526,6 @@ namespace FlightRecorder
             tbCommentaires.Name = "tbCommentaires";
             tbCommentaires.Size = new Size(286, 26);
             tbCommentaires.TabIndex = 9;
-            tbCommentaires.TextAlign = HorizontalAlignment.Right;
             // 
             // label12
             // 
