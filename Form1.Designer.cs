@@ -87,10 +87,10 @@ namespace FlightRecorder
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 574);
+            statusStrip.Location = new Point(0, 578);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 23, 0);
-            statusStrip.Size = new Size(584, 22);
+            statusStrip.Size = new Size(581, 22);
             statusStrip.TabIndex = 6;
             statusStrip.Text = "statusStrip1";
             // 
@@ -542,7 +542,7 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(10F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(584, 596);
+            ClientSize = new Size(581, 600);
             Controls.Add(groupBox4);
             Controls.Add(btnSettings);
             Controls.Add(groupBox3);
@@ -553,6 +553,7 @@ namespace FlightRecorder
             Controls.Add(statusStrip);
             Font = new Font("Arial", 12F, FontStyle.Bold);
             ForeColor = Color.White;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(6, 4, 6, 4);
             MaximizeBox = false;
