@@ -64,8 +64,10 @@ namespace FlightRecorder
             llManualSave = new LinkLabel();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
+            tbVSpeed = new TextBox();
+            label14 = new Label();
             groupBox3 = new GroupBox();
-            tbImmat = new TextBox();
+            cbImmat = new ComboBox();
             tbDesignationAvion = new TextBox();
             btnRefresh = new Button();
             btnSettings = new Button();
@@ -77,8 +79,6 @@ namespace FlightRecorder
             tbCommentaires = new TextBox();
             label12 = new Label();
             toolTip1 = new ToolTip(components);
-            label14 = new Label();
-            tbVSpeed = new TextBox();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -406,9 +406,25 @@ namespace FlightRecorder
             groupBox2.TabStop = false;
             groupBox2.Text = "Dynamic data";
             // 
+            // tbVSpeed
+            // 
+            tbVSpeed.Location = new Point(418, 25);
+            tbVSpeed.Name = "tbVSpeed";
+            tbVSpeed.Size = new Size(100, 26);
+            tbVSpeed.TabIndex = 19;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(338, 27);
+            label14.Name = "label14";
+            label14.Size = new Size(69, 19);
+            label14.TabIndex = 18;
+            label14.Text = "VSpeed";
+            // 
             // groupBox3
             // 
-            groupBox3.Controls.Add(tbImmat);
+            groupBox3.Controls.Add(cbImmat);
             groupBox3.Controls.Add(tbDesignationAvion);
             groupBox3.Controls.Add(btnRefresh);
             groupBox3.Controls.Add(btnSaveSettings);
@@ -424,14 +440,14 @@ namespace FlightRecorder
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
-            // tbImmat
+            // cbImmat
             // 
-            tbImmat.Location = new Point(132, 56);
-            tbImmat.Name = "tbImmat";
-            tbImmat.Size = new Size(121, 26);
-            tbImmat.TabIndex = 42;
-            toolTip1.SetToolTip(tbImmat, "Set plane immat.\r\nIn xplane : Menu Plugins->XPUIPC->ATC Menu\r\nIn MS FS : Edit airplane aircraft.cfg");
-            tbImmat.MouseHover += tbImmat_MouseHover;
+            cbImmat.FormattingEnabled = true;
+            cbImmat.Location = new Point(132, 55);
+            cbImmat.Name = "cbImmat";
+            cbImmat.Size = new Size(121, 27);
+            cbImmat.TabIndex = 41;
+            remplirComboImmat();
             // 
             // tbDesignationAvion
             // 
@@ -457,6 +473,7 @@ namespace FlightRecorder
             // 
             // btnSettings
             // 
+            btnSettings.Enabled = false;
             btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             btnSettings.ForeColor = Color.Gray;
             btnSettings.Location = new Point(12, 537);
@@ -512,6 +529,7 @@ namespace FlightRecorder
             cbNote.TabIndex = 17;
             cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
             cbNote.MouseHover += cbNote_MouseHover;
+            cbNote.SelectedItem = "5";
             // 
             // label2
             // 
@@ -540,22 +558,6 @@ namespace FlightRecorder
             label12.Size = new Size(120, 19);
             label12.TabIndex = 7;
             label12.Text = "Commentaires";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(338, 27);
-            label14.Name = "label14";
-            label14.Size = new Size(69, 19);
-            label14.TabIndex = 18;
-            label14.Text = "VSpeed";
-            // 
-            // tbVSpeed
-            // 
-            tbVSpeed.Location = new Point(418, 25);
-            tbVSpeed.Name = "tbVSpeed";
-            tbVSpeed.Size = new Size(100, 26);
-            tbVSpeed.TabIndex = 19;
             // 
             // Form1
             // 
@@ -640,10 +642,10 @@ namespace FlightRecorder
         private Label label13;
         private TextBox tbPax;
         private TextBox tbDesignationAvion;
-        private TextBox tbImmat;
         private ToolTip toolTip1;
         private TextBox tbVSpeed;
         private Label label14;
+        private ComboBox cbImmat;
     }
 }
 

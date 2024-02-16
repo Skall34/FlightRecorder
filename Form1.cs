@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace FlightRecorder
 {
@@ -96,7 +98,6 @@ namespace FlightRecorder
             this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
             //recupere le type d'avion donné par le simu.
             this.tbDesignationAvion.Text = _simData.getAircraftType();
-            this.tbImmat.Text = _simData.getTailNumber();
             //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
             // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
             // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
@@ -321,7 +322,7 @@ namespace FlightRecorder
 
             //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
             values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), tbImmat.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
 
             values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
             values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
@@ -360,7 +361,12 @@ namespace FlightRecorder
         {
 
         }
-
+        private async void remplirComboImmat()
+        {
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=bEeSuJVxxV_KySlbI3IzMSde9gO3Owth8t28VoZDIZsK-6v0oGNRK3GmQsvVvJDpw61oyINkV_Nw9Hv3roqizWl2I9CHah9Km5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnHswp_1Sm4Fg0y_4PQcK8D6PumPKf4Bm_iYoRI_DJL79fweV4bLTId22e8MMsN5FOdmi1x-QJV6d0j4DS1Lp_X4nHzXNnzuIQw&lib=MTPEXfapbdgKnfnHWifDMNT00VIDNQ6M4"; // Remplace URL_DES_DONNÉES par l'URL réelle
+            urlDeserializer dataReader = new urlDeserializer(url);
+            await dataReader.FillComboBoxAsync(cbImmat);
+        }
         //ouvre le navigateur par defaut sur le lien dans le form.
         private void llManualSave_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
