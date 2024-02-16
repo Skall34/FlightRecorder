@@ -43,6 +43,13 @@ namespace FlightRecorder
         private double currentVSpeed;
         private double touchDownVSpeed;
 
+        private bool gearIsUp;
+        private uint flapsPosition;
+
+        private double flapsDownSpeed;
+        private double gearDownSpeed;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -70,6 +77,9 @@ namespace FlightRecorder
 
             touchDownVSpeed = 0;
             currentVSpeed = 0;
+
+            gearIsUp = false;
+            flapsPosition = 0;
 
             overspeed = false;
             crashed = false;
@@ -140,6 +150,10 @@ namespace FlightRecorder
                 //rafraichis les données venant du simu
                 _simData.refresh();
 
+                // Airspeed
+                double airspeedKnots = _simData.getAirSpeed();
+                this.txtAirspeed.Text = airspeedKnots.ToString("F0");
+
                 currentVSpeed = _simData.getVerticalSpeed();
                 tbVSpeed.Text = currentVSpeed.ToString();
                 // Update the information on the form
@@ -151,23 +165,35 @@ namespace FlightRecorder
                 }
                 else //we're on ground !
                 {
-                    //if we weren't on ground last time, get the V speed !
-                    if (!onGround)
+                    touchDownVSpeed = _simData.getLandingVerticalSpeed();
+                }
+
+                //check gear position, if gear just deployed, get the airspeed
+                bool currentGearIsUp = gearIsUp;
+                gearIsUp = _simData.getIsGearUp();
+                if (!gearIsUp && currentGearIsUp)
+                {
+                    //get the max air speed while deploying the gear
+                    if (airspeedKnots > gearDownSpeed)
                     {
-                        //keep the VSpeed we had just before touching the ground.
-                        if (currentVSpeed > touchDownVSpeed)
-                        {
-                            //even in case of multiple bounces, get the greatest...
-                            touchDownVSpeed = currentVSpeed;
-                        }
+                        //gear just went to be deployed ! check the current speed !!!
+                        gearDownSpeed = airspeedKnots;
                     }
                 }
 
+                //check the flaps deployment speed
+                uint currentFlapsPosition = flapsPosition;
+                flapsPosition = _simData.getFlapsPosition();
+                //if flaps just went deployed, get the air speed.
+                if ((currentFlapsPosition == 0) && (flapsPosition > 0))
+                {
+                    //only keep the max flaps deployment air speed for this flight
+                    if (airspeedKnots > flapsDownSpeed)
+                    {
+                        flapsDownSpeed = airspeedKnots;
+                    }
+                }
 
-
-                // Airspeed
-                double airspeedKnots = _simData.getAirSpeed();
-                this.txtAirspeed.Text = airspeedKnots.ToString("F0");
 
                 if (_simData.getOverspeedWarning() != 0)
                 {
@@ -412,6 +438,11 @@ namespace FlightRecorder
         {
             int note = 10;
             tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed + " m/s";
+
+            if (_simData.getFlapsAvailableFlag() == 1)
+            {
+
+            }
 
             if (overspeed) note -= 2;
             if (stallWarning) note -= 2;
