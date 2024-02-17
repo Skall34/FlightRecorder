@@ -68,7 +68,7 @@ namespace FlightRecorder
             tbVSpeed = new TextBox();
             label14 = new Label();
             groupBox3 = new GroupBox();
-            tbImmat = new TextBox();
+            cbImmat = new ComboBox();
             tbDesignationAvion = new TextBox();
             btnRefresh = new Button();
             btnSettings = new Button();
@@ -81,6 +81,7 @@ namespace FlightRecorder
             label12 = new Label();
             toolTip1 = new ToolTip(components);
             refillTimer = new System.Windows.Forms.Timer(components);
+            btCheckVol = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -353,6 +354,7 @@ namespace FlightRecorder
             // 
             // btnSubmit
             // 
+            btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Gray;
             btnSubmit.Location = new Point(457, 538);
             btnSubmit.Margin = new Padding(4);
@@ -366,7 +368,7 @@ namespace FlightRecorder
             // llManualSave
             // 
             llManualSave.AutoSize = true;
-            llManualSave.Location = new Point(270, 543);
+            llManualSave.Location = new Point(144, 542);
             llManualSave.Margin = new Padding(4, 0, 4, 0);
             llManualSave.Name = "llManualSave";
             llManualSave.Size = new Size(162, 19);
@@ -442,7 +444,7 @@ namespace FlightRecorder
             // 
             // groupBox3
             // 
-            groupBox3.Controls.Add(tbImmat);
+            groupBox3.Controls.Add(cbImmat);
             groupBox3.Controls.Add(tbDesignationAvion);
             groupBox3.Controls.Add(btnRefresh);
             groupBox3.Controls.Add(btnSaveSettings);
@@ -458,14 +460,14 @@ namespace FlightRecorder
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
-            // tbImmat
+            // cbImmat
             // 
-            tbImmat.Location = new Point(132, 56);
-            tbImmat.Name = "tbImmat";
-            tbImmat.Size = new Size(121, 26);
-            tbImmat.TabIndex = 42;
-            toolTip1.SetToolTip(tbImmat, "Set plane immat.\r\nIn xplane : Menu Plugins->XPUIPC->ATC Menu\r\nIn MS FS : Edit airplane aircraft.cfg");
-            tbImmat.MouseHover += tbImmat_MouseHover;
+            cbImmat.FormattingEnabled = true;
+            cbImmat.Location = new Point(132, 55);
+            cbImmat.Name = "cbImmat";
+            cbImmat.Size = new Size(121, 27);
+            cbImmat.TabIndex = 41;
+            remplirComboImmat();
             // 
             // tbDesignationAvion
             // 
@@ -491,6 +493,7 @@ namespace FlightRecorder
             // 
             // btnSettings
             // 
+            btnSettings.Enabled = false;
             btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             btnSettings.ForeColor = Color.Gray;
             btnSettings.Location = new Point(12, 537);
@@ -538,7 +541,7 @@ namespace FlightRecorder
             // cbNote
             // 
             cbNote.FormattingEnabled = true;
-            cbNote.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
+            cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
             cbNote.Location = new Point(259, 61);
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
@@ -546,6 +549,7 @@ namespace FlightRecorder
             cbNote.TabIndex = 17;
             cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
             cbNote.MouseHover += cbNote_MouseHover;
+            cbNote.SelectedItem = 8;
             // 
             // label2
             // 
@@ -579,6 +583,17 @@ namespace FlightRecorder
             // 
             refillTimer.Interval = 500;
             refillTimer.Tick += refillTimer_Tick;
+          
+            // btCheckVol
+            // 
+            btCheckVol.ForeColor = Color.Gray;
+            btCheckVol.Location = new Point(350, 538);
+            btCheckVol.Name = "btCheckVol";
+            btCheckVol.Size = new Size(100, 29);
+            btCheckVol.TabIndex = 44;
+            btCheckVol.Text = "Check Vol";
+            btCheckVol.UseVisualStyleBackColor = true;
+            btCheckVol.Click += btCheckVol_Click;
             // 
             // Form1
             // 
@@ -586,6 +601,7 @@ namespace FlightRecorder
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
             ClientSize = new Size(581, 600);
+            Controls.Add(btCheckVol);
             Controls.Add(groupBox4);
             Controls.Add(btnSettings);
             Controls.Add(groupBox3);
@@ -664,12 +680,13 @@ namespace FlightRecorder
         private Label label13;
         private TextBox tbPax;
         private TextBox tbDesignationAvion;
-        private TextBox tbImmat;
         private ToolTip toolTip1;
         private TextBox tbVSpeed;
         private Label label14;
         private Button button1;
         private System.Windows.Forms.Timer refillTimer;
+        private ComboBox cbImmat;
+        private Button btCheckVol;
     }
 }
 
