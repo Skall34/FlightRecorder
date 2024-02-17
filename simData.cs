@@ -153,6 +153,11 @@ namespace FlightRecorder
             payloadServices.WriteChanges();
         }
 
+        public double getMaxFuel()
+        {
+            return payloadServices.FuelCapacityKgs;
+        }
+
         public short getOnground() => onGround.Value;
 
         public Double getCargoWeight()

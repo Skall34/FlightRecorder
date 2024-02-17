@@ -20,6 +20,7 @@ namespace FlightRecorder
     {
 
         //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
+        FsPositionSnapshot _currentPosition;
         FsPositionSnapshot _startPosition;
         FsPositionSnapshot _endPosition;
 
@@ -54,6 +55,7 @@ namespace FlightRecorder
         private bool modifiedPayload; //a flag indicating that the user changed the payload
         private double FuelQtty;
         private int refillQtty;
+        private double maxFuelCapacity;
 
         private bool modifiedFuel;
         public Form1()
@@ -67,6 +69,8 @@ namespace FlightRecorder
             this.lblConnectionStatus.Text = "Loading Airport database";
             airportsDatabase = new airportsMgr("airports.csv");
             this.lblConnectionStatus.Text = "Airport database loaded";
+
+            remplirComboImmat();
 
             //initialise l'object qui sert à capter les données qui viennent du simu
             _simData = new simData();
@@ -94,7 +98,7 @@ namespace FlightRecorder
 
             modifiedPayload = false;
             modifiedFuel = false;
-
+            maxFuelCapacity = 0;
 
             //recupere le callsign qui a été sauvegardé en settings de l'application
             this.tbCallsign.Text = Settings.Default.callsign;
@@ -112,19 +116,21 @@ namespace FlightRecorder
         {
             //commence à lire qq variables du simu : fuel & cargo, immat avion...
             FuelQtty = _simData.getFuelWeight();
+            maxFuelCapacity = _simData.getMaxFuel();
+
             this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
             this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
 
             //recupere l'emplacement courant :
-            _startPosition = _simData.getPosition(); ;
+            _currentPosition = _simData.getPosition(); ;
 
-            double lat = _startPosition.Location.Latitude.DecimalDegrees;
-            double lon = _startPosition.Location.Longitude.DecimalDegrees;
+            double lat = _currentPosition.Location.Latitude.DecimalDegrees;
+            double lon = _currentPosition.Location.Longitude.DecimalDegrees;
 
             airport localAirport = airportsDatabase.FindClosestAirport(lat, lon);
             string startAirportname = localAirport.Name;
-            tbStartPosition.Text = startAirportname;
-            tbStartIata.Text = localAirport.Ident;
+            tbCurrentPosition.Text = startAirportname;
+            tbCurrentIata.Text = localAirport.Ident;
 
             //recupere le type d'avion donné par le simu.
             this.tbDesignationAvion.Text = _simData.getAircraftType();
@@ -176,7 +182,7 @@ namespace FlightRecorder
                 this.txtAirspeed.Text = airspeedKnots.ToString("F0");
 
                 currentVSpeed = _simData.getVerticalSpeed();
-                tbVSpeed.Text = currentVSpeed.ToString();
+                tbVSpeed.Text = currentVSpeed.ToString("0.00");
                 // Update the information on the form
                 //check if we are in the air
                 if (_simData.getOnground() == 0)
@@ -385,11 +391,10 @@ namespace FlightRecorder
             values.Add(settingsMgr.allSettings.gformSettings.getValue("endFuel_entry"), tbEndFuel.Text);
             values.Add(settingsMgr.allSettings.gformSettings.getValue("endTime_entry"), tbEndTime.Text);
 
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("pax_entry"), tbPax.Text);
             values.Add(settingsMgr.allSettings.gformSettings.getValue("cargo_entry"), tbCargo.Text);
 
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("commentaires_entry"), tbCommentaires.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("noteDuVol_entry"), cbNote.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
+            values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
 
             //attribute les valeurs à l'object gerant la requete.
             gform.SetFieldValues(values);
@@ -564,26 +569,37 @@ namespace FlightRecorder
         {
             if (_simData.isConnected)
             {
-                    readStaticValues();
+                readStaticValues();
             }
 
         }
 
         private void refillTimer_Tick(object sender, EventArgs e)
         {
-            FuelQtty++;
-            refillQtty++;
-            if (refillQtty>5)
+            if (FuelQtty < maxFuelCapacity)
             {
-                refillTimer.Interval = 100;
-            }
+                FuelQtty++;
+                refillQtty++;
+                //accelerate after a few seconds
+                if ((refillQtty > 5)&&(refillTimer.Interval==500))
+                {
+                    refillTimer.Interval = 100;
+                }
+                //check for overfill
+                if (FuelQtty >= maxFuelCapacity)
+                {
+                    FuelQtty = maxFuelCapacity;
+                    refillTimer.Stop();
+                    _simData.setFuelWheight(FuelQtty);
+                }
 
-            tbCurrentFuel.Text = FuelQtty.ToString("0.00");
+                tbCurrentFuel.Text = FuelQtty.ToString("0.00");
+            }
         }
 
         private void button1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!refillTimer.Enabled)
+            if ((!refillTimer.Enabled)&&(FuelQtty<maxFuelCapacity))
             {
                 refillTimer.Interval = 500;
                 refillQtty = 0;
@@ -596,7 +612,7 @@ namespace FlightRecorder
             refillTimer.Stop();
             _simData.setFuelWheight(FuelQtty);
         }
-            
+
         private void btCheckVol_Click(object sender, EventArgs e)
         {
             string erreur = "";
@@ -615,13 +631,14 @@ namespace FlightRecorder
             if (callsign == "")
             {
                 erreur += "• Le callsign doit être renseigné\n";
-            } else
+            }
+            else
             {
                 if (callsign.Length != 7)
                 {
                     erreur += "• Le callsign n'est pas bien formé. Il doit être composé de 7 caractères.\n";
                 }
-                if (callsign.Substring(0,3) != "SKY")
+                if (callsign.Substring(0, 3) != "SKY")
                 {
                     erreur += "• Le callsign n'est pas bien formé. Il doit commencer par SKY.\n";
                 }
@@ -632,13 +649,29 @@ namespace FlightRecorder
             }
 
 
-            if (erreur == "") { //C'est OK, on dégrise le bouton pour envoyer le vol
+            if (erreur == "")
+            { //C'est OK, on dégrise le bouton pour envoyer le vol
                 btnSubmit.Enabled = true;
-            } else
+            }
+            else
             {
                 MessageBox.Show(erreur, "Erreurs de check.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                
             }
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
