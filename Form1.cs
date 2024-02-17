@@ -145,7 +145,7 @@ namespace FlightRecorder
                 tbVSpeed.Text = currentVSpeed.ToString();
                 // Update the information on the form
                 //check if we are in the air
-                if (_simData.getOnground()==0)
+                if (_simData.getOnground() == 0)
                 {
                     //keep memory that we're airborn
                     onGround = false;
@@ -445,6 +445,51 @@ namespace FlightRecorder
 
         private void cbNote_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void btCheckVol_Click(object sender, EventArgs e)
+        {
+            string erreur = "";
+            string callsign = "";
+            string aircraftImmat = "";
+            int fret = 0;
+            int pax = 0;
+
+            aircraftImmat = cbImmat.Text;
+            callsign = tbCallsign.Text;
+
+            if (aircraftImmat == "")
+            {
+                erreur += "• L'immatriculation de l'avion ne peut pas être vide\n";
+            }
+            if (callsign == "")
+            {
+                erreur += "• Le callsign doit être renseigné\n";
+            } else
+            {
+                if (callsign.Length != 7)
+                {
+                    erreur += "• Le callsign n'est pas bien formé. Il doit être composé de 7 caractères.\n";
+                }
+                if (callsign.Substring(0,3) != "SKY")
+                {
+                    erreur += "• Le callsign n'est pas bien formé. Il doit commencer par SKY.\n";
+                }
+                if (callsign.Contains(" "))
+                {
+                    erreur += "• Le callsign n'est pas bien formé. Il ne doit pas contenir d'espace.\n";
+                }
+            }
+
+
+            if (erreur == "") { //C'est OK, on dégrise le bouton pour envoyer le vol
+                btnSubmit.Enabled = true;
+            } else
+            {
+                MessageBox.Show(erreur, "Erreurs de check.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                
+            }
 
         }
     }

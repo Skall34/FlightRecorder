@@ -79,6 +79,7 @@ namespace FlightRecorder
             tbCommentaires = new TextBox();
             label12 = new Label();
             toolTip1 = new ToolTip(components);
+            btCheckVol = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -347,6 +348,7 @@ namespace FlightRecorder
             // 
             // btnSubmit
             // 
+            btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Gray;
             btnSubmit.Location = new Point(457, 538);
             btnSubmit.Margin = new Padding(4);
@@ -360,7 +362,7 @@ namespace FlightRecorder
             // llManualSave
             // 
             llManualSave.AutoSize = true;
-            llManualSave.Location = new Point(270, 543);
+            llManualSave.Location = new Point(144, 542);
             llManualSave.Margin = new Padding(4, 0, 4, 0);
             llManualSave.Name = "llManualSave";
             llManualSave.Size = new Size(162, 19);
@@ -521,7 +523,7 @@ namespace FlightRecorder
             // cbNote
             // 
             cbNote.FormattingEnabled = true;
-            cbNote.Items.AddRange(new object[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
+            cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
             cbNote.Location = new Point(259, 61);
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
@@ -529,7 +531,7 @@ namespace FlightRecorder
             cbNote.TabIndex = 17;
             cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
             cbNote.MouseHover += cbNote_MouseHover;
-            cbNote.SelectedItem = "5";
+            cbNote.SelectedItem = 8;
             // 
             // label2
             // 
@@ -559,12 +561,24 @@ namespace FlightRecorder
             label12.TabIndex = 7;
             label12.Text = "Commentaires";
             // 
+            // btCheckVol
+            // 
+            btCheckVol.ForeColor = Color.Gray;
+            btCheckVol.Location = new Point(350, 538);
+            btCheckVol.Name = "btCheckVol";
+            btCheckVol.Size = new Size(100, 29);
+            btCheckVol.TabIndex = 44;
+            btCheckVol.Text = "Check Vol";
+            btCheckVol.UseVisualStyleBackColor = true;
+            btCheckVol.Click += btCheckVol_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
             ClientSize = new Size(581, 600);
+            Controls.Add(btCheckVol);
             Controls.Add(groupBox4);
             Controls.Add(btnSettings);
             Controls.Add(groupBox3);
@@ -646,6 +660,7 @@ namespace FlightRecorder
         private TextBox tbVSpeed;
         private Label label14;
         private ComboBox cbImmat;
+        private Button btCheckVol;
     }
 }
 
