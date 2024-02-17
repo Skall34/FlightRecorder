@@ -27,12 +27,21 @@ namespace FlightRecorder
         //hardness of touchdown(but watch out for bounces which may
         //change this). 
         private Offset<short> onGround = new Offset<short>(0x0366);
-        private Offset<uint> verticalSpeed = new Offset<uint>(0x02C8);
+        private Offset<int> verticalSpeed = new Offset<int>(0x02C8);
+        private Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
 
         private Offset<byte> stallWarning = new Offset<byte>(0x036C);
         private Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
         private Offset<short> crashed = new Offset<short>(0x0840);
         private Offset<short> offRunwayCrashed = new Offset<short>(0x0848);
+
+        private Offset<uint> flapsAvailable = new Offset<uint>(0x778);
+        private Offset<uint> flapsPosition = new Offset<uint>(0xBE0);
+
+        private Offset<uint> gearRetractableFlag = new Offset<uint>(0x60C);
+        private Offset<uint> gearPosition = new Offset<uint>(0xBF0);
+
+
 
         //private Offset<long> altitude = new Offset<long>(0x0570);
         //private Offset<uint> pitch = new Offset<uint>(0x0578);
@@ -77,13 +86,25 @@ namespace FlightRecorder
 
         private bool atLeastOneEngineFiring;
 
+        private bool _isConnected;
+        public bool isConnected { get {
+                return _isConnected;
+            }
+            set {
+                _isConnected = value;
+            }
+        }
+
+
         public simData()
         {
+            _isConnected = false;
         }
 
         public void openConnection()
         {
             FSUIPCConnection.Open();
+            _isConnected = true;
             payloadServices = FSUIPCConnection.PayloadServices;
             FSUIPCConnection.Process();
             payloadServices.RefreshData();
@@ -91,21 +112,48 @@ namespace FlightRecorder
 
         public void refresh()
         {
-            FSUIPCConnection.Process();
-            payloadServices.RefreshData();
+            try
+            {
+                FSUIPCConnection.Process();
+                payloadServices.RefreshData();
+            }catch(Exception ex)
+            {
+                _isConnected=false;
+            }
         }
 
         public double getFuelWeight()
         {
             double result = 0;
-            result = payloadServices.FuelWeightKgs;
+            if (null != payloadServices)
+            {
+                result = payloadServices.FuelWeightKgs;
+            }
             return result;
         }
 
-        public short getOnground()
+        public void setPayload(double newWheight)
         {
-            return onGround.Value;
+            List<FsPayloadStation> stations = payloadServices.PayloadStations;
+            double currentPayload = payloadServices.PayloadWeightKgs;
+
+            int nbPayloads = payloadServices.PayloadStations.Count;
+            foreach(FsPayloadStation s in  stations)
+                {
+                //compute the % of this payload regarding the rest : 
+                double percent = s.WeightKgs / currentPayload;
+                s.WeightKgs = percent * newWheight;
+                }
+            payloadServices.WriteChanges();
         }
+
+        public void setFuelWheight(double newFuelWeight)
+        {
+            payloadServices.LoadFuelKgs(newFuelWeight, true);
+            payloadServices.WriteChanges();
+        }
+
+        public short getOnground() => onGround.Value;
 
         public Double getCargoWeight()
         {
@@ -114,35 +162,29 @@ namespace FlightRecorder
             return result;
         }
 
-        public double getAirSpeed()
-        {
-            return (double)this.airspeed.Value / 128d;
-        }
+        public double getAirSpeed() => (double)this.airspeed.Value / 128d;
 
-        public double getVerticalSpeed()
-        {
-            return ((double)verticalSpeed.Value)  / 256;
-        }
+        public double getVerticalSpeed() => ((double)verticalSpeed.Value/256 ) * 60 * 3.28084;
 
-        public byte getStallWarning()
-        {
-            return stallWarning.Value;
-        }
+        public double getLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value/256) * 60 * 3.28084;
 
-        public byte getOverspeedWarning()
-        {
-            return overSpeedWarning.Value;
-        }
+        public byte getStallWarning() => stallWarning.Value;
 
-        public short getCrashedFlag()
-        {
-            return crashed.Value;
-        }
+        public byte getOverspeedWarning() => overSpeedWarning.Value;
 
-        public short getOffRunwayCrashed()
-        {
-            return offRunwayCrashed.Value;
-        }
+        public short getCrashedFlag() => crashed.Value;
+
+        public short getOffRunwayCrashed() => offRunwayCrashed.Value;
+
+        public uint getGearRetractableFlag() => gearRetractableFlag.Value;
+
+        public bool getIsGearUp() =>
+            // gear down = 16383
+            gearPosition.Value == 0;
+
+        public uint getFlapsAvailableFlag() => flapsAvailable.Value;
+
+        public uint getFlapsPosition() => flapsPosition.Value;
 
         public bool isAtLeastOneEngineFiring()
         {
@@ -175,35 +217,17 @@ namespace FlightRecorder
             return result;
         }
 
-        public FsPositionSnapshot getPosition()
-        {
-            return FSUIPCConnection.GetPositionSnapshot();
-        }
+        public FsPositionSnapshot getPosition() => FSUIPCConnection.GetPositionSnapshot();
 
-        public string getAircraftType()
-        {
-            return aircraftType.Value;
-        }
-        public string getAircraftModel ()
-        {
-            return aircraftModel.Value;
-        }
+        public string getAircraftType() => aircraftType.Value;
+        public string getAircraftModel() => aircraftModel.Value;
 
-        public string getFlightNumber()
-        {
-            return flightNumber.Value;
-        }
+        public string getFlightNumber() => flightNumber.Value;
 
 
-        public string getTailNumber()
-        {
-            return tailNumber.Value;
-        }
+        public string getTailNumber() => tailNumber.Value;
 
-        public double getPayloadWheight()
-        {
-            return payloadServices.PayloadWeightKgs;
-        }
+        public double getPayloadWheight() => payloadServices.PayloadWeightKgs;
 
 
     }
