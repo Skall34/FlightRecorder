@@ -64,6 +64,9 @@ namespace FlightRecorder
             llManualSave = new LinkLabel();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
+            button1 = new Button();
+            tbVSpeed = new TextBox();
+            label14 = new Label();
             groupBox3 = new GroupBox();
             tbImmat = new TextBox();
             tbDesignationAvion = new TextBox();
@@ -77,8 +80,7 @@ namespace FlightRecorder
             tbCommentaires = new TextBox();
             label12 = new Label();
             toolTip1 = new ToolTip(components);
-            label14 = new Label();
-            tbVSpeed = new TextBox();
+            refillTimer = new System.Windows.Forms.Timer(components);
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -183,6 +185,7 @@ namespace FlightRecorder
             // 
             // tbCurrentFuel
             // 
+            tbCurrentFuel.BackColor = SystemColors.Control;
             tbCurrentFuel.Location = new Point(215, 61);
             tbCurrentFuel.Margin = new Padding(4);
             tbCurrentFuel.Name = "tbCurrentFuel";
@@ -190,6 +193,7 @@ namespace FlightRecorder
             tbCurrentFuel.Size = new Size(82, 26);
             tbCurrentFuel.TabIndex = 17;
             tbCurrentFuel.TextAlign = HorizontalAlignment.Right;
+            tbCurrentFuel.TextChanged += tbCurrentFuel_TextChanged;
             // 
             // label6
             // 
@@ -243,13 +247,14 @@ namespace FlightRecorder
             // 
             // tbCargo
             // 
+            tbCargo.BackColor = Color.FromArgb(192, 255, 192);
             tbCargo.Location = new Point(260, 90);
             tbCargo.Margin = new Padding(4);
             tbCargo.Name = "tbCargo";
-            tbCargo.ReadOnly = true;
             tbCargo.Size = new Size(141, 26);
             tbCargo.TabIndex = 25;
             tbCargo.TextAlign = HorizontalAlignment.Right;
+            tbCargo.TextChanged += tbCargo_TextChanged;
             // 
             // label8
             // 
@@ -324,6 +329,7 @@ namespace FlightRecorder
             // 
             // tbCallsign
             // 
+            tbCallsign.BackColor = Color.FromArgb(192, 255, 192);
             tbCallsign.Location = new Point(259, 19);
             tbCallsign.Margin = new Padding(4);
             tbCallsign.Name = "tbCallsign";
@@ -393,6 +399,7 @@ namespace FlightRecorder
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(button1);
             groupBox2.Controls.Add(tbVSpeed);
             groupBox2.Controls.Add(label14);
             groupBox2.Controls.Add(tbCurrentFuel);
@@ -405,6 +412,33 @@ namespace FlightRecorder
             groupBox2.TabIndex = 40;
             groupBox2.TabStop = false;
             groupBox2.Text = "Dynamic data";
+            // 
+            // button1
+            // 
+            button1.Location = new Point(304, 61);
+            button1.Name = "button1";
+            button1.Size = new Size(57, 26);
+            button1.TabIndex = 20;
+            button1.Text = "Refill";
+            button1.UseVisualStyleBackColor = true;
+            button1.MouseDown += button1_MouseDown;
+            button1.MouseUp += button1_MouseUp;
+            // 
+            // tbVSpeed
+            // 
+            tbVSpeed.Location = new Point(418, 25);
+            tbVSpeed.Name = "tbVSpeed";
+            tbVSpeed.Size = new Size(100, 26);
+            tbVSpeed.TabIndex = 19;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(338, 27);
+            label14.Name = "label14";
+            label14.Size = new Size(69, 19);
+            label14.TabIndex = 18;
+            label14.Text = "VSpeed";
             // 
             // groupBox3
             // 
@@ -451,7 +485,7 @@ namespace FlightRecorder
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(107, 26);
             btnRefresh.TabIndex = 39;
-            btnRefresh.Text = "Refresh";
+            btnRefresh.Text = "Update";
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
             // 
@@ -541,21 +575,10 @@ namespace FlightRecorder
             label12.TabIndex = 7;
             label12.Text = "Commentaires";
             // 
-            // label14
+            // refillTimer
             // 
-            label14.AutoSize = true;
-            label14.Location = new Point(338, 27);
-            label14.Name = "label14";
-            label14.Size = new Size(69, 19);
-            label14.TabIndex = 18;
-            label14.Text = "VSpeed";
-            // 
-            // tbVSpeed
-            // 
-            tbVSpeed.Location = new Point(418, 25);
-            tbVSpeed.Name = "tbVSpeed";
-            tbVSpeed.Size = new Size(100, 26);
-            tbVSpeed.TabIndex = 19;
+            refillTimer.Interval = 500;
+            refillTimer.Tick += refillTimer_Tick;
             // 
             // Form1
             // 
@@ -579,6 +602,7 @@ namespace FlightRecorder
             MaximizeBox = false;
             Name = "Form1";
             Text = "Flight recorder";
+            Activated += Form1_Activated;
             FormClosing += frmMain_FormClosing;
             Load += Form1_Load;
             statusStrip.ResumeLayout(false);
@@ -644,6 +668,8 @@ namespace FlightRecorder
         private ToolTip toolTip1;
         private TextBox tbVSpeed;
         private Label label14;
+        private Button button1;
+        private System.Windows.Forms.Timer refillTimer;
     }
 }
 

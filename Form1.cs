@@ -49,7 +49,11 @@ namespace FlightRecorder
         private double flapsDownSpeed;
         private double gearDownSpeed;
 
+        private bool modifiedPayload; //a flag indicating that the user changed the payload
+        private double FuelQtty;
+        private int refillQtty;
 
+        private bool modifiedFuel;
         public Form1()
         {
             InitializeComponent();
@@ -86,6 +90,10 @@ namespace FlightRecorder
             overRunwayCrashed = false;
             stallWarning = false;
 
+            modifiedPayload = false;
+            modifiedFuel = false;
+
+
             //recupere le callsign qui a été sauvegardé en settings de l'application
             this.tbCallsign.Text = Settings.Default.callsign;
             //desactive le bouton de maj du setting. Il sera reactivé si le callsign est modifié.
@@ -101,9 +109,21 @@ namespace FlightRecorder
         private void readStaticValues()
         {
             //commence à lire qq variables du simu : fuel & cargo, immat avion...
-            this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
+            FuelQtty = _simData.getFuelWeight();
+            this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
             this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
-            this.tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
+
+            //recupere l'emplacement courant :
+            _startPosition = _simData.getPosition(); ;
+
+            double lat = _startPosition.Location.Latitude.DecimalDegrees;
+            double lon = _startPosition.Location.Longitude.DecimalDegrees;
+
+            airport localAirport = airportsDatabase.FindClosestAirport(lat, lon);
+            string startAirportname = localAirport.Name;
+            tbStartPosition.Text = startAirportname;
+            tbStartIata.Text = localAirport.Ident;
+
             //recupere le type d'avion donné par le simu.
             this.tbDesignationAvion.Text = _simData.getAircraftType();
             this.tbImmat.Text = _simData.getTailNumber();
@@ -158,14 +178,18 @@ namespace FlightRecorder
                 tbVSpeed.Text = currentVSpeed.ToString();
                 // Update the information on the form
                 //check if we are in the air
-                if (_simData.getOnground()==0)
+                if (_simData.getOnground() == 0)
                 {
                     //keep memory that we're airborn
                     onGround = false;
                 }
                 else //we're on ground !
                 {
-                    touchDownVSpeed = _simData.getLandingVerticalSpeed();
+                    if (!onGround)
+                    {
+                        //only update the touchDownVSpeed if we've been airborn once
+                        touchDownVSpeed = _simData.getLandingVerticalSpeed();
+                    }
                 }
 
                 //check gear position, if gear just deployed, get the airspeed
@@ -173,7 +197,7 @@ namespace FlightRecorder
                 gearIsUp = _simData.getIsGearUp();
                 if (!gearIsUp && currentGearIsUp)
                 {
-                    //get the max air speed while deploying the gear
+                    //get the max air speed while deploying the gears
                     if (airspeedKnots > gearDownSpeed)
                     {
                         //gear just went to be deployed ! check the current speed !!!
@@ -214,7 +238,10 @@ namespace FlightRecorder
 
                 //affiche en live le niveau de barburant
                 //0.00 => only keep 2 decimals for the fuel
-                tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
+                if (!refillTimer.Enabled)
+                {
+                    tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
+                }
                 //tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
 
                 //on va verifier l'etat des moteurs :
@@ -419,8 +446,25 @@ namespace FlightRecorder
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             _simData.refresh();
+            if (modifiedPayload)
+            {
+                try
+                {
+                    double newPayload = double.Parse(tbCargo.Text);
+                    _simData.setPayload(newPayload);
+                    this.lblConnectionStatus.Text = "New payload send to simulator";
+                    this.lblConnectionStatus.ForeColor = Color.Green;
+                }
+                catch (Exception ex)
+                {
+                    //do nothing
+                }
+            }
             //update the static values
             readStaticValues();
+
+            modifiedPayload = false;
+            btnRefresh.Enabled = false;
         }
 
         private void tbImmat_MouseHover(object sender, EventArgs e)
@@ -441,10 +485,26 @@ namespace FlightRecorder
 
             if (_simData.getFlapsAvailableFlag() == 1)
             {
-
+                if (flapsDownSpeed > 130)
+                {
+                    note -= 1; // pareil que note = note -1
+                }
             }
 
-            if (overspeed) note -= 2;
+            if (_simData.getGearRetractableFlag() == 1)
+            {
+                if (gearDownSpeed > 130)
+                {
+                    note -= 1;
+                }
+            }
+
+            if (touchDownVSpeed > 500)
+            {
+                note -= 2;
+            }
+
+            if (overspeed) note -= 2; // note = note -2
             if (stallWarning) note -= 2;
             if (overRunwayCrashed) note = 2;
             if (crashed) note = 0;
@@ -457,11 +517,20 @@ namespace FlightRecorder
         {
             toolTip1.ToolTipTitle = "Flight details";
             string tipText = "";
+
             if (overspeed) tipText += "Overspeed detected \n";
             if (stallWarning) tipText += "Stall warning detected \n";
             if (overRunwayCrashed) tipText += "Over runway crashed \n";
             if (crashed) tipText += "Crashed \n";
             tipText += "vertical speed at touchdown: " + touchDownVSpeed + " m/s";
+            if (_simData.getGearRetractableFlag() == 1)
+            {
+                tipText += "gear down speed : " + gearDownSpeed + " m/s";
+            }
+            if (_simData.getFlapsAvailableFlag() == 1)
+            {
+                tipText += "flaps down speed : " + flapsDownSpeed + " m/s";
+            }
 
             toolTip1.SetToolTip((Control)sender, tipText);
 
@@ -471,6 +540,55 @@ namespace FlightRecorder
         private void cbNote_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbCargo_TextChanged(object sender, EventArgs e)
+        {
+            modifiedPayload = true;
+            btnRefresh.Enabled = true;
+        }
+
+        private void tbCurrentFuel_TextChanged(object sender, EventArgs e)
+        {
+            modifiedFuel = true;
+            btnRefresh.Enabled = true;
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            if (_simData.isConnected)
+            {
+                    readStaticValues();
+            }
+
+        }
+
+        private void refillTimer_Tick(object sender, EventArgs e)
+        {
+            FuelQtty++;
+            refillQtty++;
+            if (refillQtty>5)
+            {
+                refillTimer.Interval = 100;
+            }
+
+            tbCurrentFuel.Text = FuelQtty.ToString("0.00");
+        }
+
+        private void button1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!refillTimer.Enabled)
+            {
+                refillTimer.Interval = 500;
+                refillQtty = 0;
+                refillTimer.Enabled = true;
+            }
+        }
+
+        private void button1_MouseUp(object sender, MouseEventArgs e)
+        {
+            refillTimer.Stop();
+            _simData.setFuelWheight(FuelQtty);
         }
     }
 }

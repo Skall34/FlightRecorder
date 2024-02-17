@@ -27,8 +27,8 @@ namespace FlightRecorder
         //hardness of touchdown(but watch out for bounces which may
         //change this). 
         private Offset<short> onGround = new Offset<short>(0x0366);
-        private Offset<uint> verticalSpeed = new Offset<uint>(0x02C8);
-        private Offset<uint> landingVerticalSpeed = new Offset<uint>(0x30C);
+        private Offset<int> verticalSpeed = new Offset<int>(0x02C8);
+        private Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
 
         private Offset<byte> stallWarning = new Offset<byte>(0x036C);
         private Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
@@ -86,13 +86,25 @@ namespace FlightRecorder
 
         private bool atLeastOneEngineFiring;
 
+        private bool _isConnected;
+        public bool isConnected { get {
+                return _isConnected;
+            }
+            set {
+                _isConnected = value;
+            }
+        }
+
+
         public simData()
         {
+            _isConnected = false;
         }
 
         public void openConnection()
         {
             FSUIPCConnection.Open();
+            _isConnected = true;
             payloadServices = FSUIPCConnection.PayloadServices;
             FSUIPCConnection.Process();
             payloadServices.RefreshData();
@@ -100,15 +112,45 @@ namespace FlightRecorder
 
         public void refresh()
         {
-            FSUIPCConnection.Process();
-            payloadServices.RefreshData();
+            try
+            {
+                FSUIPCConnection.Process();
+                payloadServices.RefreshData();
+            }catch(Exception ex)
+            {
+                _isConnected=false;
+            }
         }
 
         public double getFuelWeight()
         {
             double result = 0;
-            result = payloadServices.FuelWeightKgs;
+            if (null != payloadServices)
+            {
+                result = payloadServices.FuelWeightKgs;
+            }
             return result;
+        }
+
+        public void setPayload(double newWheight)
+        {
+            List<FsPayloadStation> stations = payloadServices.PayloadStations;
+            double currentPayload = payloadServices.PayloadWeightKgs;
+
+            int nbPayloads = payloadServices.PayloadStations.Count;
+            foreach(FsPayloadStation s in  stations)
+                {
+                //compute the % of this payload regarding the rest : 
+                double percent = s.WeightKgs / currentPayload;
+                s.WeightKgs = percent * newWheight;
+                }
+            payloadServices.WriteChanges();
+        }
+
+        public void setFuelWheight(double newFuelWeight)
+        {
+            payloadServices.LoadFuelKgs(newFuelWeight, true);
+            payloadServices.WriteChanges();
         }
 
         public short getOnground() => onGround.Value;
@@ -122,9 +164,9 @@ namespace FlightRecorder
 
         public double getAirSpeed() => (double)this.airspeed.Value / 128d;
 
-        public double getVerticalSpeed() => ((double)verticalSpeed.Value) * 60 * 3.28084 / 256;
+        public double getVerticalSpeed() => ((double)verticalSpeed.Value/256 ) * 60 * 3.28084;
 
-        public double getLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value) * 60 * 3.28084 / 256;
+        public double getLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value/256) * 60 * 3.28084;
 
         public byte getStallWarning() => stallWarning.Value;
 
