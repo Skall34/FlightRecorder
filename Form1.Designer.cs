@@ -94,7 +94,7 @@ namespace FlightRecorder
             statusStrip.Location = new Point(0, 546);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 21, 0);
-            statusStrip.Size = new Size(524, 22);
+            statusStrip.Size = new Size(498, 22);
             statusStrip.TabIndex = 6;
             statusStrip.Text = "statusStrip1";
             // 
@@ -242,9 +242,9 @@ namespace FlightRecorder
             label9.Location = new Point(11, 83);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(63, 18);
+            label9.Size = new Size(97, 18);
             label9.TabIndex = 24;
-            label9.Text = "Payload";
+            label9.Text = "Payload (Kg)";
             label9.Click += label9_Click;
             // 
             // tbCargo
@@ -274,7 +274,7 @@ namespace FlightRecorder
             tbStartPosition.Margin = new Padding(4);
             tbStartPosition.Name = "tbStartPosition";
             tbStartPosition.ReadOnly = true;
-            tbStartPosition.Size = new Size(318, 25);
+            tbStartPosition.Size = new Size(293, 25);
             tbStartPosition.TabIndex = 27;
             tbStartPosition.TextAlign = HorizontalAlignment.Right;
             // 
@@ -284,7 +284,7 @@ namespace FlightRecorder
             tbEndPosition.Margin = new Padding(4);
             tbEndPosition.Name = "tbEndPosition";
             tbEndPosition.ReadOnly = true;
-            tbEndPosition.Size = new Size(318, 25);
+            tbEndPosition.Size = new Size(293, 25);
             tbEndPosition.TabIndex = 28;
             tbEndPosition.TextAlign = HorizontalAlignment.Right;
             tbEndPosition.TextChanged += tbEndPosition_TextChanged;
@@ -358,7 +358,7 @@ namespace FlightRecorder
             // 
             btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Gray;
-            btnSubmit.Location = new Point(411, 510);
+            btnSubmit.Location = new Point(381, 509);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
@@ -400,7 +400,7 @@ namespace FlightRecorder
             groupBox1.Controls.Add(label3);
             groupBox1.Location = new Point(11, 271);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(502, 232);
+            groupBox1.Size = new Size(476, 232);
             groupBox1.TabIndex = 39;
             groupBox1.TabStop = false;
             groupBox1.Text = "Flight summary";
@@ -409,7 +409,7 @@ namespace FlightRecorder
             // 
             cbNote.FormattingEnabled = true;
             cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-            cbNote.Location = new Point(118, 193);
+            cbNote.Location = new Point(118, 197);
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(66, 26);
@@ -420,19 +420,19 @@ namespace FlightRecorder
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(11, 196);
+            label2.Location = new Point(11, 200);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(90, 18);
+            label2.Size = new Size(83, 18);
             label2.TabIndex = 16;
-            label2.Text = "Note du vol";
+            label2.Text = "Evaluation";
             // 
             // tbCommentaires
             // 
             tbCommentaires.Location = new Point(118, 166);
             tbCommentaires.Margin = new Padding(5, 4, 5, 4);
             tbCommentaires.Name = "tbCommentaires";
-            tbCommentaires.Size = new Size(372, 25);
+            tbCommentaires.Size = new Size(348, 25);
             tbCommentaires.TabIndex = 9;
             // 
             // label12
@@ -441,9 +441,9 @@ namespace FlightRecorder
             label12.Location = new Point(11, 169);
             label12.Margin = new Padding(5, 0, 5, 0);
             label12.Name = "label12";
-            label12.Size = new Size(110, 18);
+            label12.Size = new Size(83, 18);
             label12.TabIndex = 7;
-            label12.Text = "Commentaires";
+            label12.Text = "Comments";
             // 
             // groupBox2
             // 
@@ -456,7 +456,7 @@ namespace FlightRecorder
             groupBox2.Controls.Add(label1);
             groupBox2.Location = new Point(11, 172);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(502, 93);
+            groupBox2.Size = new Size(476, 93);
             groupBox2.TabIndex = 40;
             groupBox2.TabStop = false;
             groupBox2.Text = "Dynamic data";
@@ -505,7 +505,7 @@ namespace FlightRecorder
             groupBox3.Controls.Add(label9);
             groupBox3.Location = new Point(11, -1);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(502, 167);
+            groupBox3.Size = new Size(476, 167);
             groupBox3.TabIndex = 41;
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
@@ -516,7 +516,7 @@ namespace FlightRecorder
             tbCurrentPosition.Margin = new Padding(4);
             tbCurrentPosition.Name = "tbCurrentPosition";
             tbCurrentPosition.ReadOnly = true;
-            tbCurrentPosition.Size = new Size(257, 25);
+            tbCurrentPosition.Size = new Size(233, 25);
             tbCurrentPosition.TabIndex = 31;
             tbCurrentPosition.TextAlign = HorizontalAlignment.Right;
             // 
@@ -571,11 +571,12 @@ namespace FlightRecorder
             // 
             // btnSettings
             // 
+            btnSettings.Enabled = false;
             btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             btnSettings.ForeColor = Color.Gray;
             btnSettings.Location = new Point(11, 509);
             btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(106, 29);
+            btnSettings.Size = new Size(54, 29);
             btnSettings.TabIndex = 42;
             btnSettings.Text = "Gform Settings";
             btnSettings.UseVisualStyleBackColor = true;
@@ -589,11 +590,11 @@ namespace FlightRecorder
             // btCheckVol
             // 
             btCheckVol.ForeColor = Color.Gray;
-            btCheckVol.Location = new Point(315, 510);
+            btCheckVol.Location = new Point(281, 510);
             btCheckVol.Name = "btCheckVol";
             btCheckVol.Size = new Size(90, 27);
             btCheckVol.TabIndex = 44;
-            btCheckVol.Text = "Check Vol";
+            btCheckVol.Text = "Check";
             btCheckVol.UseVisualStyleBackColor = true;
             btCheckVol.Click += btCheckVol_Click;
             // 
@@ -602,7 +603,7 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(524, 568);
+            ClientSize = new Size(498, 568);
             Controls.Add(btCheckVol);
             Controls.Add(btnSettings);
             Controls.Add(groupBox3);
