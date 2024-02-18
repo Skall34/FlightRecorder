@@ -1,0 +1,36 @@
+name: Build and Publish Release
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name if needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'  # Adjust the version if needed
+
+    - name: Build the project
+      run: dotnet build --configuration Release
+
+    - name: Publish the project
+      run: dotnet publish --configuration Release --output publish_output
+
+    - name: Create zip archive
+      run: |
+        cd publish_output
+        zip -r ../app_release.zip .
+
+    - name: Upload zip artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: app_release
+        path: app_release.zip
