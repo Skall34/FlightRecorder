@@ -22,7 +22,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Publish the project
-      run: dotnet publish --configuration Release --output publish_output
+      run: dotnet publish --configuration Release --output publish_output /p:EnableWindowsTargeting=true
 
     - name: Create zip archive
       run: |
