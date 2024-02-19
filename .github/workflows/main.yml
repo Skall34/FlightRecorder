@@ -2,6 +2,9 @@ name: Build and Publish Release
 
 on:
   push:
+    paths-ignore:
+      - 'docd/**'
+      - '.github/**'     
     branches:
       - main  # Adjust the branch name if needed
 
