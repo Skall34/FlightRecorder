@@ -20,16 +20,14 @@ jobs:
 
     - name: Get the version from tag
       id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      run: echo ::set-output name=VERSION::${{env.GITHUB_REF_NAME}}
 
     - name: set version in assembly
-      id: set-assembly-version
-      uses: secondbounce/assemblyinfo-update@v2
+      id: update
+      uses: vers-one/dotnet-project-version-updater@v1.4
       with:
-        version: '{{steps.get_version.outputs.VERSION}}'
-        directory: '.\'
-        filename: 'FlightRecorder.csproj'
-        recursive: false
+        file: "src/FlightRecorder.csproj"
+        version: ${{env.GITHUB_REF_NAME}}
 
     - name: Build the project
       run: dotnet build --configuration Release
@@ -40,5 +38,5 @@ jobs:
     - name: Upload zip artifact
       uses: actions/upload-artifact@v2
       with:
-        name: flight_recorder{{steps.get_version.outputs.VERSION}}
+        name: flight_recorder_${{env.GITHUB_REF_NAME}}
         path: publish_output/*
