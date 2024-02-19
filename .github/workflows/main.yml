@@ -21,6 +21,10 @@ jobs:
     - name: Build the project
       run: dotnet build --configuration Release
 
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
+
     - name: Publish the project
       run: dotnet publish --configuration Release --output publish_output /p:EnableWindowsTargeting=true
 
