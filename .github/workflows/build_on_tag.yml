@@ -23,13 +23,13 @@ jobs:
       run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
     - name: set version in assembly
-        id: set-assembly-version
-        uses: secondbounce/assemblyinfo-update@v2
-        with:
-          version: '{{steps.get_version.outputs.VERSION}}'
-          directory: '.\'
-          filename: 'FlightRecorder.csproj'
-          recursive: false
+      id: set-assembly-version
+      uses: secondbounce/assemblyinfo-update@v2
+      with:
+        version: '{{steps.get_version.outputs.VERSION}}'
+        directory: '.\'
+        filename: 'FlightRecorder.csproj'
+        recursive: false
 
     - name: Build the project
       run: dotnet build --configuration Release
