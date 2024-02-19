@@ -13,6 +13,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Extract version information
+      run: echo "::set-env name=APP_VERSION::$(grep -oP '<AssemblyVersion>\K[^<]+' FlightRecorder.csproj)"
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -36,5 +39,5 @@ jobs:
     - name: Upload zip artifact
       uses: actions/upload-artifact@v2
       with:
-        name: flight_recorder
+        name: flight_recorder_{{env.APP_VERSION}}
         path: publish_output/*
