@@ -23,7 +23,7 @@ namespace FlightRecorder
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            if (settingsMgr != null)
+            if ((settingsMgr != null)&&(null != settingsMgr.allSettings))
             {
                 tbCallsign.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.CALLSIGNENTRY);
                 tbImmat.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.AIRCRAFTENTRY);
@@ -54,7 +54,7 @@ namespace FlightRecorder
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (settingsMgr != null)
+            if (settingsMgr.allSettings != null)
             {
                 settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.CALLSIGNENTRY, tbCallsign.Text);
                 settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.AIRCRAFTENTRY, tbImmat.Text);
@@ -163,10 +163,14 @@ namespace FlightRecorder
             tbNewImmat.ResetText();
 
             string model = cbAircrafts.Text;
-            foreach (string immat in settingsMgr.allSettings.fleet.Immats[model])
+            if (settingsMgr.allSettings != null)
             {
-                lbImmats.Items.Add(immat);
+                foreach (string immat in settingsMgr.allSettings.fleet.Immats[model])
+                {
+                    lbImmats.Items.Add(immat);
+                }
             }
+
         }
 
         private void cbAircrafts_TextChanged(object sender, EventArgs e)
@@ -181,27 +185,36 @@ namespace FlightRecorder
             cbAircrafts.ResetText();
             lbImmats.Items.Clear();
             //refill the aircraft list
-            foreach (string model in settingsMgr.allSettings.fleet.AircraftModels)
+            if (settingsMgr.allSettings != null)
             {
-                cbAircrafts.Items.Add(model);
+                foreach (string model in settingsMgr.allSettings.fleet.AircraftModels)
+                {
+                    cbAircrafts.Items.Add(model);
+                }
+                //restore selected airplane model
+                cbAircrafts.SelectedIndex = index;
             }
-            //restore selected airplane model
-            cbAircrafts.SelectedIndex = index;
         }
 
         private void btnAddAircraft_Click(object sender, EventArgs e)
         {
-            settingsMgr.allSettings.fleet.addAircraftModel(cbAircrafts.Text);
-            refreshFleetLists();
-            btnAddAircraft.Enabled=false;
+            if (settingsMgr.allSettings != null)
+            {
+                settingsMgr.allSettings.fleet.addAircraftModel(cbAircrafts.Text);
+                refreshFleetLists();
+                btnAddAircraft.Enabled = false;
+            }
         }
 
         private void btnAddImmat_Click(object sender, EventArgs e)
         {
-            string model = cbAircrafts.Text;
-            settingsMgr.allSettings.fleet.addImmat(cbAircrafts.Text, tbNewImmat.Text);
-            refreshFleetLists();
-            btnAddImmat.Enabled = false;
+            if (null != settingsMgr.allSettings)
+            {
+                string model = cbAircrafts.Text;
+                settingsMgr.allSettings.fleet.addImmat(cbAircrafts.Text, tbNewImmat.Text);
+                refreshFleetLists();
+                btnAddImmat.Enabled = false;
+            }
         }
 
         private void tbNewImmat_TextChanged(object sender, EventArgs e)

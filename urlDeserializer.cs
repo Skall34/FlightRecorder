@@ -31,10 +31,19 @@ namespace FlightRecorder
                     {
                         string jsonString = await response.Content.ReadAsStringAsync();
                         // Désérialisation du JSON
-                        DataObject dataObject = JsonConvert.DeserializeObject<DataObject>(jsonString);
-                        foreach (DataItem item in dataObject.Data)
+                        DataObject? dataObject = JsonConvert.DeserializeObject<DataObject>(jsonString);
+                        if (null != dataObject)
                         {
-                            immatriculations.Add(item.Immat);
+                            if (null != dataObject.Data)
+                            {
+                                foreach (DataItem item in dataObject.Data)
+                                {
+                                    if ((null != item) && (null != item.Immat))
+                                    {
+                                        immatriculations.Add(item.Immat);
+                                    }
+                                }
+                            }
                         }
                     }
                     else
@@ -63,13 +72,13 @@ namespace FlightRecorder
     // Classe pour représenter la structure du JSON
     public class DataObject
     {
-        public List<DataItem> Data { get; set; }
+        public List<DataItem>? Data { get; set; }
     }
 
     public class DataItem
     {
-        public string Immat { get; set; }
-        public string Label { get; set; }
-        public string Lieu { get; set; }
+        public string? Immat { get; set; }
+        public string? Label { get; set; }
+        public string? Lieu { get; set; }
     }
 }

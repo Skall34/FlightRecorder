@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,16 +21,16 @@ namespace FlightRecorder
     {
 
         //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
-        FsPositionSnapshot _currentPosition;
-        FsPositionSnapshot _startPosition;
-        FsPositionSnapshot _endPosition;
+        FsPositionSnapshot? _currentPosition;
+        FsPositionSnapshot? _startPosition;
+        FsPositionSnapshot? _endPosition;
 
         private bool atLeastOneEngineFiring;
         private double _startFuel;
         private double _endFuel;
         private string commentaires;
-        private int noteDuVol;
-        private int pax;
+        //private int noteDuVol;
+        //private int pax;
 
         private DateTime _startTime;
         private DateTime _endTime;
@@ -57,10 +58,19 @@ namespace FlightRecorder
         private int refillQtty;
         private double maxFuelCapacity;
 
-        private bool modifiedFuel;
+        //private bool modifiedFuel;
         public Form1()
         {
             InitializeComponent();
+
+            // Get the version information of your application
+            Assembly? assembly = Assembly.GetEntryAssembly();
+            if (null != assembly)
+            {
+                Version? version = assembly.GetName().Version;
+                // Set the form's title to include the version number
+                this.Text = $"FlightRecorder - Version {version}";
+            }
 
             //load the settings
             settingsMgr = new SettingsMgr("settings.json");
@@ -82,7 +92,7 @@ namespace FlightRecorder
             _startFuel = 0;
             _endFuel = 0;
             commentaires = string.Empty;
-            noteDuVol = 5;
+            //noteDuVol = 5;
             onGround = true;
 
             touchDownVSpeed = 0;
@@ -97,7 +107,7 @@ namespace FlightRecorder
             stallWarning = false;
 
             modifiedPayload = false;
-            modifiedFuel = false;
+            //modifiedFuel = false;
             maxFuelCapacity = 0;
 
             //recupere le callsign qui a été sauvegardé en settings de l'application
@@ -114,30 +124,38 @@ namespace FlightRecorder
 
         private void readStaticValues()
         {
-            //commence à lire qq variables du simu : fuel & cargo, immat avion...
-            FuelQtty = _simData.getFuelWeight();
-            maxFuelCapacity = _simData.getMaxFuel();
+            if (null != _simData)
+            {
+                //commence à lire qq variables du simu : fuel & cargo, immat avion...
+                FuelQtty = _simData.getFuelWeight();
+                maxFuelCapacity = _simData.getMaxFuel();
 
-            this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
-            this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
+                this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
+                this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
 
-            //recupere l'emplacement courant :
-            _currentPosition = _simData.getPosition(); ;
+                //recupere l'emplacement courant :
+                _currentPosition = _simData.getPosition(); ;
 
-            double lat = _currentPosition.Location.Latitude.DecimalDegrees;
-            double lon = _currentPosition.Location.Longitude.DecimalDegrees;
+                double lat = _currentPosition.Location.Latitude.DecimalDegrees;
+                double lon = _currentPosition.Location.Longitude.DecimalDegrees;
 
-            airport localAirport = airportsDatabase.FindClosestAirport(lat, lon);
-            string startAirportname = localAirport.Name;
-            tbCurrentPosition.Text = startAirportname;
-            tbCurrentIata.Text = localAirport.Ident;
+                if (null != airportsDatabase)
+                {
+                    Airport? localAirport = airportsDatabase.FindClosestAirport(lat, lon);
+                    if (localAirport != null)
+                    {
+                        string startAirportname = localAirport.Name;
+                        tbCurrentPosition.Text = startAirportname;
+                        tbCurrentIata.Text = localAirport.Ident;
+                    }
+                }
 
-            //recupere le type d'avion donné par le simu.
-            this.tbDesignationAvion.Text = _simData.getAircraftType();
-            //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
-            // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
-            // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
-
+                //recupere le type d'avion donné par le simu.
+                this.tbDesignationAvion.Text = _simData.getAircraftType();
+                //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
+                // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
+                // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
+            }
         }
 
         // appelé chaque 1s par le timer de connection
@@ -267,10 +285,13 @@ namespace FlightRecorder
                     double lat = _startPosition.Location.Latitude.DecimalDegrees;
                     double lon = _startPosition.Location.Longitude.DecimalDegrees;
 
-                    airport localAirport = airportsDatabase.FindClosestAirport(lat, lon);
-                    string startAirportname = localAirport.Name;
-                    tbStartPosition.Text = startAirportname;
-                    tbStartIata.Text = localAirport.Ident;
+                    Airport? localAirport = airportsDatabase.FindClosestAirport(lat, lon);
+                    if (localAirport != null)
+                    {
+                        string startAirportname = localAirport.Name;
+                        tbStartPosition.Text = startAirportname;
+                        tbStartIata.Text = localAirport.Ident;
+                    }
 
                     _startFuel = _simData.getFuelWeight();
                     _startTime = DateTime.Now;
@@ -287,10 +308,13 @@ namespace FlightRecorder
                     double lat = _endPosition.Location.Latitude.DecimalDegrees;
                     double lon = _endPosition.Location.Longitude.DecimalDegrees;
 
-                    airport localAirport = airportsDatabase.FindClosestAirport(lat, lon);
-                    string endAirportname = localAirport.Name;
-                    tbEndPosition.Text = endAirportname;
-                    tbEndIata.Text = localAirport.Ident;
+                    Airport? localAirport = airportsDatabase.FindClosestAirport(lat, lon);
+                    if (localAirport != null)
+                    {
+                        string endAirportname = localAirport.Name;
+                        tbEndPosition.Text = endAirportname;
+                        tbEndIata.Text = localAirport.Ident;
+                    }
 
                     _endFuel = _simData.getFuelWeight(); ;
                     _endTime = DateTime.Now;
@@ -373,45 +397,47 @@ namespace FlightRecorder
         {
             //crée un dictionnaire des valeurs à envoyer
             Dictionary<string, string> values = new Dictionary<string, string>();
-
-            GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
-            //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.875291795=callSign&entry.354262163=lfmt&entry.1974689794=300&entry.1603698953=22:22&entry.864236608=LFMT&entry.789000913=200&entry.1547789562=23:23&entry.941405603=0&entry.704113444=300
-            //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
-            //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
-
-            //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
-
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("startTime_entry"), tbStartTime.Text);
-
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("endIata_entry"), tbEndIata.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("endFuel_entry"), tbEndFuel.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("endTime_entry"), tbEndTime.Text);
-
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("cargo_entry"), tbCargo.Text);
-
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
-            values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
-
-            //attribute les valeurs à l'object gerant la requete.
-            gform.SetFieldValues(values);
-
-            //envoie la requete.
-            Task<HttpResponseMessage> request = gform.SubmitAsync();
-            HttpResponseMessage response = await request;
-            if (!response.IsSuccessStatusCode)
+            if (settingsMgr.allSettings != null)
             {
-                //en, cas d'erreur, affiche une popup avec le message
-                MessageBox.Show("Error '" + response.ReasonPhrase + "' while sending flight data.");
-            }
-            else
-            {
-                //si tout va bien...
-                this.lblConnectionStatus.Text = "Flight data saved";
-                this.lblConnectionStatus.ForeColor = Color.Green;
+                GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
+                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.875291795=callSign&entry.354262163=lfmt&entry.1974689794=300&entry.1603698953=22:22&entry.864236608=LFMT&entry.789000913=200&entry.1547789562=23:23&entry.941405603=0&entry.704113444=300
+                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
+                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
+
+                //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
+
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("startTime_entry"), tbStartTime.Text);
+
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("endIata_entry"), tbEndIata.Text);
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("endFuel_entry"), tbEndFuel.Text);
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("endTime_entry"), tbEndTime.Text);
+
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("cargo_entry"), tbCargo.Text);
+
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
+
+                //attribute les valeurs à l'object gerant la requete.
+                gform.SetFieldValues(values);
+
+                //envoie la requete.
+                Task<HttpResponseMessage> request = gform.SubmitAsync();
+                HttpResponseMessage response = await request;
+                if (!response.IsSuccessStatusCode)
+                {
+                    //en, cas d'erreur, affiche une popup avec le message
+                    MessageBox.Show("Error '" + response.ReasonPhrase + "' while sending flight data.");
+                }
+                else
+                {
+                    //si tout va bien...
+                    this.lblConnectionStatus.Text = "Flight data saved";
+                    this.lblConnectionStatus.ForeColor = Color.Green;
+                }
             }
         }
 
@@ -430,11 +456,14 @@ namespace FlightRecorder
         {
             try
             {
-                // Navigate to a URL.
-                System.Diagnostics.Process.Start(new ProcessStartInfo(settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.GFORMURL) + "/viewform") { UseShellExecute = true });
+                if (settingsMgr.allSettings != null)
+                {
+                    // Navigate to a URL.
+                    System.Diagnostics.Process.Start(new ProcessStartInfo(settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.GFORMURL) + "/viewform") { UseShellExecute = true });
 
-                // Specify that the link was visited.
-                this.llManualSave.LinkVisited = true;
+                    // Specify that the link was visited.
+                    this.llManualSave.LinkVisited = true;
+                }
             }
             catch (Exception ex)
             {
@@ -466,7 +495,7 @@ namespace FlightRecorder
                     this.lblConnectionStatus.Text = "New payload send to simulator";
                     this.lblConnectionStatus.ForeColor = Color.Green;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //do nothing
                 }
@@ -481,7 +510,7 @@ namespace FlightRecorder
         private void tbImmat_MouseHover(object sender, EventArgs e)
         {
             toolTip1.ToolTipTitle = "Set plane immat.";
-            string tip = toolTip1.GetToolTip(this);
+            string? tip = toolTip1.GetToolTip(this);
             toolTip1.Show(tip, this, 5000);
         }
 
@@ -555,13 +584,13 @@ namespace FlightRecorder
 
         private void tbCargo_TextChanged(object sender, EventArgs e)
         {
-            modifiedPayload = true;
+            //modifiedPayload = true;
             btnRefresh.Enabled = true;
         }
 
         private void tbCurrentFuel_TextChanged(object sender, EventArgs e)
         {
-            modifiedFuel = true;
+            //modifiedFuel = true;
             btnRefresh.Enabled = true;
         }
 
@@ -618,8 +647,8 @@ namespace FlightRecorder
             string erreur = "";
             string callsign = "";
             string aircraftImmat = "";
-            int fret = 0;
-            int pax = 0;
+            //int fret = 0;
+            //int pax = 0;
 
             aircraftImmat = cbImmat.Text;
             callsign = tbCallsign.Text;

@@ -77,14 +77,14 @@ namespace FlightRecorder
         private Offset<string> tailNumber = new Offset<string>(0x313C, 12);
         private Offset<string> airlineName = new Offset<string>(0x3148, 24);
 
-        private PayloadServices payloadServices;
+        private PayloadServices? payloadServices;
         private PlayerLocationInfo locationInfos = new PlayerLocationInfo();
 
         //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
-        FsPositionSnapshot _startPosition;
-        FsPositionSnapshot _endPosition;
+        //FsPositionSnapshot _startPosition;
+        //FsPositionSnapshot _endPosition;
 
-        private bool atLeastOneEngineFiring;
+        //private bool atLeastOneEngineFiring;
 
         private bool _isConnected;
         public bool isConnected { get {
@@ -115,8 +115,11 @@ namespace FlightRecorder
             try
             {
                 FSUIPCConnection.Process();
-                payloadServices.RefreshData();
-            }catch(Exception ex)
+                if (null != payloadServices)
+                {
+                    payloadServices.RefreshData();
+                }
+            }catch(Exception)
             {
                 _isConnected=false;
             }
@@ -134,28 +137,41 @@ namespace FlightRecorder
 
         public void setPayload(double newWheight)
         {
-            List<FsPayloadStation> stations = payloadServices.PayloadStations;
-            double currentPayload = payloadServices.PayloadWeightKgs;
+            if (null != payloadServices)
+            {
+                List<FsPayloadStation> stations = payloadServices.PayloadStations;
+                double currentPayload = payloadServices.PayloadWeightKgs;
 
-            int nbPayloads = payloadServices.PayloadStations.Count;
-            foreach(FsPayloadStation s in  stations)
+                int nbPayloads = payloadServices.PayloadStations.Count;
+                foreach (FsPayloadStation s in stations)
                 {
-                //compute the % of this payload regarding the rest : 
-                double percent = s.WeightKgs / currentPayload;
-                s.WeightKgs = percent * newWheight;
+                    //compute the % of this payload regarding the rest : 
+                    double percent = s.WeightKgs / currentPayload;
+                    s.WeightKgs = percent * newWheight;
                 }
-            payloadServices.WriteChanges();
+                payloadServices.WriteChanges();
+            }
         }
 
         public void setFuelWheight(double newFuelWeight)
         {
-            payloadServices.LoadFuelKgs(newFuelWeight, true);
-            payloadServices.WriteChanges();
+            if (null != payloadServices)
+            {
+                payloadServices.LoadFuelKgs(newFuelWeight, true);
+                payloadServices.WriteChanges();
+            }
         }
 
         public double getMaxFuel()
         {
-            return payloadServices.FuelCapacityKgs;
+            if (null != payloadServices)
+            {
+                return payloadServices.FuelCapacityKgs;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public short getOnground() => onGround.Value;
@@ -163,7 +179,10 @@ namespace FlightRecorder
         public Double getCargoWeight()
         {
             double result = 0;
-            result = payloadServices.PayloadWeightKgs;
+            if (null != payloadServices)
+            {
+                result = payloadServices.PayloadWeightKgs;
+            }
             return result;
         }
 
@@ -232,7 +251,17 @@ namespace FlightRecorder
 
         public string getTailNumber() => tailNumber.Value;
 
-        public double getPayloadWheight() => payloadServices.PayloadWeightKgs;
+        public double getPayloadWheight()
+        {
+            if (payloadServices != null)
+            {
+                return payloadServices.PayloadWeightKgs;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
 
     }

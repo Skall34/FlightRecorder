@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FlightRecorder
 {
 
-    public class airport
+    public class Airport
     {
         public string Name { get; set; }
         public string Ident { get; set; }
@@ -21,7 +21,7 @@ namespace FlightRecorder
         //"continent","iso_country","iso_region","municipality","scheduled_service",
         //"gps_code","iata_code","local_code","home_link","wikipedia_link","keywords"
 
-        public airport(uint id, string ident, string type, string name,  double latitude, double longitude,string _code)
+        public Airport(uint id, string ident, string type, string name,  double latitude, double longitude,string _code)
         {
             Name = name;
             Ident = ident;
@@ -54,27 +54,27 @@ namespace FlightRecorder
     }
     public class airportsMgr
     {
-        private List<airport> airports;
+        private List<Airport> airports;
 
-        public IReadOnlyList<airport> Airports => airports;
+        public IReadOnlyList<Airport> Airports => airports;
 
         public airportsMgr()
         {
-            airports = new List<airport>();
+            airports = new List<Airport>();
         }
 
         public airportsMgr(string filePath)
         {
-            airports = new List<airport>();
+            airports = new List<Airport>();
             LoadAirportsFromCsv(filePath);
         }
 
-        public bool addAirport(airport newAirport)
+        public bool addAirport(Airport newAirport)
         {
             bool result = false;
             if (airports.Count > 0)
             {
-                airport closest = FindClosestAirport(newAirport.Latitude, newAirport.Longitude);
+                Airport? closest = FindClosestAirport(newAirport.Latitude, newAirport.Longitude);
                 if (closest != null)
                 {
                     double dist = closest.DistanceTo(newAirport.Latitude, newAirport.Longitude);
@@ -93,9 +93,9 @@ namespace FlightRecorder
             return result;
         }
 
-        public airport FindClosestAirport(double targetLatitude, double targetLongitude)
+        public Airport? FindClosestAirport(double targetLatitude, double targetLongitude)
         {
-            airport closestAirport = null;
+            Airport? closestAirport=null;
             double shortestDistance = double.MaxValue;
 
             foreach (var airport in airports)
@@ -107,7 +107,6 @@ namespace FlightRecorder
                     closestAirport = airport;
                 }
             }
-
             return closestAirport;
         }
 
@@ -124,23 +123,26 @@ namespace FlightRecorder
                     {
                         try
                         {
-                            string line = reader.ReadLine();
-                            var values = line.Split(',');
-
-                            if (values.Length >= 4)
+                            string? line = reader.ReadLine();
+                            if (null != line)
                             {
-                                //"id","ident","type","name","latitude_deg","longitude_deg","elevation_ft",
-                                //"continent","iso_country","iso_region","municipality","scheduled_service",
-                                //"gps_code","iata_code","local_code","home_link","wikipedia_link","keywords"
-                                uint id = uint.Parse(values[0]);
-                                string ident = values[1]; ;
-                                string airportType = values[2];
-                                string name= values[3];
-                                double latitude_deg = double.Parse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture);
-                                double longitude_deg = double.Parse(values[5], NumberStyles.Any, CultureInfo.InvariantCulture);
-                                string iata_code = values[14];
+                                var values = line.Split(',');
 
-                                    airports.Add(new airport(id,ident,airportType,name,latitude_deg,longitude_deg,iata_code));
+                                if (values.Length >= 4)
+                                {
+                                    //"id","ident","type","name","latitude_deg","longitude_deg","elevation_ft",
+                                    //"continent","iso_country","iso_region","municipality","scheduled_service",
+                                    //"gps_code","iata_code","local_code","home_link","wikipedia_link","keywords"
+                                    uint id = uint.Parse(values[0]);
+                                    string ident = values[1]; ;
+                                    string airportType = values[2];
+                                    string name = values[3];
+                                    double latitude_deg = double.Parse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture);
+                                    double longitude_deg = double.Parse(values[5], NumberStyles.Any, CultureInfo.InvariantCulture);
+                                    string iata_code = values[14];
+
+                                    airports.Add(new Airport(id, ident, airportType, name, latitude_deg, longitude_deg, iata_code));
+                                }
                             }
                         }catch(Exception ex)
                         {

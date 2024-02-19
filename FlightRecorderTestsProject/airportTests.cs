@@ -16,8 +16,8 @@ namespace FlightRecorder.Tests
         [TestMethod()]
         public void DistanceToTest()
         {
-            airport lfmt = new airport(0, "LFMT", "airport", "Montpellier", 43.57619857788086, 3.96301007270813, "LFMT");
-            airport lfng = new airport(0, "LFNG", "airport", "CAndillargues", 43.610298, 4.07028, "LFMT");
+            Airport lfmt = new Airport(0, "LFMT", "airport", "Montpellier", 43.57619857788086, 3.96301007270813, "LFMT");
+            Airport lfng = new Airport(0, "LFNG", "airport", "CAndillargues", 43.610298, 4.07028, "LFMT");
             double distance = lfng.DistanceTo(lfmt.Latitude, lfmt.Longitude);
 
             //a distance is always positive
@@ -30,8 +30,8 @@ namespace FlightRecorder.Tests
         public void addAirportTest()
         {
             airportsMgr mgr = new airportsMgr();
-            airport lfmt = new airport(0, "LFMT", "airport", "Montpellier", 43.57619857788086, 3.96301007270813, "LFMT");
-            airport lfng = new airport(0, "LFNG", "airport", "CAndillargues", 43.610298, 4.07028, "LFMT");
+            Airport lfmt = new Airport(0, "LFMT", "airport", "Montpellier", 43.57619857788086, 3.96301007270813, "LFMT");
+            Airport lfng = new Airport(0, "LFNG", "airport", "CAndillargues", 43.610298, 4.07028, "LFMT");
 
             mgr.addAirport(lfmt);
             mgr.addAirport(lfng);
@@ -43,15 +43,16 @@ namespace FlightRecorder.Tests
         public void FindClosestAirportTest()
         {
             airportsMgr mgr = new airportsMgr();
-            airport lfmt = new airport(0, "LFMT", "airport", "Montpellier", 43.57619857788086, 3.96301007270813, "LFMT");
-            airport lfng = new airport(0, "LFNG", "airport", "CAndillargues", 43.610298, 4.07028, "LFMT");
-            airport kjfk = new airport(0, "KJFK", "airport", "New-york JFK", 40.639447, -73.779317, "KJFK");
+            Airport lfmt = new Airport(0, "LFMT", "airport", "Montpellier", 43.57619857788086, 3.96301007270813, "LFMT");
+            Airport lfng = new Airport(0, "LFNG", "airport", "CAndillargues", 43.610298, 4.07028, "LFMT");
+            Airport kjfk = new Airport(0, "KJFK", "airport", "New-york JFK", 40.639447, -73.779317, "KJFK");
 
             mgr.addAirport(lfmt); //montpellier
             mgr.addAirport(lfng); //candillargues
             mgr.addAirport(kjfk); //new york
 
-            airport closest = mgr.FindClosestAirport(43.58, 3.97);
+            Airport? closest = mgr.FindClosestAirport(43.58, 3.97);
+            Assert.IsNotNull(closest);
             Assert.IsTrue(closest.Ident == "LFMT");
         }
 

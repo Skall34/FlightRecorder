@@ -30,8 +30,8 @@ public class SettingsMgr
     public const string COMMENTENTRY = "comment_entry";
 
         [JsonInclude]
-    private Settings _settings;
-    public Settings allSettings
+    private Settings? _settings;
+    public Settings? allSettings
     {
         get
         {
@@ -43,15 +43,20 @@ public class SettingsMgr
     public SettingsMgr(string settingsFilePath)
     {
         _settingsFilePath = settingsFilePath;
-        LoadSettings();
+        if (!LoadSettings())
+        {
+            _settings=new Settings();
+        }
     }
 
-    public void LoadSettings()
+    public bool LoadSettings()
     {
+        bool result=false;
         try
         {
             string json = File.ReadAllText(_settingsFilePath);
             _settings = JsonSerializer.Deserialize<Settings>(json);
+            result = true;
         }
         catch (Exception ex)
         {
@@ -59,6 +64,7 @@ public class SettingsMgr
             Console.WriteLine($"Error loading settings: {ex.Message}");
             _settings = new Settings();
         }
+        return result;
     }
 
     public void SaveSettings()
