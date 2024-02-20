@@ -10,8 +10,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: olegtarasov/get-tag@v2.1.3
-      id: tagName
        
 #    - name: Checkout repository
 #      uses: actions/checkout@v2
@@ -21,9 +19,16 @@ jobs:
 #      with:
 #        dotnet-version: '8.0.x'  # Adjust the version if needed
 
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+        #workingDirectory: another/path/where/a/git/repo/is/checked/out # Optional alternative working directory
+
     - name: Get the version from tag
       id: get_version
-      run: echo ::set-output name=VERSION::$GIT_TAG_NAME
+      run: echo ::set-output name=VERSION::${{ steps.previoustag.outputs.tag }}
 
 #    - name: set version in assembly
 #      id: update
@@ -42,5 +47,4 @@ jobs:
 #      uses: actions/upload-artifact@v2
 #      with:
 #        name: flight_recorder_${{ env.GITHUB_REF_NAME }}
-
-        path: publish_output/*
+#        path: publish_output/*
