@@ -4,8 +4,8 @@ a simple flight recorder using FSUIPC client library (compatible with x-plane an
 This little tool gets data from the flight sim, and is able to send to to a google sheet, through a google form.
 Thus there is a manual configuration to setup the sheet and the form :
 
-1) USing google forms, create a new form.
-2) Int his form, create all the following questions, all asking for short text answers :
+1) Using google forms, create a new form.
+2) In this form, create all the following questions, all asking for short text answers :
 - Callsign
 - Aircraft immat.
 - Passengers
