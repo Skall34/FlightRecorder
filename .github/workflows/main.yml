@@ -1,4 +1,4 @@
-name: Build and Publish Release
+name: Autobuild & test from code push
 
 on:
   push:
