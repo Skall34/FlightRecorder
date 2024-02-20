@@ -10,33 +10,37 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - uses: olegtarasov/get-tag@v2.1.3
+      id: tagName
+       
+#    - name: Checkout repository
+#      uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.0.x'  # Adjust the version if needed
+#    - name: Setup .NET
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: '8.0.x'  # Adjust the version if needed
 
     - name: Get the version from tag
       id: get_version
-      run: echo ::set-output name=VERSION::${{ env.GITHUB_REF_NAME }}
+      run: echo ::set-output name=VERSION::$GIT_TAG_NAME
 
-    - name: set version in assembly
-      id: update
-      uses: vers-one/dotnet-project-version-updater@v1.4
-      with:
-        file: "FlightRecorder.csproj"
-        version: ${{ env.GITHUB_REF_NAME }}
+#    - name: set version in assembly
+#      id: update
+#      uses: vers-one/dotnet-project-version-updater@v1.4
+#      with:
+#        file: "FlightRecorder.csproj"
+#        version: ${{ env.GITHUB_REF_NAME }}
 
-    - name: Build the project
-      run: dotnet build --configuration Release
+#    - name: Build the project
+#     run: dotnet build --configuration Release
 
-    - name: Publish the project
-      run: dotnet publish --configuration Release --output publish_output
+#    - name: Publish the project
+#      run: dotnet publish --configuration Release --output publish_output
 
-    - name: Upload zip artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: flight_recorder_${{ env.GITHUB_REF_NAME }}
+#    - name: Upload zip artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: flight_recorder_${{ env.GITHUB_REF_NAME }}
+
         path: publish_output/*
