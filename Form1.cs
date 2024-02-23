@@ -2,6 +2,7 @@
 using FSUIPC;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
@@ -10,6 +11,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -92,7 +94,6 @@ namespace FlightRecorder
             _startFuel = 0;
             _endFuel = 0;
             commentaires = string.Empty;
-            //noteDuVol = 5;
             onGround = true;
 
             touchDownVSpeed = 0;
@@ -447,9 +448,12 @@ namespace FlightRecorder
         }
         private async void remplirComboImmat()
         {
-            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=bEeSuJVxxV_KySlbI3IzMSde9gO3Owth8t28VoZDIZsK-6v0oGNRK3GmQsvVvJDpw61oyINkV_Nw9Hv3roqizWl2I9CHah9Km5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnHswp_1Sm4Fg0y_4PQcK8D6PumPKf4Bm_iYoRI_DJL79fweV4bLTId22e8MMsN5FOdmi1x-QJV6d0j4DS1Lp_X4nHzXNnzuIQw&lib=MTPEXfapbdgKnfnHWifDMNT00VIDNQ6M4"; // Remplace URL_DES_DONNÉES par l'URL réelle
-            urlDeserializer dataReader = new urlDeserializer(url);
+            this.Cursor = Cursors.WaitCursor;
+            //string url = "https://script.googleusercontent.com/macros/echo?user_content_key=NN9K80q4DMItlcY5i0U-wsP5olGkVAk5NF6yyIMTJP6WiDL472y2vlJA2VN0xMIC7gihtcOQMY4ggmtLpv8K-jKPwg4mQMnSm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLYUUH9E2W9hFjoXo7AdjsI54QBr3Ofrb8H0p8VLumEjyGFX_ntqaGUjbjeUX4A68rKbZSXz3gQe-4r6utGmt7YkKyyPdSIvZNz9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn"; // Remplace URL_DES_DONNÉES par l'URL réelle
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+            UrlDeserializer dataReader = new UrlDeserializer(url);
             await dataReader.FillComboBoxAsync(cbImmat);
+            this.Cursor = Cursors.Default;
         }
         //ouvre le navigateur par defaut sur le lien dans le form.
         private void llManualSave_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -642,16 +646,37 @@ namespace FlightRecorder
             _simData.setFuelWheight(FuelQtty);
         }
 
-        private void btCheckVol_Click(object sender, EventArgs e)
+        private async void btCheckVol_Click(object sender, EventArgs e)
         {
             string erreur = "";
-            string callsign = "";
-            string aircraftImmat = "";
-            //int fret = 0;
-            //int pax = 0;
+            string callsign = tbCallsign.Text;
+            string aircraftImmat = cbImmat.Text;
+            string ICAOdepart = tbCurrentIata.Text;
+            ICAOdepart = ICAOdepart.Trim('"');
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
 
-            aircraftImmat = cbImmat.Text;
-            callsign = tbCallsign.Text;
+            this.Cursor = Cursors.WaitCursor;
+            UrlDeserializer urlDeserializer = new UrlDeserializer(url);
+
+            // Appel de FetchDataAsync et stockage des valeurs retournées dans deux variables distinctes
+            (List<string> immatriculations, List<string> localisations, List<AirportsFromFic> airports) = await urlDeserializer.FetchDataAsync();
+            this.Cursor = Cursors.Default;
+            if (!immatriculations.Contains(aircraftImmat))
+            {
+                erreur += "• L'immatriculation de l'avion n'est pas valide\n";
+            }
+            else
+            {
+                // Trouver l'avion correspondant à l'immatriculation donnée
+                int index = immatriculations.IndexOf(aircraftImmat);
+                string localisationAvion = localisations[index];
+
+                // Vérifier si la localisation de l'avion correspond à ICAOdepart
+                if (localisationAvion != ICAOdepart)
+                {
+                    erreur += "• La localisation de l'avion ne correspond pas à l'ICAO de départ\n";
+                } 
+            }
 
             if (aircraftImmat == "")
             {
@@ -677,9 +702,8 @@ namespace FlightRecorder
                 }
             }
 
-
             if (erreur == "")
-            { //C'est OK, on dégrise le bouton pour envoyer le vol
+            {
                 btnSubmit.Enabled = true;
             }
             else
@@ -687,6 +711,8 @@ namespace FlightRecorder
                 MessageBox.Show(erreur, "Erreurs de check.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+
 
         private void label11_Click(object sender, EventArgs e)
         {
