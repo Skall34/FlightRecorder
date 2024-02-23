@@ -7,20 +7,19 @@ using System.Windows.Forms;
 
 namespace FlightRecorder
 {
-    public class UrlDeserializer
+    
+    public class urlDeserializer
     {
         private readonly string _url;
 
-        public UrlDeserializer(string url)
+        public urlDeserializer(string url)
         {
             _url = url;
         }
 
-        public async Task<(List<string>, List<string>, List<AirportsFromFic>)> FetchDataAsync()
+        public async Task<List<string>> FetchDataAsync()
         {
             List<string> immatriculations = new List<string>();
-            List<string> localisations = new List<string>();
-            List<AirportsFromFic> data2Items = new List<AirportsFromFic>();
 
             using (HttpClient client = new HttpClient())
             {
@@ -31,48 +30,19 @@ namespace FlightRecorder
                     if (response.IsSuccessStatusCode)
                     {
                         string jsonString = await response.Content.ReadAsStringAsync();
-
                         // Désérialisation du JSON
-                        var data = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(jsonString);
-
-                        foreach (var dataList in data.Values)
+                        DataObject? dataObject = JsonConvert.DeserializeObject<DataObject>(jsonString);
+                        if (null != dataObject)
                         {
-                            foreach (var item in dataList)
+                            if (null != dataObject.Data)
                             {
-                                if (item.TryGetValue("Immat", out string immat) && !string.IsNullOrEmpty(immat))
+                                foreach (DataItem item in dataObject.Data)
                                 {
-                                    immatriculations.Add(immat);
+                                    if ((null != item) && (null != item.Immat))
+                                    {
+                                        immatriculations.Add(item.Immat);
+                                    }
                                 }
-                                if (item.TryGetValue("Localisation", out string localisation) && !string.IsNullOrEmpty(localisation))
-                                {
-                                    localisations.Add(localisation);
-                                }
-                            }
-                        }
-
-                        if (data.TryGetValue("data2", out var data2))
-                        {
-                            foreach (var item in data2)
-                            {
-                                AirportsFromFic data2Item = new AirportsFromFic
-                                {
-                                    ICAO = item["ICAO"],
-                                    Type = item["type"],
-                                    Name = item["name"],
-                                    Municipality = item["municipality"],
-                                    LatitudeDeg = double.Parse(item["latitude_deg"]),
-                                    LongitudeDeg = double.Parse(item["longitude_deg"]),
-                                    ElevationFt = int.Parse(item["elevation_ft"]),
-                                    Piste = item["Piste"],
-                                    LongueurDePiste = item["Longueur de piste"],
-                                    TypeDePiste = item["Type de piste"],
-                                    Observations = item["Observations"],
-                                    WikipediaLink = item["wikipedia_link"],
-                                    Fret = int.Parse(item["fret"]),
-                                    Pax = int.Parse(item["pax"])
-                                };
-
-                                data2Items.Add(data2Item);
                             }
                         }
                     }
@@ -89,16 +59,26 @@ namespace FlightRecorder
                 }
             }
 
-            return (immatriculations, localisations, data2Items);
+            return immatriculations;
         }
-
-
 
         public async Task FillComboBoxAsync(ComboBox comboBox)
         {
-            (List<string> immatriculations, _, _) = await FetchDataAsync();
+            List<string> immatriculations = await FetchDataAsync();
             comboBox.Items.AddRange(immatriculations.ToArray());
         }
+    }
 
+    // Classe pour représenter la structure du JSON
+    public class DataObject
+    {
+        public List<DataItem>? Data { get; set; }
+    }
+
+    public class DataItem
+    {
+        public string? Immat { get; set; }
+        public string? Label { get; set; }
+        public string? Lieu { get; set; }
     }
 }

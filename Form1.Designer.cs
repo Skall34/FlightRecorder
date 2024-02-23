@@ -571,6 +571,7 @@ namespace FlightRecorder
             // 
             // btnSettings
             // 
+            btnSettings.Enabled = false;
             btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             btnSettings.ForeColor = Color.Gray;
             btnSettings.Location = new Point(11, 509);
