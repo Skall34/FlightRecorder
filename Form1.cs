@@ -186,8 +186,6 @@ namespace FlightRecorder
             }
         }
 
-
-
         // This method runs 2 times per second (every 500ms). This is set on the timerMain properties.
         private void timerMain_Tick(object sender, EventArgs e)
         {
@@ -401,9 +399,19 @@ namespace FlightRecorder
             if (settingsMgr.allSettings != null)
             {
                 GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
-                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.875291795=callSign&entry.354262163=lfmt&entry.1974689794=300&entry.1603698953=22:22&entry.864236608=LFMT&entry.789000913=200&entry.1547789562=23:23&entry.941405603=0&entry.704113444=300
-                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
-                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
+                //https://docs.google.com/forms/d/e/1FAIpQLSenVdLY9xU6jfLqG7jx-JyEqt99qUkiYM4NqvRO7tAWk60FrQ
+                //entry.338426599=SKY0707&
+                //entry.1184138656=F-HXBV&
+                //entry.1206632170=LFLS&
+                //entry.2122251018=120&
+                //entry.866846136=22:00&
+                //entry.1434303808=LFMT&
+                //entry.1246669828=20&
+                //entry.1305759358=23:30&
+                //entry.750791914=2&
+                //entry.2006049487=100&
+                //entry.607952088=commentaires&
+                //entry.652005461=5
 
                 //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
@@ -453,6 +461,7 @@ namespace FlightRecorder
             string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
             UrlDeserializer dataReader = new UrlDeserializer(url);
             await dataReader.FillComboBoxAsync(cbImmat);
+            cbImmat.DisplayMember = "Immat";
             this.Cursor = Cursors.Default;
         }
         //ouvre le navigateur par defaut sur le lien dans le form.
@@ -654,28 +663,50 @@ namespace FlightRecorder
             string ICAOdepart = tbCurrentIata.Text;
             ICAOdepart = ICAOdepart.Trim('"');
             string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
-
+            string tempCargo = tbCargo.Text;
+            float cargo = float.Parse(tempCargo);
             this.Cursor = Cursors.WaitCursor;
             UrlDeserializer urlDeserializer = new UrlDeserializer(url);
 
             // Appel de FetchDataAsync et stockage des valeurs retournées dans deux variables distinctes
-            (List<string> immatriculations, List<string> localisations, List<AirportsFromFic> airports) = await urlDeserializer.FetchDataAsync();
+            (List<Avion> avions, List<Aeroport> airports) = await urlDeserializer.FetchDataAsync();
+
             this.Cursor = Cursors.Default;
-            if (!immatriculations.Contains(aircraftImmat))
+
+            bool immatFound = avions.Any(avion => avion.Immat == aircraftImmat);
+            if (immatFound)
             {
-                erreur += "• L'immatriculation de l'avion n'est pas valide\n";
+                Avion avionFound = avions.Find(avion => avion.Immat == aircraftImmat);
+                if (avionFound != null)
+                {
+                    string localisation = avionFound.Localisation;
+                    Aeroport airport = airports.Find(aeroport => aeroport.Ident == localisation);
+
+                    if (airport != null)
+                    {
+                        if (airport.Ident == ICAOdepart)
+                        {
+                            int fretAirport = airport.Fret;
+                            if (fretAirport >= cargo)
+                            {
+                                //Tout est OK
+                                btnSubmit.Enabled = true;
+                            }
+                            else
+                            {
+                                erreur += "• Il n'y a pas suffisamment de fret disponible à l'aéroport (" + fretAirport + ").\n";
+                            }
+                        }
+                        else
+                        {
+                            erreur += $"• L'avion n'est pas situé à l'aéroport de départ spécifié. Il se trouve à {localisation} \n";
+                        }
+                    }
+                }
             }
             else
             {
-                // Trouver l'avion correspondant à l'immatriculation donnée
-                int index = immatriculations.IndexOf(aircraftImmat);
-                string localisationAvion = localisations[index];
-
-                // Vérifier si la localisation de l'avion correspond à ICAOdepart
-                if (localisationAvion != ICAOdepart)
-                {
-                    erreur += "• La localisation de l'avion ne correspond pas à l'ICAO de départ\n";
-                } 
+                erreur += "• L'immatriculation de l'avion n'existe pas.\n";
             }
 
             if (aircraftImmat == "")
