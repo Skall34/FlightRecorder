@@ -41,10 +41,8 @@
             label8 = new Label();
             label9 = new Label();
             label10 = new Label();
-            label11 = new Label();
             tbCallsign = new TextBox();
             tbImmat = new TextBox();
-            tbPassengers = new TextBox();
             tbCargo = new TextBox();
             tbDepICAO = new TextBox();
             tbDepFuel = new TextBox();
@@ -114,7 +112,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 111);
+            label3.Location = new Point(12, 87);
             label3.Name = "label3";
             label3.Size = new Size(39, 15);
             label3.TabIndex = 4;
@@ -183,15 +181,6 @@
             label10.TabIndex = 11;
             label10.Text = "Arrival_Time";
             // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Location = new Point(12, 85);
-            label11.Name = "label11";
-            label11.Size = new Size(65, 15);
-            label11.TabIndex = 12;
-            label11.Text = "Passengers";
-            // 
             // tbCallsign
             // 
             tbCallsign.Location = new Point(204, 30);
@@ -206,16 +195,9 @@
             tbImmat.Size = new Size(100, 23);
             tbImmat.TabIndex = 14;
             // 
-            // tbPassengers
-            // 
-            tbPassengers.Location = new Point(204, 82);
-            tbPassengers.Name = "tbPassengers";
-            tbPassengers.Size = new Size(100, 23);
-            tbPassengers.TabIndex = 15;
-            // 
             // tbCargo
             // 
-            tbCargo.Location = new Point(204, 108);
+            tbCargo.Location = new Point(204, 84);
             tbCargo.Name = "tbCargo";
             tbCargo.Size = new Size(100, 23);
             tbCargo.TabIndex = 16;
@@ -336,8 +318,6 @@
             tabPage1.Controls.Add(label9);
             tabPage1.Controls.Add(tbCargo);
             tabPage1.Controls.Add(label10);
-            tabPage1.Controls.Add(tbPassengers);
-            tabPage1.Controls.Add(label11);
             tabPage1.Controls.Add(tbImmat);
             tabPage1.Controls.Add(tbCallsign);
             tabPage1.Location = new Point(4, 24);
@@ -350,14 +330,14 @@
             // 
             // tbComment
             // 
-            tbComment.Location = new Point(204, 165);
+            tbComment.Location = new Point(204, 141);
             tbComment.Name = "tbComment";
             tbComment.Size = new Size(100, 23);
             tbComment.TabIndex = 30;
             // 
             // tbFlightNote
             // 
-            tbFlightNote.Location = new Point(204, 136);
+            tbFlightNote.Location = new Point(204, 112);
             tbFlightNote.Name = "tbFlightNote";
             tbFlightNote.Size = new Size(100, 23);
             tbFlightNote.TabIndex = 29;
@@ -365,7 +345,7 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(12, 168);
+            label17.Location = new Point(12, 144);
             label17.Name = "label17";
             label17.Size = new Size(61, 15);
             label17.TabIndex = 28;
@@ -374,7 +354,7 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Location = new Point(12, 142);
+            label16.Location = new Point(12, 118);
             label16.Name = "label16";
             label16.Size = new Size(68, 15);
             label16.TabIndex = 27;
@@ -508,10 +488,8 @@
         private Label label8;
         private Label label9;
         private Label label10;
-        private Label label11;
         private TextBox tbCallsign;
         private TextBox tbImmat;
-        private TextBox tbPassengers;
         private TextBox tbCargo;
         private TextBox tbDepICAO;
         private TextBox tbDepFuel;

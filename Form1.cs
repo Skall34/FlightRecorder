@@ -32,7 +32,6 @@ namespace FlightRecorder
         private double _endFuel;
         private string commentaires;
         //private int noteDuVol;
-        //private int pax;
 
         private DateTime _startTime;
         private DateTime _endTime;
@@ -137,6 +136,8 @@ namespace FlightRecorder
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
 
+
+
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
 
@@ -153,9 +154,6 @@ namespace FlightRecorder
 
                 //recupere le type d'avion donné par le simu.
                 this.tbDesignationAvion.Text = _simData.getAircraftType();
-                //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
-                // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
-                // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
             }
         }
 
@@ -690,6 +688,8 @@ namespace FlightRecorder
                             if (fretAirport >= cargo)
                             {
                                 //Tout est OK
+                                lbCheck.Text = "OK";
+                                lbCheck.ForeColor = Color.Green;
                                 btnSubmit.Enabled = true;
                             }
                             else
@@ -742,8 +742,6 @@ namespace FlightRecorder
                 MessageBox.Show(erreur, "Erreurs de check.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-
 
         private void label11_Click(object sender, EventArgs e)
         {

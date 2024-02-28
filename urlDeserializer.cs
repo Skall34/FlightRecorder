@@ -75,7 +75,6 @@ namespace FlightRecorder
                                     Observations = item.TryGetValue("Observations", out string observations) ? observations : "",
                                     WikipediaLink = item.TryGetValue("wikipedia_link", out string wikiLink) ? wikiLink : "",
                                     Fret = int.TryParse(item.TryGetValue("fret", out string fret) ? fret : "", out int fretValue) ? fretValue : 0,
-                                    Pax = int.TryParse(item.TryGetValue("pax", out string pax) ? pax : "", out int paxValue) ? paxValue : 0
                                 };
 
                                 aeroports.Add(aeroport);

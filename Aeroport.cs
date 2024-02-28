@@ -21,6 +21,6 @@ namespace FlightRecorder
         public string? Observations { get; set; }
         public string? WikipediaLink { get; set; }
         public int Fret { get; set; }
-        public int Pax { get; set; }
+        
     }
 }

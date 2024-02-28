@@ -27,7 +27,7 @@ namespace FlightRecorder
             {
                 tbCallsign.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.CALLSIGNENTRY);
                 tbImmat.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.AIRCRAFTENTRY);
-                tbPassengers.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.PAXENTRY);
+                //tbPassengers.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.PAXENTRY);
                 tbCargo.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.CARGOENTRY);
                 
                 tbDepICAO.Text = settingsMgr.allSettings.gformSettings.getValue(SettingsMgr.STARTIATAENTRY);
@@ -58,7 +58,7 @@ namespace FlightRecorder
             {
                 settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.CALLSIGNENTRY, tbCallsign.Text);
                 settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.AIRCRAFTENTRY, tbImmat.Text);
-                settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.PAXENTRY, tbPassengers.Text);
+                //settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.PAXENTRY, tbPassengers.Text);
                 settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.CARGOENTRY, tbCargo.Text);
                 
                 settingsMgr.allSettings.gformSettings.setValue(SettingsMgr.STARTIATAENTRY, tbDepICAO.Text);
@@ -101,10 +101,10 @@ namespace FlightRecorder
                     {
                         tbImmat.Text = sParam[0];
                     }
-                    if (sParam[1] == "Passengers")
-                    {
-                        tbPassengers.Text = sParam[0];
-                    }
+                    //if (sParam[1] == "Passengers")
+                    //{
+                    //    tbPassengers.Text = sParam[0];
+                    //}
                     if (sParam[1] == "Cargo")
                     {
                         tbCargo.Text = sParam[0];
