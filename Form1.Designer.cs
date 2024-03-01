@@ -656,6 +656,7 @@ namespace FlightRecorder
             groupBox3.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
+            remplirComboImmat();
         }
 
         #endregion
