@@ -59,6 +59,10 @@ namespace FlightRecorder
         private int refillQtty;
         private double maxFuelCapacity;
 
+        private List<Avion> avions;
+        private List<Aeroport> airports;
+
+
         //private bool modifiedFuel;
         public Form1()
         {
@@ -80,8 +84,6 @@ namespace FlightRecorder
             this.lblConnectionStatus.Text = "Loading Airport database";
             airportsDatabase = new airportsMgr("airports.csv");
             this.lblConnectionStatus.Text = "Airport database loaded";
-
-            remplirComboImmat();
 
             //initialise l'object qui sert à capter les données qui viennent du simu
             _simData = new simData();
@@ -122,7 +124,24 @@ namespace FlightRecorder
             this.timerConnection.Start();
         }
 
-        private void readStaticValues()
+        private int GetFretOnAirport(string airportIdent)
+        {
+            if (this.airports != null)
+            {
+                string identAeroportFormate = airportIdent.Trim('"').Replace("\\", "");
+                foreach (var airport in this.airports)
+                {
+                    if (airport.Ident == identAeroportFormate)
+                    {
+                        return airport.Fret;
+                    }
+                }
+            }
+            return 0; // Si aucun aéroport correspondant n'est trouvé, retourne 0
+        }
+
+
+        private async void readStaticValues()
         {
             if (null != _simData)
             {
@@ -135,13 +154,19 @@ namespace FlightRecorder
 
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
-
-
-
+               
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
+                
+                string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+                UrlDeserializer dataReader = new UrlDeserializer(url);
 
-                if (null != airportsDatabase)
+                (List<Avion> avions, List<Aeroport> airports) = await dataReader.FetchDataAsync();
+
+                this.avions = avions;
+                this.airports = airports;
+
+                if (airportsDatabase != null)
                 {
                     Airport? localAirport = airportsDatabase.FindClosestAirport(lat, lon);
                     if (localAirport != null)
@@ -149,6 +174,16 @@ namespace FlightRecorder
                         string startAirportname = localAirport.Name;
                         tbCurrentPosition.Text = startAirportname;
                         tbCurrentIata.Text = localAirport.Ident;
+
+                        //Ca ne marche pas. Airport est null. 
+                        // Je confonds airports et Aeroport
+                        // Utilisez les avions et les aéroports ici
+                        if (this.airports != null)
+                        {
+                            // Votre code pour utiliser les avions et les aéroports
+                            int fretOnLFMT = GetFretOnAirport(tbCurrentIata.Text);
+                            lbFret.Text= "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
+                        }
                     }
                 }
 
@@ -385,7 +420,6 @@ namespace FlightRecorder
             Settings.Default.Save();
             //desactive le bouton de sauvegarde.
             this.btnSaveSettings.Enabled = false;
-
         }
 
 
@@ -455,6 +489,7 @@ namespace FlightRecorder
         private async void remplirComboImmat()
         {
             this.Cursor = Cursors.WaitCursor;
+            lbFret.Text = "Acars initializing ..... please wait";
             //string url = "https://script.googleusercontent.com/macros/echo?user_content_key=NN9K80q4DMItlcY5i0U-wsP5olGkVAk5NF6yyIMTJP6WiDL472y2vlJA2VN0xMIC7gihtcOQMY4ggmtLpv8K-jKPwg4mQMnSm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLYUUH9E2W9hFjoXo7AdjsI54QBr3Ofrb8H0p8VLumEjyGFX_ntqaGUjbjeUX4A68rKbZSXz3gQe-4r6utGmt7YkKyyPdSIvZNz9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn"; // Remplace URL_DES_DONNÉES par l'URL réelle
             string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
             UrlDeserializer dataReader = new UrlDeserializer(url);
@@ -621,7 +656,7 @@ namespace FlightRecorder
                 FuelQtty++;
                 refillQtty++;
                 //accelerate after a few seconds
-                if ((refillQtty > 5)&&(refillTimer.Interval==500))
+                if ((refillQtty > 5) && (refillTimer.Interval == 500))
                 {
                     refillTimer.Interval = 100;
                 }
@@ -639,7 +674,7 @@ namespace FlightRecorder
 
         private void button1_MouseDown(object sender, MouseEventArgs e)
         {
-            if ((!refillTimer.Enabled)&&(FuelQtty<maxFuelCapacity))
+            if ((!refillTimer.Enabled) && (FuelQtty < maxFuelCapacity))
             {
                 refillTimer.Interval = 500;
                 refillQtty = 0;
@@ -668,6 +703,9 @@ namespace FlightRecorder
 
             // Appel de FetchDataAsync et stockage des valeurs retournées dans deux variables distinctes
             (List<Avion> avions, List<Aeroport> airports) = await urlDeserializer.FetchDataAsync();
+            this.avions = avions;
+            this.airports = airports;
+
 
             this.Cursor = Cursors.Default;
 
@@ -757,5 +795,6 @@ namespace FlightRecorder
         {
 
         }
+
     }
 }
