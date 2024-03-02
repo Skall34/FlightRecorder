@@ -63,6 +63,9 @@ namespace FlightRecorder
             btnSubmit = new Button();
             llManualSave = new LinkLabel();
             groupBox1 = new GroupBox();
+            rbMissionAutre = new RadioButton();
+            rbMissionPNG = new RadioButton();
+            rbMissionFR = new RadioButton();
             cbNote = new ComboBox();
             label2 = new Label();
             tbCommentaires = new TextBox();
@@ -93,7 +96,7 @@ namespace FlightRecorder
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 577);
+            statusStrip.Location = new Point(0, 622);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 21, 0);
             statusStrip.Size = new Size(498, 22);
@@ -360,7 +363,7 @@ namespace FlightRecorder
             // 
             btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
-            btnSubmit.Location = new Point(391, 543);
+            btnSubmit.Location = new Point(391, 583);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
@@ -372,7 +375,7 @@ namespace FlightRecorder
             // llManualSave
             // 
             llManualSave.AutoSize = true;
-            llManualSave.Location = new Point(77, 547);
+            llManualSave.Location = new Point(77, 587);
             llManualSave.Margin = new Padding(4, 0, 4, 0);
             llManualSave.Name = "llManualSave";
             llManualSave.Size = new Size(152, 18);
@@ -383,6 +386,9 @@ namespace FlightRecorder
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(rbMissionAutre);
+            groupBox1.Controls.Add(rbMissionPNG);
+            groupBox1.Controls.Add(rbMissionFR);
             groupBox1.Controls.Add(cbNote);
             groupBox1.Controls.Add(tbEndIata);
             groupBox1.Controls.Add(label2);
@@ -402,10 +408,44 @@ namespace FlightRecorder
             groupBox1.Controls.Add(label3);
             groupBox1.Location = new Point(11, 305);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(476, 232);
+            groupBox1.Size = new Size(476, 272);
             groupBox1.TabIndex = 39;
             groupBox1.TabStop = false;
             groupBox1.Text = "Flight summary";
+            // 
+            // rbMissionAutre
+            // 
+            rbMissionAutre.AutoSize = true;
+            rbMissionAutre.Checked = true;
+            rbMissionAutre.Location = new Point(331, 201);
+            rbMissionAutre.Name = "rbMissionAutre";
+            rbMissionAutre.Size = new Size(64, 22);
+            rbMissionAutre.TabIndex = 33;
+            rbMissionAutre.TabStop = true;
+            rbMissionAutre.Text = "Autre";
+            rbMissionAutre.UseVisualStyleBackColor = true;
+            // 
+            // rbMissionPNG
+            // 
+            rbMissionPNG.AutoSize = true;
+            rbMissionPNG.Location = new Point(194, 228);
+            rbMissionPNG.Name = "rbMissionPNG";
+            rbMissionPNG.Size = new Size(118, 22);
+            rbMissionPNG.TabIndex = 32;
+            rbMissionPNG.TabStop = true;
+            rbMissionPNG.Text = "Mission PNG";
+            rbMissionPNG.UseVisualStyleBackColor = true;
+            // 
+            // rbMissionFR
+            // 
+            rbMissionFR.AutoSize = true;
+            rbMissionFR.Location = new Point(194, 200);
+            rbMissionFR.Name = "rbMissionFR";
+            rbMissionFR.Size = new Size(105, 22);
+            rbMissionFR.TabIndex = 31;
+            rbMissionFR.TabStop = true;
+            rbMissionFR.Text = "Mission FR";
+            rbMissionFR.UseVisualStyleBackColor = true;
             // 
             // cbNote
             // 
@@ -418,6 +458,7 @@ namespace FlightRecorder
             cbNote.TabIndex = 17;
             cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
             cbNote.MouseHover += cbNote_MouseHover;
+            cbNote.SelectedItem = 8;
             // 
             // label2
             // 
@@ -586,7 +627,7 @@ namespace FlightRecorder
             btnSettings.Enabled = false;
             btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             btnSettings.ForeColor = Color.Black;
-            btnSettings.Location = new Point(11, 543);
+            btnSettings.Location = new Point(11, 583);
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(54, 29);
             btnSettings.TabIndex = 42;
@@ -602,7 +643,7 @@ namespace FlightRecorder
             // btCheckVol
             // 
             btCheckVol.ForeColor = Color.Black;
-            btCheckVol.Location = new Point(246, 543);
+            btCheckVol.Location = new Point(246, 583);
             btCheckVol.Name = "btCheckVol";
             btCheckVol.Size = new Size(90, 27);
             btCheckVol.TabIndex = 44;
@@ -614,7 +655,7 @@ namespace FlightRecorder
             // 
             lbCheck.AutoSize = true;
             lbCheck.ForeColor = Color.Magenta;
-            lbCheck.Location = new Point(342, 548);
+            lbCheck.Location = new Point(342, 588);
             lbCheck.Name = "lbCheck";
             lbCheck.Size = new Size(42, 18);
             lbCheck.TabIndex = 45;
@@ -625,7 +666,7 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(498, 599);
+            ClientSize = new Size(498, 644);
             Controls.Add(lbCheck);
             Controls.Add(btCheckVol);
             Controls.Add(btnSettings);
@@ -656,7 +697,9 @@ namespace FlightRecorder
             groupBox3.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
+
             remplirComboImmat();
+
         }
 
         #endregion
@@ -712,6 +755,9 @@ namespace FlightRecorder
         private TextBox tbCurrentPosition;
         private Label lbCheck;
         private Label lbFret;
+        private RadioButton rbMissionPNG;
+        private RadioButton rbMissionFR;
+        private RadioButton rbMissionAutre;
     }
 }
 

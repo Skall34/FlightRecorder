@@ -31,6 +31,7 @@ namespace FlightRecorder
         private double _startFuel;
         private double _endFuel;
         private string commentaires;
+        private string mission;
         //private int noteDuVol;
 
         private DateTime _startTime;
