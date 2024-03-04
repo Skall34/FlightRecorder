@@ -155,14 +155,14 @@ namespace FlightRecorder
 
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
-               
+
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
-                
+
                 string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
                 UrlDeserializer dataReader = new UrlDeserializer(url);
 
-                (List<Avion> avions, List<Aeroport> airports) = await dataReader.FetchDataAsync();
+                (List<Avion> avions, List<Aeroport> airports, List<Mission> missions) = await dataReader.FetchDataAsync();
 
                 this.avions = avions;
                 this.airports = airports;
@@ -183,7 +183,7 @@ namespace FlightRecorder
                         {
                             // Votre code pour utiliser les avions et les aéroports
                             int fretOnLFMT = GetFretOnAirport(tbCurrentIata.Text);
-                            lbFret.Text= "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
+                            lbFret.Text = "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
                         }
                     }
                 }
@@ -445,7 +445,7 @@ namespace FlightRecorder
                 //entry.2006049487=100&
                 //entry.607952088=commentaires&
                 //entry.652005461=5
-
+                //entry.240152711=France
                 //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
@@ -462,6 +462,10 @@ namespace FlightRecorder
 
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
+
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("mission_entry"),cbMission.Text);
+
+
 
                 //attribute les valeurs à l'object gerant la requete.
                 gform.SetFieldValues(values);
@@ -491,13 +495,22 @@ namespace FlightRecorder
         {
             this.Cursor = Cursors.WaitCursor;
             lbFret.Text = "Acars initializing ..... please wait";
-            //string url = "https://script.googleusercontent.com/macros/echo?user_content_key=NN9K80q4DMItlcY5i0U-wsP5olGkVAk5NF6yyIMTJP6WiDL472y2vlJA2VN0xMIC7gihtcOQMY4ggmtLpv8K-jKPwg4mQMnSm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLYUUH9E2W9hFjoXo7AdjsI54QBr3Ofrb8H0p8VLumEjyGFX_ntqaGUjbjeUX4A68rKbZSXz3gQe-4r6utGmt7YkKyyPdSIvZNz9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn"; // Remplace URL_DES_DONNÉES par l'URL réelle
             string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
             UrlDeserializer dataReader = new UrlDeserializer(url);
-            await dataReader.FillComboBoxAsync(cbImmat);
+            await dataReader.FillComboBoxImmatAsync(cbImmat);
             cbImmat.DisplayMember = "Immat";
             this.Cursor = Cursors.Default;
         }
+
+        private async void remplirComboMissions()
+        {
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+            UrlDeserializer dataReader = new UrlDeserializer(url);
+            await dataReader.FillComboBoxMissionsAsync(cbMission);
+            cbMission.DisplayMember = "Libelle";
+            this.Cursor = Cursors.Default;
+        }
+
         //ouvre le navigateur par defaut sur le lien dans le form.
         private void llManualSave_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -703,7 +716,7 @@ namespace FlightRecorder
             UrlDeserializer urlDeserializer = new UrlDeserializer(url);
 
             // Appel de FetchDataAsync et stockage des valeurs retournées dans deux variables distinctes
-            (List<Avion> avions, List<Aeroport> airports) = await urlDeserializer.FetchDataAsync();
+            (List<Avion> avions, List<Aeroport> airports,List<Mission> missions) = await urlDeserializer.FetchDataAsync();
             this.avions = avions;
             this.airports = airports;
 

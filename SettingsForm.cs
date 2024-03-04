@@ -141,6 +141,10 @@ namespace FlightRecorder
                     {
                         tbComment.Text = sParam[0];
                     }
+                    if (sParam[1] == "Mission")
+                    {
+                        tbMission.Text = sParam[0];
+                    }
                 }
             }
             string gFormBaseUrl = major_items[0].Substring(0, major_items[0].LastIndexOf('/'));

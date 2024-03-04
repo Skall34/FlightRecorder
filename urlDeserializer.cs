@@ -16,10 +16,11 @@ namespace FlightRecorder
             _url = url;
         }
 
-        public async Task<(List<Avion>, List<Aeroport>)> FetchDataAsync()
+        public async Task<(List<Avion>, List<Aeroport>, List<Mission>)> FetchDataAsync()
         {
             List<Avion> avions = new List<Avion>();
             List<Aeroport> aeroports = new List<Aeroport>();
+            List<Mission> missions = new List<Mission>();
 
             using (HttpClient client = new HttpClient())
             {
@@ -33,9 +34,9 @@ namespace FlightRecorder
                         // Désérialisation du JSON
                         var data = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(jsonString);
 
-                        if (data.TryGetValue("data1", out var data1))
+                        if (data.TryGetValue("flotte", out var flotte))
                         {
-                            foreach (var item in data1)
+                            foreach (var item in flotte)
                             {
                                 Avion avion = new Avion
                                 {
@@ -56,9 +57,9 @@ namespace FlightRecorder
                             }
                         }
 
-                        if (data.TryGetValue("data2", out var data2))
+                        if (data.TryGetValue("airports", out var airports))
                         {
-                            foreach (var item in data2)
+                            foreach (var item in airports)
                             {
                                 Aeroport aeroport = new Aeroport
                                 {
@@ -80,6 +81,21 @@ namespace FlightRecorder
                                 aeroports.Add(aeroport);
                             }
                         }
+
+                        if (data.TryGetValue("missions", out var missionTemp))
+                        {
+                            foreach (var item in missionTemp)
+                            {
+                                Mission mission = new Mission
+                                {
+                                    Libelle = item.TryGetValue("Libelle", out string libMission) ? libMission : "",
+                                    Index = int.TryParse(item.TryGetValue("Index", out string indexMission) ? indexMission : "", out int index) ? index : 0,
+                                };
+
+                                missions.Add(mission);
+                            }
+
+                        }
                     }
                     else
                     {
@@ -94,21 +110,44 @@ namespace FlightRecorder
                 }
             }
 
-            return (avions, aeroports);
+            return (avions, aeroports,missions);
         }
 
 
 
-        public async Task FillComboBoxAsync(ComboBox comboBox)
+        public async Task FillComboBoxImmatAsync(ComboBox comboBox)
         {
-            var (avions, _) = await FetchDataAsync();
+            var (avions, _, _) = await FetchDataAsync();
             if (avions != null)
             {
-                comboBox.Items.AddRange(avions.Select(avion => avion.Immat).Where(immat => !string.IsNullOrEmpty(immat)).ToArray());
+                // Effacez les éléments existants dans la combobox
+                comboBox.Items.Clear();
+
+                // Parcourez la liste des avions
+                foreach (var avion in avions)
+                {
+                    // Vérifiez si le statut de l'avion est égal à 1
+                    if (avion.Status == 1 || avion.Status == 2)
+                    {
+                        // Si le statut est égal à 1, passez à l'itération suivante
+                        continue;
+                    }
+
+                    // Ajoutez l'immatriculation de l'avion à la combobox
+                    comboBox.Items.Add(avion.Immat);
+                }
             }
         }
 
 
+        public async Task FillComboBoxMissionsAsync(ComboBox comboBox)
+        {
+            var (_, _, missions) = await FetchDataAsync();
+            if (missions != null)
+            {
+                comboBox.Items.AddRange(missions.Select(mission => mission.Libelle).Where(mission => !string.IsNullOrEmpty(mission)).ToArray());
+            }
+        }
 
     }
 }

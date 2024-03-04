@@ -63,9 +63,8 @@ namespace FlightRecorder
             btnSubmit = new Button();
             llManualSave = new LinkLabel();
             groupBox1 = new GroupBox();
-            rbMissionAutre = new RadioButton();
-            rbMissionPNG = new RadioButton();
-            rbMissionFR = new RadioButton();
+            label15 = new Label();
+            cbMission = new ComboBox();
             cbNote = new ComboBox();
             label2 = new Label();
             tbCommentaires = new TextBox();
@@ -386,9 +385,8 @@ namespace FlightRecorder
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(rbMissionAutre);
-            groupBox1.Controls.Add(rbMissionPNG);
-            groupBox1.Controls.Add(rbMissionFR);
+            groupBox1.Controls.Add(label15);
+            groupBox1.Controls.Add(cbMission);
             groupBox1.Controls.Add(cbNote);
             groupBox1.Controls.Add(tbEndIata);
             groupBox1.Controls.Add(label2);
@@ -413,39 +411,23 @@ namespace FlightRecorder
             groupBox1.TabStop = false;
             groupBox1.Text = "Flight summary";
             // 
-            // rbMissionAutre
+            // label15
             // 
-            rbMissionAutre.AutoSize = true;
-            rbMissionAutre.Checked = true;
-            rbMissionAutre.Location = new Point(331, 201);
-            rbMissionAutre.Name = "rbMissionAutre";
-            rbMissionAutre.Size = new Size(64, 22);
-            rbMissionAutre.TabIndex = 33;
-            rbMissionAutre.TabStop = true;
-            rbMissionAutre.Text = "Autre";
-            rbMissionAutre.UseVisualStyleBackColor = true;
+            label15.AutoSize = true;
+            label15.Location = new Point(217, 200);
+            label15.Margin = new Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(63, 18);
+            label15.TabIndex = 32;
+            label15.Text = "Mission";
             // 
-            // rbMissionPNG
+            // cbMission
             // 
-            rbMissionPNG.AutoSize = true;
-            rbMissionPNG.Location = new Point(194, 228);
-            rbMissionPNG.Name = "rbMissionPNG";
-            rbMissionPNG.Size = new Size(118, 22);
-            rbMissionPNG.TabIndex = 32;
-            rbMissionPNG.TabStop = true;
-            rbMissionPNG.Text = "Mission PNG";
-            rbMissionPNG.UseVisualStyleBackColor = true;
-            // 
-            // rbMissionFR
-            // 
-            rbMissionFR.AutoSize = true;
-            rbMissionFR.Location = new Point(194, 200);
-            rbMissionFR.Name = "rbMissionFR";
-            rbMissionFR.Size = new Size(105, 22);
-            rbMissionFR.TabIndex = 31;
-            rbMissionFR.TabStop = true;
-            rbMissionFR.Text = "Mission FR";
-            rbMissionFR.UseVisualStyleBackColor = true;
+            cbMission.FormattingEnabled = true;
+            cbMission.Location = new Point(287, 198);
+            cbMission.Name = "cbMission";
+            cbMission.Size = new Size(121, 26);
+            cbMission.TabIndex = 31;
             // 
             // cbNote
             // 
@@ -699,7 +681,7 @@ namespace FlightRecorder
             PerformLayout();
 
             remplirComboImmat();
-
+            remplirComboMissions();
         }
 
         #endregion
@@ -755,9 +737,8 @@ namespace FlightRecorder
         private TextBox tbCurrentPosition;
         private Label lbCheck;
         private Label lbFret;
-        private RadioButton rbMissionPNG;
-        private RadioButton rbMissionFR;
-        private RadioButton rbMissionAutre;
+        private Label label15;
+        private ComboBox cbMission;
     }
 }
 

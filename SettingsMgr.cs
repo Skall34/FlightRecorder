@@ -29,6 +29,8 @@ public class SettingsMgr
     public const string FLIGHTNOTEENTRY = "flightNote_entry";
     public const string COMMENTENTRY = "comment_entry";
 
+    public const string MISSIONENTRY = "mission_enrty";
+
         [JsonInclude]
     private Settings? _settings;
     public Settings? allSettings

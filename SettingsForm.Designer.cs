@@ -69,6 +69,8 @@
             label14 = new Label();
             cbAircrafts = new ComboBox();
             label13 = new Label();
+            tbMission = new TextBox();
+            label11 = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -292,6 +294,8 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(tbMission);
+            tabPage1.Controls.Add(label11);
             tabPage1.Controls.Add(tbComment);
             tabPage1.Controls.Add(tbFlightNote);
             tabPage1.Controls.Add(label17);
@@ -455,6 +459,22 @@
             label13.TabIndex = 0;
             label13.Text = "Aircrafts";
             // 
+            // tbMission
+            // 
+            tbMission.Location = new Point(204, 174);
+            tbMission.Name = "tbMission";
+            tbMission.Size = new Size(100, 23);
+            tbMission.TabIndex = 32;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(12, 177);
+            label11.Name = "label11";
+            label11.Size = new Size(48, 15);
+            label11.TabIndex = 31;
+            label11.Text = "Mission";
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -516,5 +536,7 @@
         private TextBox tbFlightNote;
         private Label label17;
         private Label label16;
+        private TextBox tbMission;
+        private Label label11;
     }
 }
