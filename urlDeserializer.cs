@@ -132,6 +132,40 @@ namespace FlightRecorder
         }
 
 
+        
+        public async Task<int> FetchFreightDataAsync()
+        {
+            int result;
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(_url);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = await response.Content.ReadAsStringAsync();
+                        // Désérialisation du JSON
+                        result = await Aeroport.deserializeFreight(jsonString);
+                        //if we received airports, store them locally
+                    }
+                    else
+                    {
+                        result = -1;
+                        // Gérer les erreurs si la requête n'a pas réussi
+                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = -1;
+                    // Gérer les exceptions
+                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                }
+            }
+            return result;
+        }
+
 
         //public async Task FillComboBoxImmatAsync(ComboBox comboBox)
         //{

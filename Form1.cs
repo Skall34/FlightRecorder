@@ -72,6 +72,8 @@ namespace FlightRecorder
         {
             InitializeComponent();
 
+            this.Cursor = Cursors.WaitCursor;
+
             loadAirportsFromSheet();
             loadDataFromSheet();
 
@@ -124,7 +126,6 @@ namespace FlightRecorder
             //met à jour l'etat de connection au simu dans la barre de statut
             configureForm();
 
-
             //demarre le timer de connection (fait un essai de connexion toutes les 1000ms)
             this.timerConnection.Start();
         }
@@ -148,22 +149,23 @@ namespace FlightRecorder
 
             remplirComboImmat();
             remplirComboMissions();
+            this.Cursor = Cursors.Default;
+
         }
 
-        private int GetFretOnAirport(string airportIdent)
+        private async Task<int> GetFretOnAirport(string airportIdent)
         {
-            if (this.aeroports != null)
+            string url = BASERURL + "?query=freight&airport="+airportIdent;
+            int fret = await Aeroport.fetchFreight(BASERURL, airportIdent);
+            if (fret > 0)
             {
-                string identAeroportFormate = airportIdent.Trim('"').Replace("\\", "");
-                foreach (var airport in this.aeroports)
-                {
-                    if (airport.Ident == identAeroportFormate)
-                    {
-                        return airport.fret;
-                    }
-                }
+                lbFret.Text = "Available fret: " + fret.ToString();
             }
-            return 0; // Si aucun aéroport correspondant n'est trouvé, retourne 0
+            else
+            {
+                lbFret.Text = "No fret here";
+            }
+            return fret;
         }
 
 
@@ -199,7 +201,7 @@ namespace FlightRecorder
                         if (this.aeroports != null)
                         {
                             // Votre code pour utiliser les avions et les aéroports
-                            int fretOnLFMT = GetFretOnAirport(tbCurrentIata.Text);
+                            int fretOnLFMT = await GetFretOnAirport(tbCurrentIata.Text);
                             lbFret.Text = "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
                         }
                     }
@@ -509,7 +511,6 @@ namespace FlightRecorder
         }
         private void remplirComboImmat()
         {
-            this.Cursor = Cursors.WaitCursor;
             lbFret.Text = "Acars initializing ..... please wait";
             // Effacez les éléments existants dans la combobox
             cbImmat.Items.Clear();

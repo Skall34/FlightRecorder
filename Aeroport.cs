@@ -10,6 +10,11 @@ using System.Xml.Linq;
 
 namespace FlightRecorder
 {
+    public class Fret
+    {
+        public int fret { get; set; }
+    }
+
     public class Aeroport
     {
         public string? Ident { get; set; }
@@ -109,11 +114,31 @@ namespace FlightRecorder
             return result;
         }
 
+        public static async Task<int> fetchFreight(string baseUrl, string airportID)
+        {
+
+            string url = baseUrl + "?query=freight&airport=" + airportID;
+            UrlDeserializer dataReader = new UrlDeserializer(url);
+            int result;
+            result = await dataReader.FetchFreightDataAsync();
+            return result;
+        }
+
+
+
         public static async Task<List<Aeroport>> deserializeAeroports(string jsonString)
         {
             //var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
             List<Aeroport> aeroports = JsonConvert.DeserializeObject<List<Aeroport>>(jsonString);
             return aeroports;
+        }
+
+        
+        public static async Task<int> deserializeFreight(string jsonString)
+        {
+            //var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
+            Fret result = JsonConvert.DeserializeObject<Fret>(jsonString);
+            return result.fret;
         }
     }
 
