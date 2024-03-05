@@ -25,6 +25,7 @@
   <ItemGroup>
     <PackageReference Include="FSUIPCClientDLL" Version="3.3.9" />
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.66.0.3148" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.1" />
   </ItemGroup>
 

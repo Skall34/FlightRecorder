@@ -440,7 +440,6 @@ namespace FlightRecorder
             cbNote.TabIndex = 17;
             cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
             cbNote.MouseHover += cbNote_MouseHover;
-            cbNote.SelectedItem = 8;
             // 
             // label2
             // 
@@ -679,9 +678,6 @@ namespace FlightRecorder
             groupBox3.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
-            remplirComboImmat();
-            remplirComboMissions();
         }
 
         #endregion

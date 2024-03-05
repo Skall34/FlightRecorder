@@ -90,6 +90,7 @@ namespace FlightRecorder
             _simData = new simData();
 
             //initialise des variables qui servent à garder un état.
+            cbNote.SelectedItem = 8;
             atLeastOneEngineFiring = false;
             _startTime = DateTime.Now;
             _endTime = DateTime.Now;
@@ -120,6 +121,10 @@ namespace FlightRecorder
 
             //met à jour l'etat de connection au simu dans la barre de statut
             configureForm();
+
+            remplirComboImmat();
+
+            remplirComboMissions();
 
             //demarre le timer de connection (fait un essai de connexion toutes les 1000ms)
             this.timerConnection.Start();
