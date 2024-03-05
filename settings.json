@@ -3,7 +3,6 @@
     "Setting": {
       "callsign_entry": "entry.338426599",
       "aircraft_entry": "entry.1184138656",
-      "pax_entry": "entry.750791914",
       "cargo_entry": "entry.2006049487",
       "startIata_entry": "entry.1206632170",
       "startFuel_entry": "entry.2122251018",
@@ -11,9 +10,10 @@
       "endIata_entry": "entry.1434303808",
       "endFuel_entry": "entry.1246669828",
       "endTime_entry": "entry.1305759358",
-      "GoogleFormUrl": "https://docs.google.com/forms/d/1UcaY66JJZS_x7VhyKNKpfHSAsicOmfZk-Eqd75k84OA",
+      "GoogleFormUrl": "https://docs.google.com/forms/d/e/1FAIpQLSenVdLY9xU6jfLqG7jx-JyEqt99qUkiYM4NqvRO7tAWk60FrQ",
       "flightNote_entry": "entry.652005461",
-      "comment_entry": "entry.607952088"
+      "comment_entry": "entry.607952088",
+      "mission_entry": "entry.240152711"
     }
   },
   "fleet": {

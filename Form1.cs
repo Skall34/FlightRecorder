@@ -2,6 +2,7 @@
 using FSUIPC;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
@@ -10,6 +11,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,8 +31,8 @@ namespace FlightRecorder
         private double _startFuel;
         private double _endFuel;
         private string commentaires;
+        private string mission;
         //private int noteDuVol;
-        //private int pax;
 
         private DateTime _startTime;
         private DateTime _endTime;
@@ -58,6 +60,10 @@ namespace FlightRecorder
         private int refillQtty;
         private double maxFuelCapacity;
 
+        private List<Avion> avions;
+        private List<Aeroport> airports;
+
+
         //private bool modifiedFuel;
         public Form1()
         {
@@ -80,19 +86,17 @@ namespace FlightRecorder
             airportsDatabase = new airportsMgr("airports.csv");
             this.lblConnectionStatus.Text = "Airport database loaded";
 
-            remplirComboImmat();
-
             //initialise l'object qui sert à capter les données qui viennent du simu
             _simData = new simData();
 
             //initialise des variables qui servent à garder un état.
+            cbNote.SelectedItem = 8;
             atLeastOneEngineFiring = false;
             _startTime = DateTime.Now;
             _endTime = DateTime.Now;
             _startFuel = 0;
             _endFuel = 0;
             commentaires = string.Empty;
-            //noteDuVol = 5;
             onGround = true;
 
             touchDownVSpeed = 0;
@@ -118,11 +122,32 @@ namespace FlightRecorder
             //met à jour l'etat de connection au simu dans la barre de statut
             configureForm();
 
+            remplirComboImmat();
+
+            remplirComboMissions();
+
             //demarre le timer de connection (fait un essai de connexion toutes les 1000ms)
             this.timerConnection.Start();
         }
 
-        private void readStaticValues()
+        private int GetFretOnAirport(string airportIdent)
+        {
+            if (this.airports != null)
+            {
+                string identAeroportFormate = airportIdent.Trim('"').Replace("\\", "");
+                foreach (var airport in this.airports)
+                {
+                    if (airport.Ident == identAeroportFormate)
+                    {
+                        return airport.Fret;
+                    }
+                }
+            }
+            return 0; // Si aucun aéroport correspondant n'est trouvé, retourne 0
+        }
+
+
+        private async void readStaticValues()
         {
             if (null != _simData)
             {
@@ -139,7 +164,15 @@ namespace FlightRecorder
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
 
-                if (null != airportsDatabase)
+                string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+                UrlDeserializer dataReader = new UrlDeserializer(url);
+
+                (List<Avion> avions, List<Aeroport> airports, List<Mission> missions) = await dataReader.FetchDataAsync();
+
+                this.avions = avions;
+                this.airports = airports;
+
+                if (airportsDatabase != null)
                 {
                     Airport? localAirport = airportsDatabase.FindClosestAirport(lat, lon);
                     if (localAirport != null)
@@ -147,14 +180,21 @@ namespace FlightRecorder
                         string startAirportname = localAirport.Name;
                         tbCurrentPosition.Text = startAirportname;
                         tbCurrentIata.Text = localAirport.Ident;
+
+                        //Ca ne marche pas. Airport est null. 
+                        // Je confonds airports et Aeroport
+                        // Utilisez les avions et les aéroports ici
+                        if (this.airports != null)
+                        {
+                            // Votre code pour utiliser les avions et les aéroports
+                            int fretOnLFMT = GetFretOnAirport(tbCurrentIata.Text);
+                            lbFret.Text = "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
+                        }
                     }
                 }
 
                 //recupere le type d'avion donné par le simu.
                 this.tbDesignationAvion.Text = _simData.getAircraftType();
-                //A FAIRE : croiser le type d'avion avec les avions enregistrés dans la fleet du settingsMgr.
-                // si l'avion n'est pas present dans la fleet, proposer de l'ajouter.
-                // si l'avion est present, remplir la combo box avec les immat connues pour ce type d'avion.
             }
         }
 
@@ -184,8 +224,6 @@ namespace FlightRecorder
                 // No connection found. Don't need to do anything, just keep trying
             }
         }
-
-
 
         // This method runs 2 times per second (every 500ms). This is set on the timerMain properties.
         private void timerMain_Tick(object sender, EventArgs e)
@@ -388,7 +426,6 @@ namespace FlightRecorder
             Settings.Default.Save();
             //desactive le bouton de sauvegarde.
             this.btnSaveSettings.Enabled = false;
-
         }
 
 
@@ -400,10 +437,20 @@ namespace FlightRecorder
             if (settingsMgr.allSettings != null)
             {
                 GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
-                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.875291795=callSign&entry.354262163=lfmt&entry.1974689794=300&entry.1603698953=22:22&entry.864236608=LFMT&entry.789000913=200&entry.1547789562=23:23&entry.941405603=0&entry.704113444=300
-                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
-                //https://docs.google.com/forms/d/e/1FAIpQLSeUruKbF7P3Es2b5JC8RIZaDhK5In1nwn_mq_RhsGV5MXU9AQ/viewform?usp=pp_url&entry.793899725=immat
-
+                //https://docs.google.com/forms/d/e/1FAIpQLSenVdLY9xU6jfLqG7jx-JyEqt99qUkiYM4NqvRO7tAWk60FrQ
+                //entry.338426599=SKY0707&
+                //entry.1184138656=F-HXBV&
+                //entry.1206632170=LFLS&
+                //entry.2122251018=120&
+                //entry.866846136=22:00&
+                //entry.1434303808=LFMT&
+                //entry.1246669828=20&
+                //entry.1305759358=23:30&
+                //entry.750791914=2&
+                //entry.2006049487=100&
+                //entry.607952088=commentaires&
+                //entry.652005461=5
+                //entry.240152711=France
                 //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
@@ -420,6 +467,10 @@ namespace FlightRecorder
 
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
+
+                values.Add(settingsMgr.allSettings.gformSettings.getValue("mission_entry"),cbMission.Text);
+
+
 
                 //attribute les valeurs à l'object gerant la requete.
                 gform.SetFieldValues(values);
@@ -447,10 +498,24 @@ namespace FlightRecorder
         }
         private async void remplirComboImmat()
         {
-            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=bEeSuJVxxV_KySlbI3IzMSde9gO3Owth8t28VoZDIZsK-6v0oGNRK3GmQsvVvJDpw61oyINkV_Nw9Hv3roqizWl2I9CHah9Km5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnHswp_1Sm4Fg0y_4PQcK8D6PumPKf4Bm_iYoRI_DJL79fweV4bLTId22e8MMsN5FOdmi1x-QJV6d0j4DS1Lp_X4nHzXNnzuIQw&lib=MTPEXfapbdgKnfnHWifDMNT00VIDNQ6M4"; // Remplace URL_DES_DONNÉES par l'URL réelle
-            urlDeserializer dataReader = new urlDeserializer(url);
-            await dataReader.FillComboBoxAsync(cbImmat);
+            this.Cursor = Cursors.WaitCursor;
+            lbFret.Text = "Acars initializing ..... please wait";
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+            UrlDeserializer dataReader = new UrlDeserializer(url);
+            await dataReader.FillComboBoxImmatAsync(cbImmat);
+            cbImmat.DisplayMember = "Immat";
+            this.Cursor = Cursors.Default;
         }
+
+        private async void remplirComboMissions()
+        {
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+            UrlDeserializer dataReader = new UrlDeserializer(url);
+            await dataReader.FillComboBoxMissionsAsync(cbMission);
+            cbMission.DisplayMember = "Libelle";
+            this.Cursor = Cursors.Default;
+        }
+
         //ouvre le navigateur par defaut sur le lien dans le form.
         private void llManualSave_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -610,7 +675,7 @@ namespace FlightRecorder
                 FuelQtty++;
                 refillQtty++;
                 //accelerate after a few seconds
-                if ((refillQtty > 5)&&(refillTimer.Interval==500))
+                if ((refillQtty > 5) && (refillTimer.Interval == 500))
                 {
                     refillTimer.Interval = 100;
                 }
@@ -628,7 +693,7 @@ namespace FlightRecorder
 
         private void button1_MouseDown(object sender, MouseEventArgs e)
         {
-            if ((!refillTimer.Enabled)&&(FuelQtty<maxFuelCapacity))
+            if ((!refillTimer.Enabled) && (FuelQtty < maxFuelCapacity))
             {
                 refillTimer.Interval = 500;
                 refillQtty = 0;
@@ -642,16 +707,64 @@ namespace FlightRecorder
             _simData.setFuelWheight(FuelQtty);
         }
 
-        private void btCheckVol_Click(object sender, EventArgs e)
+        private async void btCheckVol_Click(object sender, EventArgs e)
         {
             string erreur = "";
-            string callsign = "";
-            string aircraftImmat = "";
-            //int fret = 0;
-            //int pax = 0;
+            string callsign = tbCallsign.Text;
+            string aircraftImmat = cbImmat.Text;
+            string ICAOdepart = tbCurrentIata.Text;
+            ICAOdepart = ICAOdepart.Trim('"');
+            string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
+            string tempCargo = tbCargo.Text;
+            float cargo = float.Parse(tempCargo);
+            this.Cursor = Cursors.WaitCursor;
+            UrlDeserializer urlDeserializer = new UrlDeserializer(url);
 
-            aircraftImmat = cbImmat.Text;
-            callsign = tbCallsign.Text;
+            // Appel de FetchDataAsync et stockage des valeurs retournées dans deux variables distinctes
+            (List<Avion> avions, List<Aeroport> airports,List<Mission> missions) = await urlDeserializer.FetchDataAsync();
+            this.avions = avions;
+            this.airports = airports;
+
+
+            this.Cursor = Cursors.Default;
+
+            bool immatFound = avions.Any(avion => avion.Immat == aircraftImmat);
+            if (immatFound)
+            {
+                Avion avionFound = avions.Find(avion => avion.Immat == aircraftImmat);
+                if (avionFound != null)
+                {
+                    string localisation = avionFound.Localisation;
+                    Aeroport airport = airports.Find(aeroport => aeroport.Ident == localisation);
+
+                    if (airport != null)
+                    {
+                        if (airport.Ident == ICAOdepart)
+                        {
+                            int fretAirport = airport.Fret;
+                            if (fretAirport >= cargo)
+                            {
+                                //Tout est OK
+                                lbCheck.Text = "OK";
+                                lbCheck.ForeColor = Color.Green;
+                                btnSubmit.Enabled = true;
+                            }
+                            else
+                            {
+                                erreur += "• Il n'y a pas suffisamment de fret disponible à l'aéroport (" + fretAirport + ").\n";
+                            }
+                        }
+                        else
+                        {
+                            erreur += $"• L'avion n'est pas situé à l'aéroport de départ spécifié. Il se trouve à {localisation} \n";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                erreur += "• L'immatriculation de l'avion n'existe pas.\n";
+            }
 
             if (aircraftImmat == "")
             {
@@ -677,9 +790,8 @@ namespace FlightRecorder
                 }
             }
 
-
             if (erreur == "")
-            { //C'est OK, on dégrise le bouton pour envoyer le vol
+            {
                 btnSubmit.Enabled = true;
             }
             else
@@ -702,5 +814,6 @@ namespace FlightRecorder
         {
 
         }
+
     }
 }
