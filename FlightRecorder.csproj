@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="airportsMgr.cs" />
     <Compile Remove="GlobalUsings.cs" />
     <Compile Remove="UnitTest1.cs" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,10 +17,9 @@ namespace FlightRecorder
             _url = url;
         }
 
-        public async Task<(List<Avion>, List<Aeroport>, List<Mission>)> FetchDataAsync()
+        public async Task<(List<Avion>, List<Mission>)> FetchDataAsync()
         {
             List<Avion> avions = new List<Avion>();
-            List<Aeroport> aeroports = new List<Aeroport>();
             List<Mission> missions = new List<Mission>();
 
             using (HttpClient client = new HttpClient())
@@ -57,31 +57,6 @@ namespace FlightRecorder
                             }
                         }
 
-                        if (data.TryGetValue("airports", out var airports))
-                        {
-                            foreach (var item in airports)
-                            {
-                                Aeroport aeroport = new Aeroport
-                                {
-                                    Ident = item.TryGetValue("Ident", out string ident) ? ident : "",
-                                    Type = item.TryGetValue("type", out string type) ? type : "",
-                                    Name = item.TryGetValue("name", out string name) ? name : "",
-                                    Municipality = item.TryGetValue("municipality", out string municipality) ? municipality : "",
-                                    LatitudeDeg = double.TryParse(item.TryGetValue("latitude_deg", out string latitude) ? latitude : "", out double latitudeValue) ? latitudeValue : 0,
-                                    LongitudeDeg = double.TryParse(item.TryGetValue("longitude_deg", out string longitude) ? longitude : "", out double longitudeValue) ? longitudeValue : 0,
-                                    ElevationFt = int.TryParse(item.TryGetValue("elevation_ft", out string elevation) ? elevation : "", out int elevationValue) ? elevationValue : 0,
-                                    Piste = item.TryGetValue("Piste", out string piste) ? piste : "",
-                                    LongueurDePiste = item.TryGetValue("Longueur de piste", out string longueur) ? longueur : "",
-                                    TypeDePiste = item.TryGetValue("Type de piste", out string typePiste) ? typePiste : "",
-                                    Observations = item.TryGetValue("Observations", out string observations) ? observations : "",
-                                    WikipediaLink = item.TryGetValue("wikipedia_link", out string wikiLink) ? wikiLink : "",
-                                    Fret = int.TryParse(item.TryGetValue("fret", out string fret) ? fret : "", out int fretValue) ? fretValue : 0,
-                                };
-
-                                aeroports.Add(aeroport);
-                            }
-                        }
-
                         if (data.TryGetValue("missions", out var missionTemp))
                         {
                             foreach (var item in missionTemp)
@@ -110,44 +85,91 @@ namespace FlightRecorder
                 }
             }
 
-            return (avions, aeroports,missions);
+            return (avions, missions);
         }
 
-
-
-        public async Task FillComboBoxImmatAsync(ComboBox comboBox)
+        public async Task<List<Aeroport>> FetchAirportsDataAsync(string filename)
         {
-            var (avions, _, _) = await FetchDataAsync();
-            if (avions != null)
+            List<Aeroport> aeroports ;
+
+            using (HttpClient client = new HttpClient())
             {
-                // Effacez les éléments existants dans la combobox
-                comboBox.Items.Clear();
-
-                // Parcourez la liste des avions
-                foreach (var avion in avions)
+                try
                 {
-                    // Vérifiez si le statut de l'avion est égal à 1
-                    if (avion.Status == 1 || avion.Status == 2)
-                    {
-                        // Si le statut est égal à 1, passez à l'itération suivante
-                        continue;
-                    }
+                    HttpResponseMessage response = await client.GetAsync(_url);
 
-                    // Ajoutez l'immatriculation de l'avion à la combobox
-                    comboBox.Items.Add(avion.Immat);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = await response.Content.ReadAsStringAsync();
+                        // Désérialisation du JSON
+                        aeroports = await Aeroport.deserializeAeroports(jsonString);
+                        //if we received airports, store them locally
+                        if (aeroports != null)
+                        {                           
+                            StreamWriter sw= new StreamWriter(filename);
+                            JsonSerializer serializer = new JsonSerializer();
+                            serializer.Formatting = Formatting.Indented;
+                            serializer.Serialize(sw, aeroports);
+                            sw.Close();
+                        }
+                    }
+                    else
+                    {
+                        aeroports = new List<Aeroport>();
+                            // Gérer les erreurs si la requête n'a pas réussi
+                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    aeroports = new List<Aeroport>();
+                    // Gérer les exceptions
+                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
+
+            return aeroports;
         }
 
 
-        public async Task FillComboBoxMissionsAsync(ComboBox comboBox)
-        {
-            var (_, _, missions) = await FetchDataAsync();
-            if (missions != null)
-            {
-                comboBox.Items.AddRange(missions.Select(mission => mission.Libelle).Where(mission => !string.IsNullOrEmpty(mission)).ToArray());
-            }
-        }
+
+        //public async Task FillComboBoxImmatAsync(ComboBox comboBox)
+        //{
+        //    if (avions == null)
+        //    {
+        //        var (avions, _) = await FetchDataAsync();
+        //    }
+
+        //    if (avions != null)
+        //    {
+        //        // Effacez les éléments existants dans la combobox
+        //        comboBox.Items.Clear();
+
+        //        // Parcourez la liste des avions
+        //        foreach (var avion in avions)
+        //        {
+        //            // Vérifiez si le statut de l'avion est égal à 1
+        //            if (avion.Status == 1 || avion.Status == 2)
+        //            {
+        //                // Si le statut est égal à 1, passez à l'itération suivante
+        //                continue;
+        //            }
+
+        //            // Ajoutez l'immatriculation de l'avion à la combobox
+        //            comboBox.Items.Add(avion.Immat);
+        //        }
+        //    }
+        //}
+
+
+        //public async Task FillComboBoxMissionsAsync(ComboBox comboBox)
+        //{
+        //    var (_, missions) = await FetchDataAsync();
+        //    if (missions != null)
+        //    {
+        //        comboBox.Items.AddRange(missions.Select(mission => mission.Libelle).Where(mission => !string.IsNullOrEmpty(mission)).ToArray());
+        //    }
+        //}
 
     }
 }
