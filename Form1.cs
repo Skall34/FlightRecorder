@@ -135,6 +135,8 @@ namespace FlightRecorder
         {
             //load the airports.
             this.aeroports = await Aeroport.fetchAirports(BASERURL, DateTime.UnixEpoch);
+            //just in case, reload the statc values
+            readStaticValues();
         }
 
         private async void loadDataFromSheet()
@@ -186,7 +188,7 @@ namespace FlightRecorder
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
 
-                if (aeroports.Count>0)
+                if ((aeroports!=null) && (aeroports.Count>0))
                 {
                     Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
                     if (localAirport != null)
@@ -677,7 +679,7 @@ namespace FlightRecorder
 
         private void tbCargo_TextChanged(object sender, EventArgs e)
         {
-            //modifiedPayload = true;
+            modifiedPayload = true;
             btnRefresh.Enabled = true;
         }
 
