@@ -173,7 +173,7 @@ namespace FlightRecorder
 
         private async void readStaticValues()
         {
-            if (null != _simData)
+            if ((null != _simData)&&(_simData.isConnected))
             {
                 //commence à lire qq variables du simu : fuel & cargo, immat avion...
                 FuelQtty = _simData.getFuelWeight();
