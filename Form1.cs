@@ -64,6 +64,7 @@ namespace FlightRecorder
         private List<Avion> avions;
         private List<Aeroport> aeroports;
 
+        private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
 
         private const string BASERURL = "https://script.google.com/macros/s/AKfycbzUPqAuUnVGOmZf6ZKgrYoOpKslgQR1TuWoApM_8KQOwc7_7IaT9ksBGB5Xgy6y3V1oUQ/exec";
 
@@ -245,6 +246,20 @@ namespace FlightRecorder
         {
             try
             {
+                if (startDisabled > 0)
+                {
+                    startDisabled -= 1;
+
+                    if (startDisabled == 0)
+                    {
+                        //the start detection disable timer expired, restore the start textboxes.
+                        tbStartFuel.Enabled = true;
+                        tbStartPosition.Enabled = true;
+                        tbStartTime.Enabled = true;
+                        tbStartIata.Enabled = true;
+                    }
+                }
+
                 //rafraichis les données venant du simu
                 _simData.refresh();
 
@@ -331,7 +346,7 @@ namespace FlightRecorder
 
                 //si aucun moteur de tournait, mais que maintenant, au moins un moteur tourne, on commence a enregistrer.
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
-                if (!_previousEngineStatus && atLeastOneEngineFiring)
+                if (( !_previousEngineStatus && atLeastOneEngineFiring ) && ( startDisabled == 0 ))
                 {
                     _startPosition = _simData.getPosition(); ;
 
@@ -356,6 +371,13 @@ namespace FlightRecorder
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
                 if (_previousEngineStatus && !atLeastOneEngineFiring)
                 {
+                    // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
+                    startDisabled = 300;
+                    tbStartFuel.Enabled = false;
+                    tbStartPosition.Enabled = false;
+                    tbStartTime.Enabled = false;
+                    tbStartIata.Enabled = false;
+
                     //on recupere les etats de fin de vol : heure, carbu, position.
                     _endPosition = _simData.getPosition();
                     double lat = _endPosition.Location.Latitude.DecimalDegrees;
@@ -484,8 +506,6 @@ namespace FlightRecorder
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
 
                 values.Add(settingsMgr.allSettings.gformSettings.getValue("mission_entry"),cbMission.Text);
-
-
 
                 //attribute les valeurs à l'object gerant la requete.
                 gform.SetFieldValues(values);
@@ -748,15 +768,11 @@ namespace FlightRecorder
             string tempCargo = tbCargo.Text;
             float cargo = float.Parse(tempCargo);
             this.Cursor = Cursors.WaitCursor;
-            UrlDeserializer urlDeserializer = new UrlDeserializer(url);
-
-            // Appel de FetchDataAsync et stockage des valeurs retournées dans deux variables distinctes
-            //(List<Avion> avions, List<Mission> missions) = await urlDeserializer.FetchDataAsync();
-            //this.avions = avions;
-            //this.airports = airports;
-
+            //UrlDeserializer urlDeserializer = new UrlDeserializer(url);
 
             this.Cursor = Cursors.Default;
+
+            bool errorFound = false;
 
             bool immatFound = avions.Any(avion => avion.Immat == aircraftImmat);
             if (immatFound)
@@ -764,69 +780,67 @@ namespace FlightRecorder
                 Avion avionFound = avions.Find(avion => avion.Immat == aircraftImmat);
                 if (avionFound != null)
                 {
+                    int startFret = await Aeroport.fetchFreight(BASERURL, ICAOdepart);
+                    //considere que le pilote fait 80Kg;
+                    if ((cargo - 80)  < startFret)
+                    {
+                        //pas assez de fret à l'aeroport de départ
+                        erreur += "Il n'y a pas suffisamment de fret disponible à l'aéroport (" + startFret + ").\n";
+                        errorFound = true;
+                    }
                     string localisation = avionFound.Localisation;
                     Aeroport airport = aeroports.Find(aeroport => aeroport.Ident == localisation);
 
                     if (airport != null)
                     {
-                        if (airport.Ident == ICAOdepart)
+                        if (airport.Ident != ICAOdepart)
                         {
-                            int fretAirport = airport.fret;
-                            if (fretAirport >= cargo)
-                            {
-                                //Tout est OK
-                                lbCheck.Text = "OK";
-                                lbCheck.ForeColor = Color.Green;
-                                btnSubmit.Enabled = true;
-                            }
-                            else
-                            {
-                                erreur += "• Il n'y a pas suffisamment de fret disponible à l'aéroport (" + fretAirport + ").\n";
-                            }
-                        }
-                        else
-                        {
-                            erreur += $"• L'avion n'est pas situé à l'aéroport de départ spécifié. Il se trouve à {localisation} \n";
+                            erreur += $"L'avion n'est pas situé à l'aéroport de départ spécifié. Il se trouve à {localisation} \n";
                         }
                     }
                 }
             }
             else
             {
-                erreur += "• L'immatriculation de l'avion n'existe pas.\n";
+                erreur += "L'immatriculation de l'avion n'existe pas.\n";
+                errorFound = true;
             }
 
             if (aircraftImmat == "")
             {
-                erreur += "• L'immatriculation de l'avion ne peut pas être vide\n";
+                erreur += "L'immatriculation de l'avion ne peut pas être vide\n";
+                errorFound = true;
             }
             if (callsign == "")
             {
-                erreur += "• Le callsign doit être renseigné\n";
+                erreur += "Le callsign doit être renseigné\n";
+                errorFound = true;
             }
             else
             {
                 if (callsign.Length != 7)
                 {
-                    erreur += "• Le callsign n'est pas bien formé. Il doit être composé de 7 caractères.\n";
+                    erreur += "Le callsign n'est pas bien formé. Il doit être composé de 7 caractères.\n";
+                    errorFound = true;
                 }
                 if (callsign.Substring(0, 3) != "SKY")
                 {
-                    erreur += "• Le callsign n'est pas bien formé. Il doit commencer par SKY.\n";
+                    erreur += "Le callsign n'est pas bien formé. Il doit commencer par SKY.\n";
                 }
                 if (callsign.Contains(" "))
                 {
-                    erreur += "• Le callsign n'est pas bien formé. Il ne doit pas contenir d'espace.\n";
+                    erreur += "Le callsign n'est pas bien formé. Il ne doit pas contenir d'espace.\n";
+                    errorFound = true;
                 }
             }
 
-            if (erreur == "")
+            if (!errorFound)
             {
                 btnSubmit.Enabled = true;
             }
-            else
+            if (erreur!=string.Empty)
             {
-                MessageBox.Show(erreur, "Erreurs de check.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(erreur, "Check invalides", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

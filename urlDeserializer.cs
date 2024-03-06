@@ -165,45 +165,5 @@ namespace FlightRecorder
             }
             return result;
         }
-
-
-        //public async Task FillComboBoxImmatAsync(ComboBox comboBox)
-        //{
-        //    if (avions == null)
-        //    {
-        //        var (avions, _) = await FetchDataAsync();
-        //    }
-
-        //    if (avions != null)
-        //    {
-        //        // Effacez les éléments existants dans la combobox
-        //        comboBox.Items.Clear();
-
-        //        // Parcourez la liste des avions
-        //        foreach (var avion in avions)
-        //        {
-        //            // Vérifiez si le statut de l'avion est égal à 1
-        //            if (avion.Status == 1 || avion.Status == 2)
-        //            {
-        //                // Si le statut est égal à 1, passez à l'itération suivante
-        //                continue;
-        //            }
-
-        //            // Ajoutez l'immatriculation de l'avion à la combobox
-        //            comboBox.Items.Add(avion.Immat);
-        //        }
-        //    }
-        //}
-
-
-        //public async Task FillComboBoxMissionsAsync(ComboBox comboBox)
-        //{
-        //    var (_, missions) = await FetchDataAsync();
-        //    if (missions != null)
-        //    {
-        //        comboBox.Items.AddRange(missions.Select(mission => mission.Libelle).Where(mission => !string.IsNullOrEmpty(mission)).ToArray());
-        //    }
-        //}
-
     }
 }
