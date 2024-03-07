@@ -67,6 +67,7 @@ namespace FlightRecorder
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
 
         private const string BASERURL = "https://script.google.com/macros/s/AKfycbzUPqAuUnVGOmZf6ZKgrYoOpKslgQR1TuWoApM_8KQOwc7_7IaT9ksBGB5Xgy6y3V1oUQ/exec";
+        private const string DEBUGBASEURL = "https://script.google.com/macros/s/AKfycbxeubE-ReLw4TCJHWg9kiLsXGw1-ISAf9KSJw9khJW_/dev";
 
         //private bool modifiedFuel;
         public Form1()
@@ -473,57 +474,87 @@ namespace FlightRecorder
             Dictionary<string, string> values = new Dictionary<string, string>();
             if (settingsMgr.allSettings != null)
             {
-                GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
-                //https://docs.google.com/forms/d/e/1FAIpQLSenVdLY9xU6jfLqG7jx-JyEqt99qUkiYM4NqvRO7tAWk60FrQ
-                //entry.338426599=SKY0707&
-                //entry.1184138656=F-HXBV&
-                //entry.1206632170=LFLS&
-                //entry.2122251018=120&
-                //entry.866846136=22:00&
-                //entry.1434303808=LFMT&
-                //entry.1246669828=20&
-                //entry.1305759358=23:30&
-                //entry.750791914=2&
-                //entry.2006049487=100&
-                //entry.607952088=commentaires&
-                //entry.652005461=5
-                //entry.240152711=France
-                //rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
-
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("startTime_entry"), tbStartTime.Text);
-
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("endIata_entry"), tbEndIata.Text);
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("endFuel_entry"), tbEndFuel.Text);
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("endTime_entry"), tbEndTime.Text);
-
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("cargo_entry"), tbCargo.Text);
-
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
-
-                values.Add(settingsMgr.allSettings.gformSettings.getValue("mission_entry"),cbMission.Text);
-
-                //attribute les valeurs à l'object gerant la requete.
-                gform.SetFieldValues(values);
-
-                //envoie la requete.
-                Task<HttpResponseMessage> request = gform.SubmitAsync();
-                HttpResponseMessage response = await request;
-                if (!response.IsSuccessStatusCode)
-                {
-                    //en, cas d'erreur, affiche une popup avec le message
-                    MessageBox.Show("Error '" + response.ReasonPhrase + "' while sending flight data.");
-                }
-                else
+                UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery {
+                    query = "save",
+                    qtype = "json",
+                    cs = tbCallsign.Text,
+                    plane = cbImmat.Text,
+                    sicao = tbStartIata.Text,
+                    sfuel = tbStartFuel.Text,
+                    stime = tbStartTime.Text,
+                    eicao = tbEndIata.Text,
+                    efuel = tbEndFuel.Text,
+                    etime = tbEndTime.Text,
+                    note= cbNote.Text,
+                    mission = cbMission.Text,
+                    comment = tbCommentaires.Text,
+                    cargo = tbCargo.Text                    
+                };
+                UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
+                int result = await urlDeserializer.PushFlightAsync(data);
+                if (0 != result)
                 {
                     //si tout va bien...
                     this.lblConnectionStatus.Text = "Flight data saved";
                     this.lblConnectionStatus.ForeColor = Color.Green;
                 }
+                else
+                {
+                    //en, cas d'erreur, affiche une popup avec le message
+                    MessageBox.Show("Error while sending flight data.");
+                }
+
+                //GoogleFormsSubmissionService gform = new GoogleFormsSubmissionService(settingsMgr.allSettings.gformSettings.getValue("GoogleFormUrl") + "/formResponse");
+                ////https://docs.google.com/forms/d/e/1FAIpQLSenVdLY9xU6jfLqG7jx-JyEqt99qUkiYM4NqvRO7tAWk60FrQ
+                ////entry.338426599=SKY0707&
+                ////entry.1184138656=F-HXBV&
+                ////entry.1206632170=LFLS&
+                ////entry.2122251018=120&
+                ////entry.866846136=22:00&
+                ////entry.1434303808=LFMT&
+                ////entry.1246669828=20&
+                ////entry.1305759358=23:30&
+                ////entry.750791914=2&
+                ////entry.2006049487=100&
+                ////entry.607952088=commentaires&
+                ////entry.652005461=5
+                ////entry.240152711=France
+                ////rempli le dictionnaire avec les valeurs. La clé et la reference de la donnée dans le google form
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("callsign_entry"), tbCallsign.Text);
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("aircraft_entry"), cbImmat.Text);
+
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("startIata_entry"), tbStartIata.Text);
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("startFuel_entry"), tbStartFuel.Text);
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("startTime_entry"), tbStartTime.Text);
+
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("endIata_entry"), tbEndIata.Text);
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("endFuel_entry"), tbEndFuel.Text);
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("endTime_entry"), tbEndTime.Text);
+
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("cargo_entry"), tbCargo.Text);
+
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("comment_entry"), tbCommentaires.Text);
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("flightNote_entry"), cbNote.Text);
+
+                //values.Add(settingsMgr.allSettings.gformSettings.getValue("mission_entry"),cbMission.Text);
+
+                ////attribute les valeurs à l'object gerant la requete.
+                //gform.SetFieldValues(values);
+
+                ////envoie la requete.
+                //Task<HttpResponseMessage> request = gform.SubmitAsync();
+                //HttpResponseMessage response = await request;
+                //if (!response.IsSuccessStatusCode)
+                //{
+                //    //en, cas d'erreur, affiche une popup avec le message
+                //    MessageBox.Show("Error '" + response.ReasonPhrase + "' while sending flight data.");
+                //}
+                //else
+                //{
+                //    //si tout va bien...
+                //    this.lblConnectionStatus.Text = "Flight data saved";
+                //    this.lblConnectionStatus.ForeColor = Color.Green;
+                //}
             }
         }
 

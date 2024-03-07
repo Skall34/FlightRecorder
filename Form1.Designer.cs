@@ -360,7 +360,6 @@ namespace FlightRecorder
             // 
             // btnSubmit
             // 
-            btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
             btnSubmit.Location = new Point(391, 583);
             btnSubmit.Margin = new Padding(4);
@@ -458,6 +457,7 @@ namespace FlightRecorder
             tbCommentaires.Name = "tbCommentaires";
             tbCommentaires.Size = new Size(348, 25);
             tbCommentaires.TabIndex = 9;
+            tbCommentaires.Text = "no";
             // 
             // label12
             // 
@@ -624,7 +624,7 @@ namespace FlightRecorder
             // btCheckVol
             // 
             btCheckVol.ForeColor = Color.Black;
-            btCheckVol.Location = new Point(246, 583);
+            btCheckVol.Location = new Point(228, 584);
             btCheckVol.Name = "btCheckVol";
             btCheckVol.Size = new Size(90, 27);
             btCheckVol.TabIndex = 44;
@@ -636,7 +636,7 @@ namespace FlightRecorder
             // 
             lbCheck.AutoSize = true;
             lbCheck.ForeColor = Color.Magenta;
-            lbCheck.Location = new Point(342, 588);
+            lbCheck.Location = new Point(324, 588);
             lbCheck.Name = "lbCheck";
             lbCheck.Size = new Size(42, 18);
             lbCheck.TabIndex = 45;

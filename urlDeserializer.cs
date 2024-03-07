@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -159,6 +160,58 @@ namespace FlightRecorder
                 catch (Exception ex)
                 {
                     result = -1;
+                    // Gérer les exceptions
+                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                }
+            }
+            return result;
+        }
+
+        [Serializable]
+        public class SaveFlightQuery
+        {
+            public string qtype { get; set; }
+            public string query { get; set; }
+            public string? cs { get; set; }
+            public string? plane { get; set; }
+            public string? sicao { get; set; }
+            public string? sfuel { get; set; }
+            public string? stime { get; set; }
+            public string? eicao { get; set; }
+            public string? efuel { get; set; }
+            public string? etime { get; set; }
+            public string? cargo { get; set; }
+            public string? note { get; set; }
+            public string? mission { get; set; }
+            public string? comment { get; set; }
+        }
+
+        public async Task<int> PushFlightAsync(SaveFlightQuery data)
+        {
+            int result;
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync<SaveFlightQuery>(_url, data);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string res = await response.Content.ReadAsStringAsync();
+                        result = 1;
+                        //if we received airports, store them locally
+                    }
+                    else
+                    {
+                        result = 0;
+                        // Gérer les erreurs si la requête n'a pas réussi
+                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = 0;
                     // Gérer les exceptions
                     Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
