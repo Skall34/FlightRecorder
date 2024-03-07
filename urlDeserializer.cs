@@ -138,15 +138,14 @@ namespace FlightRecorder
 
 
         
-        public async Task<int> FetchFreightDataAsync()
+        public async Task<float> FetchFreightDataAsync()
         {
-            int result;
+            float result;
             using (HttpClient client = new HttpClient())
             {
                 try
                 {
                     HttpResponseMessage response = await client.GetAsync(_url);
-
                     if (response.IsSuccessStatusCode)
                     {
                         string jsonString = await response.Content.ReadAsStringAsync();

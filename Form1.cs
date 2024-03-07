@@ -70,7 +70,8 @@ namespace FlightRecorder
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
 
-        private const string BASERURL = "https://script.google.com/macros/s/AKfycbzUPqAuUnVGOmZf6ZKgrYoOpKslgQR1TuWoApM_8KQOwc7_7IaT9ksBGB5Xgy6y3V1oUQ/exec";
+        private const string BASERURL = "https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec";
+        
         private const string DEBUGBASEURL = "https://script.google.com/macros/s/AKfycbxeubE-ReLw4TCJHWg9kiLsXGw1-ISAf9KSJw9khJW_/dev";
 
         //private bool modifiedFuel;
@@ -160,10 +161,10 @@ namespace FlightRecorder
 
         }
 
-        private async Task<int> GetFretOnAirport(string airportIdent)
+        private async Task<float> GetFretOnAirport(string airportIdent)
         {
             string url = BASERURL + "?query=freight&airport=" + airportIdent;
-            int fret = await Aeroport.fetchFreight(BASERURL, airportIdent);
+            float fret = await Aeroport.fetchFreight(BASERURL, airportIdent);
             if (fret > 0)
             {
                 lbFret.Text = "Available fret: " + fret.ToString();
@@ -208,7 +209,7 @@ namespace FlightRecorder
                         if (this.aeroports != null)
                         {
                             // Votre code pour utiliser les avions et les aéroports
-                            int fretOnLFMT = await GetFretOnAirport(tbCurrentIata.Text);
+                            float fretOnLFMT = await GetFretOnAirport(tbCurrentIata.Text);
                             lbFret.Text = "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
                         }
                     }
@@ -382,7 +383,7 @@ namespace FlightRecorder
                     float fpayload = float.Parse(tbCargo.Text) - 80;
 
                     //recupere le fret qui etait dispo au depart;
-                    int startFret = await Aeroport.fetchFreight(BASERURL, tbStartIata.Text);
+                    float startFret = await Aeroport.fetchFreight(BASERURL, tbStartIata.Text);
                     if (fpayload > startFret)
                     {
                         fpayload = startFret + 80;
@@ -760,7 +761,7 @@ namespace FlightRecorder
                     Avion? avionFound = avions.Find(avion => avion.Immat == aircraftImmat);
                     if (avionFound != null)
                     {
-                        int startFret = await Aeroport.fetchFreight(BASERURL, ICAOdepart);
+                        float startFret = await Aeroport.fetchFreight(BASERURL, ICAOdepart);
                         //considere que le pilote fait 80Kg;
                         if ((cargo - 80) < startFret)
                         {

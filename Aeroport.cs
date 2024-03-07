@@ -12,7 +12,7 @@ namespace FlightRecorder
 {
     public class Fret
     {
-        public int fret { get; set; }
+        public float fret { get; set; }
     }
 
     public class Aeroport
@@ -118,12 +118,12 @@ namespace FlightRecorder
             return result;
         }
 
-        public static async Task<int> fetchFreight(string baseUrl, string airportID)
+        public static async Task<float> fetchFreight(string baseUrl, string airportID)
         {
 
             string url = baseUrl + "?query=freight&airport=" + airportID;
             UrlDeserializer dataReader = new UrlDeserializer(url);
-            int result;
+            float result;
             result = await dataReader.FetchFreightDataAsync();
             return result;
         }
@@ -138,7 +138,7 @@ namespace FlightRecorder
         }
 
         
-        public static int deserializeFreight(string jsonString)
+        public static float deserializeFreight(string jsonString)
         {
             //var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
             Fret? result = JsonConvert.DeserializeObject<Fret>(jsonString);
