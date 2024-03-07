@@ -625,6 +625,7 @@ namespace FlightRecorder
             btnReset.TabIndex = 46;
             btnReset.Text = "Reset flight";
             btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
             // 
             // Form1
             // 

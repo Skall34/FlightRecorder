@@ -157,7 +157,7 @@ namespace FlightRecorder
 
         private async Task<int> GetFretOnAirport(string airportIdent)
         {
-            string url = BASERURL + "?query=freight&airport="+airportIdent;
+            string url = BASERURL + "?query=freight&airport=" + airportIdent;
             int fret = await Aeroport.fetchFreight(BASERURL, airportIdent);
             if (fret > 0)
             {
@@ -173,7 +173,7 @@ namespace FlightRecorder
 
         private async void readStaticValues()
         {
-            if ((null != _simData)&&(_simData.isConnected))
+            if ((null != _simData) && (_simData.isConnected))
             {
                 //commence à lire qq variables du simu : fuel & cargo, immat avion...
                 FuelQtty = _simData.getFuelWeight();
@@ -188,7 +188,7 @@ namespace FlightRecorder
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
 
-                if ((aeroports!=null) && (aeroports.Count>0))
+                if ((aeroports != null) && (aeroports.Count > 0))
                 {
                     Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
                     if (localAirport != null)
@@ -345,14 +345,14 @@ namespace FlightRecorder
 
                 //si aucun moteur de tournait, mais que maintenant, au moins un moteur tourne, on commence a enregistrer.
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
-                if (( !_previousEngineStatus && atLeastOneEngineFiring ) && ( startDisabled == 0 ))
+                if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
                     _startPosition = _simData.getPosition(); ;
 
                     double lat = _startPosition.Location.Latitude.DecimalDegrees;
                     double lon = _startPosition.Location.Longitude.DecimalDegrees;
 
-                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports,lat, lon);
+                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
                     if (localAirport != null)
                     {
                         string startAirportname = localAirport.name;
@@ -382,7 +382,7 @@ namespace FlightRecorder
                     double lat = _endPosition.Location.Latitude.DecimalDegrees;
                     double lon = _endPosition.Location.Longitude.DecimalDegrees;
 
-                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports,lat, lon);
+                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
                     if (localAirport != null)
                     {
                         string endAirportname = localAirport.name;
@@ -470,36 +470,37 @@ namespace FlightRecorder
         {
             //crée un dictionnaire des valeurs à envoyer
             Dictionary<string, string> values = new Dictionary<string, string>();
-                UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery {
-                    query = "save",
-                    qtype = "json",
-                    cs = tbCallsign.Text,
-                    plane = cbImmat.Text,
-                    sicao = tbStartIata.Text,
-                    sfuel = tbStartFuel.Text,
-                    stime = tbStartTime.Text,
-                    eicao = tbEndIata.Text,
-                    efuel = tbEndFuel.Text,
-                    etime = tbEndTime.Text,
-                    note= cbNote.Text,
-                    mission = cbMission.Text,
-                    comment = tbCommentaires.Text,
-                    cargo = tbCargo.Text                    
-                };
-                UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
-                int result = await urlDeserializer.PushFlightAsync(data);
-                if (0 != result)
-                {
-                    //si tout va bien...
-                    this.lblConnectionStatus.Text = "Flight data saved";
-                    this.lblConnectionStatus.ForeColor = Color.Green;
-                }
-                else
-                {
-                    //en, cas d'erreur, affiche une popup avec le message
-                    MessageBox.Show("Error while sending flight data.");
-                }
-            
+            UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
+            {
+                query = "save",
+                qtype = "json",
+                cs = tbCallsign.Text,
+                plane = cbImmat.Text,
+                sicao = tbStartIata.Text,
+                sfuel = tbStartFuel.Text,
+                stime = tbStartTime.Text,
+                eicao = tbEndIata.Text,
+                efuel = tbEndFuel.Text,
+                etime = tbEndTime.Text,
+                note = cbNote.Text,
+                mission = cbMission.Text,
+                comment = tbCommentaires.Text,
+                cargo = tbCargo.Text
+            };
+            UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
+            int result = await urlDeserializer.PushFlightAsync(data);
+            if (0 != result)
+            {
+                //si tout va bien...
+                this.lblConnectionStatus.Text = "Flight data saved";
+                this.lblConnectionStatus.ForeColor = Color.Green;
+            }
+            else
+            {
+                //en, cas d'erreur, affiche une popup avec le message
+                MessageBox.Show("Error while sending flight data.");
+            }
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -535,10 +536,10 @@ namespace FlightRecorder
 
         private void remplirComboMissions()
         {
-             if (missions != null)
-                {
-                    cbMission.Items.AddRange(missions.Select(mission => mission.Libelle).Where(mission => !string.IsNullOrEmpty(mission)).ToArray());
-                }
+            if (missions != null)
+            {
+                cbMission.Items.AddRange(missions.Select(mission => mission.Libelle).Where(mission => !string.IsNullOrEmpty(mission)).ToArray());
+            }
             //await dataReader.FillComboBoxMissionsAsync(cbMission);
             cbMission.DisplayMember = "Libelle";
             this.Cursor = Cursors.Default;
@@ -620,7 +621,7 @@ namespace FlightRecorder
             toolTip1.ToolTipTitle = "Flight details";
             string tipText = "";
 
-            if (overspeed) tipText += "Overspeed detected \n"; 
+            if (overspeed) tipText += "Overspeed detected \n";
             if (stallWarning) tipText += "Stall warning detected \n";
             if (overRunwayCrashed) tipText += "Over runway crashed \n";
             if (crashed) tipText += "Crashed \n";
@@ -793,7 +794,7 @@ namespace FlightRecorder
             {
                 btnSubmit.Enabled = true;
             }
-            if (erreur!=string.Empty)
+            if (erreur != string.Empty)
             {
                 MessageBox.Show(erreur, "Check invalides", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -814,5 +815,22 @@ namespace FlightRecorder
 
         }
 
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            DialogResult res =MessageBox.Show("Confirm flight reset ?","Confirm",MessageBoxButtons.OKCancel);
+            if (res == DialogResult.OK)
+            {
+
+                tbStartIata.Text = string.Empty;
+                tbStartFuel.Text = string.Empty;
+                tbStartPosition.Text = string.Empty;
+                tbStartTime.Text = string.Empty;
+
+                tbEndTime.Text = string.Empty;
+                tbEndFuel.Text = string.Empty;
+                tbEndIata.Text = string.Empty;
+                tbEndPosition.Text = string.Empty;
+            }
+        }
     }
 }
