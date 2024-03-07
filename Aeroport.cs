@@ -29,7 +29,7 @@ namespace FlightRecorder
         public string? TypeDePiste { get; set; }
         public string? Observations { get; set; }
         public string? Wikipedia_Link { get; set; }
-        public int fret { get; set; }
+        public float fret { get; set; }
 
         private const string DBFILE = "aeroports.json";
 
