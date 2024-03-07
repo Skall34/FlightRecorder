@@ -135,6 +135,16 @@ namespace FlightRecorder
             return result;
         }
 
+        public double getPlaneWeight()
+        {
+            double result = 0;
+            if (null != payloadServices)
+            {
+                result = payloadServices.GrossWeightKgs;
+            }
+            return result;
+        }
+
         public void setPayload(double newWheight)
         {
             if (null != payloadServices)

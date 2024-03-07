@@ -410,7 +410,7 @@ namespace FlightRecorder
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(217, 200);
+            label15.Location = new Point(217, 242);
             label15.Margin = new Padding(4, 0, 4, 0);
             label15.Name = "label15";
             label15.Size = new Size(63, 18);
@@ -420,16 +420,17 @@ namespace FlightRecorder
             // cbMission
             // 
             cbMission.FormattingEnabled = true;
-            cbMission.Location = new Point(287, 198);
+            cbMission.Location = new Point(287, 240);
             cbMission.Name = "cbMission";
             cbMission.Size = new Size(121, 26);
             cbMission.TabIndex = 22;
+            cbMission.SelectedIndexChanged += cbMission_SelectedIndexChanged;
             // 
             // cbNote
             // 
             cbNote.FormattingEnabled = true;
             cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-            cbNote.Location = new Point(118, 197);
+            cbNote.Location = new Point(118, 239);
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(66, 26);
@@ -440,7 +441,7 @@ namespace FlightRecorder
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(11, 200);
+            label2.Location = new Point(11, 242);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(83, 18);
@@ -451,8 +452,10 @@ namespace FlightRecorder
             // 
             tbCommentaires.Location = new Point(118, 166);
             tbCommentaires.Margin = new Padding(5, 4, 5, 4);
+            tbCommentaires.Multiline = true;
             tbCommentaires.Name = "tbCommentaires";
-            tbCommentaires.Size = new Size(348, 25);
+            tbCommentaires.ScrollBars = ScrollBars.Vertical;
+            tbCommentaires.Size = new Size(348, 66);
             tbCommentaires.TabIndex = 20;
             // 
             // label12

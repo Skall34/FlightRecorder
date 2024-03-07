@@ -61,6 +61,9 @@ namespace FlightRecorder
         private int refillQtty;
         private double maxFuelCapacity;
 
+        private double takeOffWeight;
+        private double landingWeight;
+
         private List<Mission> missions;
         private List<Avion> avions;
         private List<Aeroport> aeroports;
@@ -274,6 +277,11 @@ namespace FlightRecorder
                 //check if we are in the air
                 if (_simData.getOnground() == 0)
                 {
+                    if (onGround)
+                    {
+                        //we just took off ! read the plane weight
+                        takeOffWeight = _simData.getPlaneWeight();
+                    }
                     //keep memory that we're airborn
                     onGround = false;
                 }
@@ -283,6 +291,7 @@ namespace FlightRecorder
                     {
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
+                        landingWeight = _simData.getPlaneWeight();
                     }
                 }
 
@@ -379,7 +388,7 @@ namespace FlightRecorder
                         fpayload = startFret + 80;
                         tbCargo.Text = fpayload.ToString();
                         _simData.setPayload(fpayload);
-                        lbFret.Text = "Cargo payload maxed to " + fpayload.ToString()+" Kg";
+                        lbFret.Text = "Cargo payload maxed to " + fpayload.ToString() + " Kg";
                         Invalidate();
                     }
                     btnSubmit.Enabled = true;
@@ -603,7 +612,9 @@ namespace FlightRecorder
         private int analyseFlight()
         {
             int note = 10;
-            tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed + " m/s";
+            tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed.ToString("0.00") + " fpm\n";
+            tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg\n";
+            tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg\n";
 
             if (_simData.getFlapsAvailableFlag() == 1)
             {
@@ -644,7 +655,7 @@ namespace FlightRecorder
             if (stallWarning) tipText += "Stall warning detected \n";
             if (overRunwayCrashed) tipText += "Over runway crashed \n";
             if (crashed) tipText += "Crashed \n";
-            tipText += "vertical speed at touchdown: " + touchDownVSpeed + " m/s";
+            tipText += "vertical speed at touchdown: " + touchDownVSpeed + " fpm";
             if (_simData.getGearRetractableFlag() == 1)
             {
                 tipText += "gear down speed : " + gearDownSpeed + " m/s";
@@ -836,7 +847,7 @@ namespace FlightRecorder
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            DialogResult res =MessageBox.Show("Confirm flight reset ?","Confirm",MessageBoxButtons.OKCancel);
+            DialogResult res = MessageBox.Show("Confirm flight reset ?", "Confirm", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
 
@@ -850,6 +861,11 @@ namespace FlightRecorder
                 tbEndIata.Text = string.Empty;
                 tbEndPosition.Text = string.Empty;
             }
+        }
+
+        private void cbMission_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
