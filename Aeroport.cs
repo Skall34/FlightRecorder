@@ -19,7 +19,7 @@ namespace FlightRecorder
     {
         public string? Ident { get; set; }
         public string? type { get; set; }
-        public string? name { get; set; }
+        public string name { get; set; }
         public string? municipality { get; set; }
         public double latitude_deg { get; set; }
         public double longitude_deg { get; set; }
@@ -93,7 +93,7 @@ namespace FlightRecorder
 
             string url = baseUrl + "?query=airports&date=" + epoch.ToString();
             UrlDeserializer dataReader = new UrlDeserializer(url);
-            List<Aeroport> result;
+            List<Aeroport>? result;
             result = await dataReader.FetchAirportsDataAsync(DBFILE);
             if (result == null)
             {
@@ -103,12 +103,16 @@ namespace FlightRecorder
                     //read the aeroports.json file.
                     StreamReader sr = new StreamReader(DBFILE);
                     string allData = sr.ReadToEnd();
-                    result = await deserializeAeroports(allData);
+                    result = deserializeAeroports(allData);
+                    if (null == result)
+                    {
+                        result = new List<Aeroport>();
+                    }
                 }
                 else
                 {
                     //no data from server and no local file available... it sucks....
-
+                    result = new List<Aeroport>();
                 }
             }
             return result;
@@ -126,19 +130,26 @@ namespace FlightRecorder
 
 
 
-        public static async Task<List<Aeroport>> deserializeAeroports(string jsonString)
+        public static List<Aeroport>? deserializeAeroports(string jsonString)
         {
             //var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
-            List<Aeroport> aeroports = JsonConvert.DeserializeObject<List<Aeroport>>(jsonString);
+            List<Aeroport>? aeroports = JsonConvert.DeserializeObject<List<Aeroport>>(jsonString);
             return aeroports;
         }
 
         
-        public static async Task<int> deserializeFreight(string jsonString)
+        public static int deserializeFreight(string jsonString)
         {
             //var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
-            Fret result = JsonConvert.DeserializeObject<Fret>(jsonString);
-            return result.fret;
+            Fret? result = JsonConvert.DeserializeObject<Fret>(jsonString);
+            if (null != result)
+            {
+                return result.fret;
+            }
+            else
+            {
+                return -1;
+            }
         }
     }
 

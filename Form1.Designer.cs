@@ -61,7 +61,6 @@ namespace FlightRecorder
             tbCallsign = new TextBox();
             btnSaveSettings = new Button();
             btnSubmit = new Button();
-            llManualSave = new LinkLabel();
             groupBox1 = new GroupBox();
             label15 = new Label();
             cbMission = new ComboBox();
@@ -81,11 +80,11 @@ namespace FlightRecorder
             cbImmat = new ComboBox();
             tbDesignationAvion = new TextBox();
             btnRefresh = new Button();
-            btnSettings = new Button();
             toolTip1 = new ToolTip(components);
             refillTimer = new System.Windows.Forms.Timer(components);
             btCheckVol = new Button();
             lbCheck = new Label();
+            btnReset = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -370,18 +369,6 @@ namespace FlightRecorder
             btnSubmit.UseVisualStyleBackColor = true;
             btnSubmit.Click += btnSubmit_Click;
             // 
-            // llManualSave
-            // 
-            llManualSave.AutoSize = true;
-            llManualSave.Location = new Point(77, 587);
-            llManualSave.Margin = new Padding(4, 0, 4, 0);
-            llManualSave.Name = "llManualSave";
-            llManualSave.Size = new Size(152, 18);
-            llManualSave.TabIndex = 37;
-            llManualSave.TabStop = true;
-            llManualSave.Text = "Manually enter flight";
-            llManualSave.LinkClicked += llManualSave_LinkClicked;
-            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(label15);
@@ -530,7 +517,7 @@ namespace FlightRecorder
             groupBox3.Controls.Add(label9);
             groupBox3.Location = new Point(11, 5);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(476, 198);
+            groupBox3.Size = new Size(476, 195);
             groupBox3.TabIndex = 41;
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
@@ -603,19 +590,6 @@ namespace FlightRecorder
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
             // 
-            // btnSettings
-            // 
-            btnSettings.Enabled = false;
-            btnSettings.Font = new Font("Arial", 9.75F, FontStyle.Bold);
-            btnSettings.ForeColor = Color.Black;
-            btnSettings.Location = new Point(11, 583);
-            btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(54, 29);
-            btnSettings.TabIndex = 42;
-            btnSettings.Text = "Gform Settings";
-            btnSettings.UseVisualStyleBackColor = true;
-            btnSettings.Click += btnSettings_Click;
-            // 
             // refillTimer
             // 
             refillTimer.Interval = 500;
@@ -624,7 +598,7 @@ namespace FlightRecorder
             // btCheckVol
             // 
             btCheckVol.ForeColor = Color.Black;
-            btCheckVol.Location = new Point(228, 584);
+            btCheckVol.Location = new Point(184, 583);
             btCheckVol.Name = "btCheckVol";
             btCheckVol.Size = new Size(90, 27);
             btCheckVol.TabIndex = 44;
@@ -636,11 +610,21 @@ namespace FlightRecorder
             // 
             lbCheck.AutoSize = true;
             lbCheck.ForeColor = Color.Magenta;
-            lbCheck.Location = new Point(324, 588);
+            lbCheck.Location = new Point(298, 587);
             lbCheck.Name = "lbCheck";
             lbCheck.Size = new Size(42, 18);
             lbCheck.TabIndex = 45;
             lbCheck.Text = "NOK";
+            // 
+            // btnReset
+            // 
+            btnReset.ForeColor = Color.Black;
+            btnReset.Location = new Point(12, 583);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(101, 27);
+            btnReset.TabIndex = 46;
+            btnReset.Text = "Reset flight";
+            btnReset.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -648,13 +632,12 @@ namespace FlightRecorder
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
             ClientSize = new Size(498, 644);
+            Controls.Add(btnReset);
             Controls.Add(lbCheck);
             Controls.Add(btCheckVol);
-            Controls.Add(btnSettings);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(llManualSave);
             Controls.Add(btnSubmit);
             Controls.Add(statusStrip);
             Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -710,11 +693,9 @@ namespace FlightRecorder
         private TextBox tbCallsign;
         private Button btnSaveSettings;
         private Button btnSubmit;
-        private LinkLabel llManualSave;
         private GroupBox groupBox1;
         private GroupBox groupBox2;
         private GroupBox groupBox3;
-        private Button btnSettings;
         private Button btnRefresh;
         private TextBox tbCurrentIata;
         private Label label2;
@@ -735,6 +716,7 @@ namespace FlightRecorder
         private Label lbFret;
         private Label label15;
         private ComboBox cbMission;
+        private Button btnReset;
     }
 }
 

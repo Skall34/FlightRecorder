@@ -35,37 +35,37 @@ namespace FlightRecorder
                         // Désérialisation du JSON
                         var data = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(jsonString);
 
-                        if (data.TryGetValue("flotte", out var flotte))
+                        if ((data!=null) && (data.TryGetValue("flotte", out var flotte)))
                         {
                             foreach (var item in flotte)
                             {
                                 Avion avion = new Avion
                                 {
-                                    Index = int.TryParse(item.TryGetValue("index", out string index) ? index : "", out int indexValue) ? indexValue : 0,
-                                    ICAO = item.TryGetValue("ICAO", out string icao) ? icao : "",
-                                    Type = item.TryGetValue("Type", out string type) ? type : "",
-                                    Immat = item.TryGetValue("Immat", out string immat) ? immat : "",
-                                    Localisation = item.TryGetValue("Localisation", out string localisation) ? localisation : "",
-                                    Hub = item.TryGetValue("Hub", out string hub) ? hub : "",
-                                    CoutHoraire = int.TryParse(item.TryGetValue("Cout Horaire", out string cout) ? cout : "", out int coutValue) ? coutValue : 0,
-                                    Etat = int.TryParse(item.TryGetValue("Etat", out string etat) ? etat : "", out int etatValue) ? etatValue : 0,
-                                    Status = int.TryParse(item.TryGetValue("Status", out string status) ? status : "", out int statusValue) ? statusValue : 0,
-                                    Horametre = item.TryGetValue("Horametre", out string horametre) ? horametre : "",
-                                    DernierUtilisateur = item.TryGetValue("Dernier utilisateur", out string utilisateur) ? utilisateur : ""
+                                    Index = int.TryParse(item.TryGetValue("index", out string? index) ? index : "", out int indexValue) ? indexValue : 0,
+                                    ICAO = item.TryGetValue("ICAO", out string? icao) ? icao : "",
+                                    Type = item.TryGetValue("Type", out string? type) ? type : "",
+                                    Immat = item.TryGetValue("Immat", out string? immat) ? immat : "",
+                                    Localisation = item.TryGetValue("Localisation", out string? localisation) ? localisation : "",
+                                    Hub = item.TryGetValue("Hub", out string? hub) ? hub : "",
+                                    CoutHoraire = int.TryParse(item.TryGetValue("Cout Horaire", out string? cout) ? cout : "", out int coutValue) ? coutValue : 0,
+                                    Etat = int.TryParse(item.TryGetValue("Etat", out string? etat) ? etat : "", out int etatValue) ? etatValue : 0,
+                                    Status = int.TryParse(item.TryGetValue("Status", out string? status) ? status : "", out int statusValue) ? statusValue : 0,
+                                    Horametre = item.TryGetValue("Horametre", out string? horametre) ? horametre : "",
+                                    DernierUtilisateur = item.TryGetValue("Dernier utilisateur", out string? utilisateur) ? utilisateur : ""
                                 };
 
                                 avions.Add(avion);
                             }
                         }
 
-                        if (data.TryGetValue("missions", out var missionTemp))
+                        if ((null != data) &&(data.TryGetValue("missions", out var missionTemp)))
                         {
                             foreach (var item in missionTemp)
                             {
                                 Mission mission = new Mission
                                 {
-                                    Libelle = item.TryGetValue("Libelle", out string libMission) ? libMission : "",
-                                    Index = int.TryParse(item.TryGetValue("Index", out string indexMission) ? indexMission : "", out int index) ? index : 0,
+                                    Libelle = item.TryGetValue("Libelle", out string? libMission) ? libMission : "",
+                                    Index = int.TryParse(item.TryGetValue("Index", out string? indexMission) ? indexMission : "", out int index) ? index : 0,
                                 };
 
                                 missions.Add(mission);
@@ -91,7 +91,7 @@ namespace FlightRecorder
 
         public async Task<List<Aeroport>> FetchAirportsDataAsync(string filename)
         {
-            List<Aeroport> aeroports ;
+            List<Aeroport>? aeroports ;
 
             using (HttpClient client = new HttpClient())
             {
@@ -103,7 +103,7 @@ namespace FlightRecorder
                     {
                         string jsonString = await response.Content.ReadAsStringAsync();
                         // Désérialisation du JSON
-                        aeroports = await Aeroport.deserializeAeroports(jsonString);
+                        aeroports = Aeroport.deserializeAeroports(jsonString);
                         //if we received airports, store them locally
                         if (aeroports != null)
                         {                           
@@ -112,6 +112,10 @@ namespace FlightRecorder
                             serializer.Formatting = Formatting.Indented;
                             serializer.Serialize(sw, aeroports);
                             sw.Close();
+                        }
+                        else
+                        {
+                            aeroports=new List<Aeroport>();
                         }
                     }
                     else
@@ -147,7 +151,7 @@ namespace FlightRecorder
                     {
                         string jsonString = await response.Content.ReadAsStringAsync();
                         // Désérialisation du JSON
-                        result = await Aeroport.deserializeFreight(jsonString);
+                        result = Aeroport.deserializeFreight(jsonString);
                         //if we received airports, store them locally
                     }
                     else
@@ -170,8 +174,8 @@ namespace FlightRecorder
         [Serializable]
         public class SaveFlightQuery
         {
-            public string qtype { get; set; }
-            public string query { get; set; }
+            public string? qtype { get; set; }
+            public string? query { get; set; }
             public string? cs { get; set; }
             public string? plane { get; set; }
             public string? sicao { get; set; }
