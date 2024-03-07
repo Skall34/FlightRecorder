@@ -15,7 +15,9 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace FlightRecorder
 {
@@ -241,7 +243,7 @@ namespace FlightRecorder
         }
 
         // This method runs 2 times per second (every 500ms). This is set on the timerMain properties.
-        private void timerMain_Tick(object sender, EventArgs e)
+        private async void timerMain_Tick(object sender, EventArgs e)
         {
             try
             {
@@ -365,6 +367,22 @@ namespace FlightRecorder
                     this.tbStartTime.Text = _startTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
                     this.tbStartFuel.Text = _startFuel.ToString("0.00");
+
+                    //fix payload, remove the pilot wheight;
+                    //considere que le pilote fait 80Kg;
+                    float fpayload = float.Parse(tbCargo.Text) - 80;
+
+                    //recupere le fret qui etait dispo au depart;
+                    int startFret = await Aeroport.fetchFreight(BASERURL, tbStartIata.Text);
+                    if (fpayload > startFret)
+                    {
+                        fpayload = startFret + 80;
+                        tbCargo.Text = fpayload.ToString();
+                        _simData.setPayload(fpayload);
+                        lbFret.Text = "Cargo payload maxed to " + fpayload.ToString()+" Kg";
+                        Invalidate();
+                    }
+                    btnSubmit.Enabled = true;
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
@@ -468,6 +486,7 @@ namespace FlightRecorder
         //envoi des données au google form
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
+
             //crée un dictionnaire des valeurs à envoyer
             Dictionary<string, string> values = new Dictionary<string, string>();
             UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
@@ -500,7 +519,7 @@ namespace FlightRecorder
                 //en, cas d'erreur, affiche une popup avec le message
                 MessageBox.Show("Error while sending flight data.");
             }
-
+            btnSubmit.Enabled = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)

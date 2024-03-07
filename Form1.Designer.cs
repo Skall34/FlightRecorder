@@ -82,8 +82,6 @@ namespace FlightRecorder
             btnRefresh = new Button();
             toolTip1 = new ToolTip(components);
             refillTimer = new System.Windows.Forms.Timer(components);
-            btCheckVol = new Button();
-            lbCheck = new Label();
             btnReset = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -251,9 +249,9 @@ namespace FlightRecorder
             label9.Location = new Point(11, 83);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(97, 18);
+            label9.Size = new Size(157, 18);
             label9.TabIndex = 24;
-            label9.Text = "Payload (Kg)";
+            label9.Text = "Payload (Kg Inc pilot)";
             label9.Click += label9_Click;
             // 
             // tbCargo
@@ -370,6 +368,7 @@ namespace FlightRecorder
             // 
             // btnSubmit
             // 
+            btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
             btnSubmit.Location = new Point(391, 583);
             btnSubmit.Margin = new Padding(4);
@@ -609,27 +608,6 @@ namespace FlightRecorder
             refillTimer.Interval = 500;
             refillTimer.Tick += refillTimer_Tick;
             // 
-            // btCheckVol
-            // 
-            btCheckVol.ForeColor = Color.Black;
-            btCheckVol.Location = new Point(184, 583);
-            btCheckVol.Name = "btCheckVol";
-            btCheckVol.Size = new Size(90, 27);
-            btCheckVol.TabIndex = 23;
-            btCheckVol.Text = "Check";
-            btCheckVol.UseVisualStyleBackColor = true;
-            btCheckVol.Click += btCheckVol_Click;
-            // 
-            // lbCheck
-            // 
-            lbCheck.AutoSize = true;
-            lbCheck.ForeColor = Color.Magenta;
-            lbCheck.Location = new Point(298, 587);
-            lbCheck.Name = "lbCheck";
-            lbCheck.Size = new Size(42, 18);
-            lbCheck.TabIndex = 45;
-            lbCheck.Text = "NOK";
-            // 
             // btnReset
             // 
             btnReset.ForeColor = Color.Black;
@@ -648,8 +626,6 @@ namespace FlightRecorder
             BackColor = Color.FromArgb(255, 128, 0);
             ClientSize = new Size(498, 644);
             Controls.Add(btnReset);
-            Controls.Add(lbCheck);
-            Controls.Add(btCheckVol);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -725,10 +701,8 @@ namespace FlightRecorder
         private Button btnRefill;
         private System.Windows.Forms.Timer refillTimer;
         private ComboBox cbImmat;
-        private Button btCheckVol;
         private Label label13;
         private TextBox tbCurrentPosition;
-        private Label lbCheck;
         private Label lbFret;
         private Label label15;
         private ComboBox cbMission;
