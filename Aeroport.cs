@@ -95,7 +95,7 @@ namespace FlightRecorder
             UrlDeserializer dataReader = new UrlDeserializer(url);
             List<Aeroport>? result;
             result = await dataReader.FetchAirportsDataAsync(DBFILE);
-            if (result == null)
+            if (result.Count == 0)
             {
                 //no airports from the server, try to load the local database.
                 if (File.Exists(DBFILE))

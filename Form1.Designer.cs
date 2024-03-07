@@ -118,7 +118,8 @@ namespace FlightRecorder
             txtAirspeed.Name = "txtAirspeed";
             txtAirspeed.ReadOnly = true;
             txtAirspeed.Size = new Size(74, 25);
-            txtAirspeed.TabIndex = 9;
+            txtAirspeed.TabIndex = 8;
+            txtAirspeed.TabStop = false;
             txtAirspeed.TextAlign = HorizontalAlignment.Right;
             // 
             // label1
@@ -164,7 +165,8 @@ namespace FlightRecorder
             tbStartTime.Name = "tbStartTime";
             tbStartTime.ReadOnly = true;
             tbStartTime.Size = new Size(69, 25);
-            tbStartTime.TabIndex = 14;
+            tbStartTime.TabIndex = 12;
+            tbStartTime.TabStop = false;
             tbStartTime.TextAlign = HorizontalAlignment.Right;
             // 
             // tbEndTime
@@ -174,7 +176,8 @@ namespace FlightRecorder
             tbEndTime.Name = "tbEndTime";
             tbEndTime.ReadOnly = true;
             tbEndTime.Size = new Size(69, 25);
-            tbEndTime.TabIndex = 15;
+            tbEndTime.TabIndex = 13;
+            tbEndTime.TabStop = false;
             tbEndTime.TextAlign = HorizontalAlignment.Right;
             // 
             // label5
@@ -195,7 +198,8 @@ namespace FlightRecorder
             tbCurrentFuel.Name = "tbCurrentFuel";
             tbCurrentFuel.ReadOnly = true;
             tbCurrentFuel.Size = new Size(74, 25);
-            tbCurrentFuel.TabIndex = 17;
+            tbCurrentFuel.TabIndex = 10;
+            tbCurrentFuel.TabStop = false;
             tbCurrentFuel.TextAlign = HorizontalAlignment.Right;
             tbCurrentFuel.TextChanged += tbCurrentFuel_TextChanged;
             // 
@@ -226,7 +230,8 @@ namespace FlightRecorder
             tbStartFuel.Name = "tbStartFuel";
             tbStartFuel.ReadOnly = true;
             tbStartFuel.Size = new Size(69, 25);
-            tbStartFuel.TabIndex = 20;
+            tbStartFuel.TabIndex = 14;
+            tbStartFuel.TabStop = false;
             tbStartFuel.TextAlign = HorizontalAlignment.Right;
             // 
             // tbEndFuel
@@ -236,7 +241,8 @@ namespace FlightRecorder
             tbEndFuel.Name = "tbEndFuel";
             tbEndFuel.ReadOnly = true;
             tbEndFuel.Size = new Size(69, 25);
-            tbEndFuel.TabIndex = 21;
+            tbEndFuel.TabIndex = 15;
+            tbEndFuel.TabStop = false;
             tbEndFuel.TextAlign = HorizontalAlignment.Right;
             // 
             // label9
@@ -257,7 +263,7 @@ namespace FlightRecorder
             tbCargo.Margin = new Padding(4);
             tbCargo.Name = "tbCargo";
             tbCargo.Size = new Size(127, 25);
-            tbCargo.TabIndex = 25;
+            tbCargo.TabIndex = 4;
             tbCargo.TextAlign = HorizontalAlignment.Right;
             tbCargo.TextChanged += tbCargo_TextChanged;
             // 
@@ -278,7 +284,8 @@ namespace FlightRecorder
             tbStartPosition.Name = "tbStartPosition";
             tbStartPosition.ReadOnly = true;
             tbStartPosition.Size = new Size(293, 25);
-            tbStartPosition.TabIndex = 27;
+            tbStartPosition.TabIndex = 17;
+            tbStartPosition.TabStop = false;
             tbStartPosition.TextAlign = HorizontalAlignment.Right;
             // 
             // tbEndPosition
@@ -288,7 +295,8 @@ namespace FlightRecorder
             tbEndPosition.Name = "tbEndPosition";
             tbEndPosition.ReadOnly = true;
             tbEndPosition.Size = new Size(293, 25);
-            tbEndPosition.TabIndex = 28;
+            tbEndPosition.TabIndex = 19;
+            tbEndPosition.TabStop = false;
             tbEndPosition.TextAlign = HorizontalAlignment.Right;
             tbEndPosition.TextChanged += tbEndPosition_TextChanged;
             // 
@@ -299,7 +307,8 @@ namespace FlightRecorder
             tbStartIata.Name = "tbStartIata";
             tbStartIata.ReadOnly = true;
             tbStartIata.Size = new Size(81, 25);
-            tbStartIata.TabIndex = 29;
+            tbStartIata.TabIndex = 16;
+            tbStartIata.TabStop = false;
             tbStartIata.TextAlign = HorizontalAlignment.Right;
             // 
             // tbEndIata
@@ -309,7 +318,8 @@ namespace FlightRecorder
             tbEndIata.Name = "tbEndIata";
             tbEndIata.ReadOnly = true;
             tbEndIata.Size = new Size(81, 25);
-            tbEndIata.TabIndex = 30;
+            tbEndIata.TabIndex = 18;
+            tbEndIata.TabStop = false;
             tbEndIata.TextAlign = HorizontalAlignment.Right;
             // 
             // label10
@@ -339,8 +349,9 @@ namespace FlightRecorder
             tbCallsign.Location = new Point(233, 14);
             tbCallsign.Margin = new Padding(4);
             tbCallsign.Name = "tbCallsign";
+            tbCallsign.ShortcutsEnabled = false;
             tbCallsign.Size = new Size(127, 25);
-            tbCallsign.TabIndex = 34;
+            tbCallsign.TabIndex = 0;
             tbCallsign.TextAlign = HorizontalAlignment.Right;
             tbCallsign.TextChanged += textBox1_TextChanged;
             // 
@@ -352,7 +363,7 @@ namespace FlightRecorder
             btnSaveSettings.Margin = new Padding(4);
             btnSaveSettings.Name = "btnSaveSettings";
             btnSaveSettings.Size = new Size(96, 25);
-            btnSaveSettings.TabIndex = 35;
+            btnSaveSettings.TabIndex = 1;
             btnSaveSettings.Text = "Apply";
             btnSaveSettings.UseVisualStyleBackColor = true;
             btnSaveSettings.Click += btnSaveSettings_Click;
@@ -364,7 +375,7 @@ namespace FlightRecorder
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
-            btnSubmit.TabIndex = 36;
+            btnSubmit.TabIndex = 24;
             btnSubmit.Text = "Save flight";
             btnSubmit.UseVisualStyleBackColor = true;
             btnSubmit.Click += btnSubmit_Click;
@@ -413,7 +424,7 @@ namespace FlightRecorder
             cbMission.Location = new Point(287, 198);
             cbMission.Name = "cbMission";
             cbMission.Size = new Size(121, 26);
-            cbMission.TabIndex = 31;
+            cbMission.TabIndex = 22;
             // 
             // cbNote
             // 
@@ -423,7 +434,7 @@ namespace FlightRecorder
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(66, 26);
-            cbNote.TabIndex = 17;
+            cbNote.TabIndex = 21;
             cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
             cbNote.MouseHover += cbNote_MouseHover;
             // 
@@ -443,8 +454,7 @@ namespace FlightRecorder
             tbCommentaires.Margin = new Padding(5, 4, 5, 4);
             tbCommentaires.Name = "tbCommentaires";
             tbCommentaires.Size = new Size(348, 25);
-            tbCommentaires.TabIndex = 9;
-            tbCommentaires.Text = "no";
+            tbCommentaires.TabIndex = 20;
             // 
             // label12
             // 
@@ -477,7 +487,7 @@ namespace FlightRecorder
             btnRefill.Location = new Point(274, 58);
             btnRefill.Name = "btnRefill";
             btnRefill.Size = new Size(51, 25);
-            btnRefill.TabIndex = 20;
+            btnRefill.TabIndex = 11;
             btnRefill.Text = "Refill";
             toolTip1.SetToolTip(btnRefill, "Keep button pressed to refill the tanks");
             btnRefill.UseVisualStyleBackColor = true;
@@ -489,7 +499,8 @@ namespace FlightRecorder
             tbVSpeed.Location = new Point(376, 24);
             tbVSpeed.Name = "tbVSpeed";
             tbVSpeed.Size = new Size(90, 25);
-            tbVSpeed.TabIndex = 19;
+            tbVSpeed.TabIndex = 9;
+            tbVSpeed.TabStop = false;
             // 
             // label14
             // 
@@ -538,7 +549,8 @@ namespace FlightRecorder
             tbCurrentPosition.Name = "tbCurrentPosition";
             tbCurrentPosition.ReadOnly = true;
             tbCurrentPosition.Size = new Size(233, 25);
-            tbCurrentPosition.TabIndex = 31;
+            tbCurrentPosition.TabIndex = 7;
+            tbCurrentPosition.TabStop = false;
             tbCurrentPosition.TextAlign = HorizontalAlignment.Right;
             // 
             // tbCurrentIata
@@ -548,7 +560,8 @@ namespace FlightRecorder
             tbCurrentIata.Name = "tbCurrentIata";
             tbCurrentIata.ReadOnly = true;
             tbCurrentIata.Size = new Size(81, 25);
-            tbCurrentIata.TabIndex = 31;
+            tbCurrentIata.TabIndex = 6;
+            tbCurrentIata.TabStop = false;
             tbCurrentIata.TextAlign = HorizontalAlignment.Right;
             // 
             // label13
@@ -566,7 +579,7 @@ namespace FlightRecorder
             cbImmat.Location = new Point(118, 46);
             cbImmat.Name = "cbImmat";
             cbImmat.Size = new Size(109, 26);
-            cbImmat.TabIndex = 41;
+            cbImmat.TabIndex = 2;
             // 
             // tbDesignationAvion
             // 
@@ -576,7 +589,8 @@ namespace FlightRecorder
             tbDesignationAvion.Name = "tbDesignationAvion";
             tbDesignationAvion.ReadOnly = true;
             tbDesignationAvion.Size = new Size(233, 26);
-            tbDesignationAvion.TabIndex = 40;
+            tbDesignationAvion.TabIndex = 3;
+            tbDesignationAvion.TabStop = false;
             tbDesignationAvion.TextAlign = HorizontalAlignment.Right;
             // 
             // btnRefresh
@@ -585,7 +599,7 @@ namespace FlightRecorder
             btnRefresh.Location = new Point(370, 80);
             btnRefresh.Name = "btnRefresh";
             btnRefresh.Size = new Size(96, 25);
-            btnRefresh.TabIndex = 39;
+            btnRefresh.TabIndex = 5;
             btnRefresh.Text = "Update";
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
@@ -601,7 +615,7 @@ namespace FlightRecorder
             btCheckVol.Location = new Point(184, 583);
             btCheckVol.Name = "btCheckVol";
             btCheckVol.Size = new Size(90, 27);
-            btCheckVol.TabIndex = 44;
+            btCheckVol.TabIndex = 23;
             btCheckVol.Text = "Check";
             btCheckVol.UseVisualStyleBackColor = true;
             btCheckVol.Click += btCheckVol_Click;
@@ -622,7 +636,7 @@ namespace FlightRecorder
             btnReset.Location = new Point(12, 583);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(101, 27);
-            btnReset.TabIndex = 46;
+            btnReset.TabIndex = 25;
             btnReset.Text = "Reset flight";
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Click += btnReset_Click;
@@ -649,6 +663,7 @@ namespace FlightRecorder
             MaximizeBox = false;
             Name = "Form1";
             Text = "Flight recorder";
+            TopMost = true;
             Activated += Form1_Activated;
             FormClosing += frmMain_FormClosing;
             Load += Form1_Load;
