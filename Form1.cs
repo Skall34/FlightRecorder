@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -142,7 +143,15 @@ namespace FlightRecorder
             //load the airports.
             this.aeroports.AddRange(await Aeroport.fetchAirports(BASERURL, DateTime.UnixEpoch));
             //just in case, reload the statc values
-            readStaticValues();
+            if (aeroports.Count > 0)
+            {
+                readStaticValues();
+            }
+            else
+            {
+                MessageBox.Show("airport database is empty !","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
+            this.Cursor = Cursors.Default;
         }
 
         private async void loadDataFromSheet()
@@ -155,10 +164,18 @@ namespace FlightRecorder
             this.avions.AddRange(avions);
             this.missions.AddRange(missions);
 
+            if (avions.Count==0)
+            {
+                MessageBox.Show("planes database is empty !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            if (missions.Count == 0)
+            {
+                MessageBox.Show("No mission available !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             remplirComboImmat();
             remplirComboMissions();
             this.Cursor = Cursors.Default;
-
         }
 
         private async Task<float> GetFretOnAirport(string airportIdent)
@@ -255,7 +272,7 @@ namespace FlightRecorder
                 {
                     startDisabled -= 1;
 
-                    if (startDisabled == 0)
+                    if (startDisabled <= 0)
                     {
                         //the start detection disable timer expired, restore the start textboxes.
                         tbStartFuel.Enabled = true;
@@ -392,7 +409,6 @@ namespace FlightRecorder
                         lbFret.Text = "Cargo payload maxed to " + fpayload.ToString() + " Kg";
                         Invalidate();
                     }
-                    btnSubmit.Enabled = true;
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
@@ -426,6 +442,10 @@ namespace FlightRecorder
 
                     //compute the note of the flight
                     analyseFlight();
+
+                    //enable the save button
+                    btnSubmit.Enabled = true;
+
                 }
 
             }
@@ -492,44 +512,84 @@ namespace FlightRecorder
             this.btnSaveSettings.Enabled = false;
         }
 
+        private bool checkBeforeSave()
+        {
+            if (tbCallsign.Text== string.Empty) {
+                throw new Exception("Please indicate callsign and click 'Apply'.");
+            }
+
+            // Define the regular expression pattern
+            string pattern = @"^SKY\d{4}$";
+            // Create a Regex object with the pattern
+            Regex regex = new Regex(pattern);
+            // Check if the input string matches the pattern
+            if (!regex.IsMatch(tbCallsign.Text))
+            {
+                throw new Exception("The string starts with 'SKY' followed by four numbers.");
+            }
+
+            if (cbMission.Text == string.Empty)
+            {
+                throw new Exception("Please select a mission.");
+            }
+
+            if (cbImmat.Text == string.Empty)
+            {
+                throw new Exception("Please select a plane immatriculation.");
+            }
+
+            return true;
+        }
 
         //envoi des données au google form
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
+            try
+            {
+                checkBeforeSave();
 
-            //crée un dictionnaire des valeurs à envoyer
-            Dictionary<string, string> values = new Dictionary<string, string>();
-            UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
-            {
-                query = "save",
-                qtype = "json",
-                cs = tbCallsign.Text,
-                plane = cbImmat.Text,
-                sicao = tbStartIata.Text,
-                sfuel = tbStartFuel.Text,
-                stime = tbStartTime.Text,
-                eicao = tbEndIata.Text,
-                efuel = tbEndFuel.Text,
-                etime = tbEndTime.Text,
-                note = cbNote.Text,
-                mission = cbMission.Text,
-                comment = tbCommentaires.Text,
-                cargo = tbCargo.Text
-            };
-            UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
-            int result = await urlDeserializer.PushFlightAsync(data);
-            if (0 != result)
-            {
-                //si tout va bien...
-                this.lblConnectionStatus.Text = "Flight data saved";
-                this.lblConnectionStatus.ForeColor = Color.Green;
+                //crée un dictionnaire des valeurs à envoyer
+                Dictionary<string, string> values = new Dictionary<string, string>();
+                UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
+                {
+                    query = "save",
+                    qtype = "json",
+                    cs = tbCallsign.Text,
+                    plane = cbImmat.Text,
+                    sicao = tbStartIata.Text,
+                    sfuel = tbStartFuel.Text,
+                    stime = tbStartTime.Text,
+                    eicao = tbEndIata.Text,
+                    efuel = tbEndFuel.Text,
+                    etime = tbEndTime.Text,
+                    note = cbNote.Text,
+                    mission = cbMission.Text,
+                    comment = tbCommentaires.Text,
+                    cargo = tbCargo.Text
+                };
+                UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
+                int result = await urlDeserializer.PushFlightAsync(data);
+                if (0 != result)
+                {
+                    //si tout va bien...
+                    this.lblConnectionStatus.Text = "Flight data saved";
+                    this.lblConnectionStatus.ForeColor = Color.Green;
+                }
+                else
+                {
+                    //en, cas d'erreur, affiche une popup avec le message
+                    MessageBox.Show("Error while sending flight data.");
+                }
+                btnSubmit.Enabled = false;
             }
-            else
+            catch (Exception ex)
             {
-                //en, cas d'erreur, affiche une popup avec le message
-                MessageBox.Show("Error while sending flight data.");
+                //in case if check error, or exception durong save, show a messagebox containing the error message
+                MessageBox.Show(ex.Message);
             }
-            btnSubmit.Enabled = false;
+            this.Cursor = Cursors.Default;
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -736,101 +796,6 @@ namespace FlightRecorder
             _simData.setFuelWheight(FuelQtty);
         }
 
-        private async void btCheckVol_Click(object sender, EventArgs e)
-        {
-            string erreur = "";
-            string callsign = tbCallsign.Text;
-            string aircraftImmat = cbImmat.Text;
-            string ICAOdepart = tbCurrentIata.Text;
-            ICAOdepart = ICAOdepart.Trim('"');
-            //string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
-            string tempCargo = tbCargo.Text;
-            float cargo = float.Parse(tempCargo);
-            this.Cursor = Cursors.WaitCursor;
-            //UrlDeserializer urlDeserializer = new UrlDeserializer(url);
-
-            this.Cursor = Cursors.Default;
-
-            bool errorFound = false;
-
-            if (null != avions)
-            {
-                bool immatFound = avions.Any(avion => avion.Immat == aircraftImmat);
-                if (immatFound)
-                {
-                    Avion? avionFound = avions.Find(avion => avion.Immat == aircraftImmat);
-                    if (avionFound != null)
-                    {
-                        float startFret = await Aeroport.fetchFreight(BASERURL, ICAOdepart);
-                        //considere que le pilote fait 80Kg;
-                        if ((cargo - 80) < startFret)
-                        {
-                            //pas assez de fret à l'aeroport de départ
-                            erreur += "Il n'y a pas suffisamment de fret disponible à l'aéroport (" + startFret + ").\n";
-                            errorFound = true;
-                        }
-                        string? localisation = avionFound.Localisation;
-                        Aeroport? airport = aeroports.Find(aeroport => aeroport.Ident == localisation);
-
-                        if (airport != null)
-                        {
-                            if (airport.Ident != ICAOdepart)
-                            {
-                                erreur += $"L'avion n'est pas situé à l'aéroport de départ spécifié. Il se trouve à {localisation} \n";
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    erreur += "L'immatriculation de l'avion n'existe pas.\n";
-                    errorFound = true;
-                }
-            }
-            else
-            {
-                erreur += "Pas d'avions dans la base de données.\n";
-                errorFound = true;
-            }
-
-            if (aircraftImmat == "")
-            {
-                erreur += "L'immatriculation de l'avion ne peut pas être vide\n";
-                errorFound = true;
-            }
-            if (callsign == "")
-            {
-                erreur += "Le callsign doit être renseigné\n";
-                errorFound = true;
-            }
-            else
-            {
-                if (callsign.Length != 7)
-                {
-                    erreur += "Le callsign n'est pas bien formé. Il doit être composé de 7 caractères.\n";
-                    errorFound = true;
-                }
-                if (callsign.Substring(0, 3) != "SKY")
-                {
-                    erreur += "Le callsign n'est pas bien formé. Il doit commencer par SKY.\n";
-                }
-                if (callsign.Contains(" "))
-                {
-                    erreur += "Le callsign n'est pas bien formé. Il ne doit pas contenir d'espace.\n";
-                    errorFound = true;
-                }
-            }
-
-            if (!errorFound)
-            {
-                btnSubmit.Enabled = true;
-            }
-            if (erreur != string.Empty)
-            {
-                MessageBox.Show(erreur, "Check invalides", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
         private void label11_Click(object sender, EventArgs e)
         {
 
@@ -861,6 +826,11 @@ namespace FlightRecorder
                 tbEndFuel.Text = string.Empty;
                 tbEndIata.Text = string.Empty;
                 tbEndPosition.Text = string.Empty;
+
+                tbCommentaires.Text = string.Empty;
+                //reenable start detection at next timer tick
+                startDisabled = 1;
+                btnSubmit.Enabled = false;
             }
         }
 

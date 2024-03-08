@@ -419,6 +419,7 @@ namespace FlightRecorder
             // 
             // cbMission
             // 
+            cbMission.DropDownStyle = ComboBoxStyle.DropDownList;
             cbMission.FormattingEnabled = true;
             cbMission.Location = new Point(287, 240);
             cbMission.Name = "cbMission";
@@ -428,6 +429,7 @@ namespace FlightRecorder
             // 
             // cbNote
             // 
+            cbNote.DropDownStyle = ComboBoxStyle.DropDownList;
             cbNote.FormattingEnabled = true;
             cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
             cbNote.Location = new Point(118, 239);
@@ -577,6 +579,7 @@ namespace FlightRecorder
             // 
             // cbImmat
             // 
+            cbImmat.DropDownStyle = ComboBoxStyle.DropDownList;
             cbImmat.FormattingEnabled = true;
             cbImmat.Location = new Point(118, 46);
             cbImmat.Name = "cbImmat";
