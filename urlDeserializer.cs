@@ -127,6 +127,8 @@ namespace FlightRecorder
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message,"Error while loading airports",MessageBoxButtons.OK,MessageBoxIcon.Error);
+
                     aeroports = new List<Aeroport>();
                     // Gérer les exceptions
                     Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
