@@ -19,17 +19,17 @@ namespace FlightRecorder
     {
         public string? Ident { get; set; }
         public string? type { get; set; }
-        public string name { get; set; }
+        public string? name { get; set; }
         public string? municipality { get; set; }
         public double latitude_deg { get; set; }
         public double longitude_deg { get; set; }
-        public int elevation_ft { get; set; }
+        public double? elevation_ft { get; set; }
         public string? Piste { get; set; }
         public string? LongueurDePiste { get; set; }
         public string? TypeDePiste { get; set; }
         public string? Observations { get; set; }
         public string? Wikipedia_Link { get; set; }
-        public float fret { get; set; }
+        public float? fret { get; set; }
 
         private const string DBFILE = "aeroports.json";
 
