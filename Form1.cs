@@ -70,7 +70,7 @@ namespace FlightRecorder
         private List<Aeroport> aeroports;
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
-
+        
         private const string BASERURL = "https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec";
         
         private const string DEBUGBASEURL = "https://script.google.com/macros/s/AKfycbxeubE-ReLw4TCJHWg9kiLsXGw1-ISAf9KSJw9khJW_/dev";
@@ -830,6 +830,7 @@ namespace FlightRecorder
                 tbCommentaires.Text = string.Empty;
                 //reenable start detection at next timer tick
                 startDisabled = 1;
+				
                 btnSubmit.Enabled = false;
             }
         }
