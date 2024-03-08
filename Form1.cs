@@ -673,9 +673,9 @@ namespace FlightRecorder
         private int analyseFlight()
         {
             int note = 10;
-            tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed.ToString("0.00") + " fpm\n";
-            tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg\n";
-            tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg\n";
+            tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed.ToString("0.00") + " fpm ";
+            tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
+            tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg ";
 
             if (_simData.getFlapsAvailableFlag() == 1)
             {
