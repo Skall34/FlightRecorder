@@ -69,7 +69,7 @@ namespace FlightRecorder
         private List<Aeroport> aeroports;
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
-
+        
         private const string BASERURL = "https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec";
         
         private const string DEBUGBASEURL = "https://script.google.com/macros/s/AKfycbxeubE-ReLw4TCJHWg9kiLsXGw1-ISAf9KSJw9khJW_/dev";
@@ -736,101 +736,6 @@ namespace FlightRecorder
             _simData.setFuelWheight(FuelQtty);
         }
 
-        private async void btCheckVol_Click(object sender, EventArgs e)
-        {
-            string erreur = "";
-            string callsign = tbCallsign.Text;
-            string aircraftImmat = cbImmat.Text;
-            string ICAOdepart = tbCurrentIata.Text;
-            ICAOdepart = ICAOdepart.Trim('"');
-            //string url = "https://script.googleusercontent.com/macros/echo?user_content_key=3r7GqHQu2vYQTzjEDr8yZh6Or1qP9ZjoZd1lhUs1XzRTaAmt295yZYGzTYkNfr2Cnt8ylooBt8nB3SEAu9-iiSenpULGttWxm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnEWXZbxKowbFyWK6mf0AkZUck9mw4aqlryv0Uyk3X2EUUNB1LJ5EiMh4C_CqyO32UhuVtHfl-WwxQrjcySXBdMKHuOhsgSUX_9z9Jw9Md8uu&lib=MgqmD8WsWvTWSgj1P7b2DAIsibdiOaNOn";
-            string tempCargo = tbCargo.Text;
-            float cargo = float.Parse(tempCargo);
-            this.Cursor = Cursors.WaitCursor;
-            //UrlDeserializer urlDeserializer = new UrlDeserializer(url);
-
-            this.Cursor = Cursors.Default;
-
-            bool errorFound = false;
-
-            if (null != avions)
-            {
-                bool immatFound = avions.Any(avion => avion.Immat == aircraftImmat);
-                if (immatFound)
-                {
-                    Avion? avionFound = avions.Find(avion => avion.Immat == aircraftImmat);
-                    if (avionFound != null)
-                    {
-                        float startFret = await Aeroport.fetchFreight(BASERURL, ICAOdepart);
-                        //considere que le pilote fait 80Kg;
-                        if ((cargo - 80) < startFret)
-                        {
-                            //pas assez de fret à l'aeroport de départ
-                            erreur += "Il n'y a pas suffisamment de fret disponible à l'aéroport (" + startFret + ").\n";
-                            errorFound = true;
-                        }
-                        string? localisation = avionFound.Localisation;
-                        Aeroport? airport = aeroports.Find(aeroport => aeroport.Ident == localisation);
-
-                        if (airport != null)
-                        {
-                            if (airport.Ident != ICAOdepart)
-                            {
-                                erreur += $"L'avion n'est pas situé à l'aéroport de départ spécifié. Il se trouve à {localisation} \n";
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    erreur += "L'immatriculation de l'avion n'existe pas.\n";
-                    errorFound = true;
-                }
-            }
-            else
-            {
-                erreur += "Pas d'avions dans la base de données.\n";
-                errorFound = true;
-            }
-
-            if (aircraftImmat == "")
-            {
-                erreur += "L'immatriculation de l'avion ne peut pas être vide\n";
-                errorFound = true;
-            }
-            if (callsign == "")
-            {
-                erreur += "Le callsign doit être renseigné\n";
-                errorFound = true;
-            }
-            else
-            {
-                if (callsign.Length != 7)
-                {
-                    erreur += "Le callsign n'est pas bien formé. Il doit être composé de 7 caractères.\n";
-                    errorFound = true;
-                }
-                if (callsign.Substring(0, 3) != "SKY")
-                {
-                    erreur += "Le callsign n'est pas bien formé. Il doit commencer par SKY.\n";
-                }
-                if (callsign.Contains(" "))
-                {
-                    erreur += "Le callsign n'est pas bien formé. Il ne doit pas contenir d'espace.\n";
-                    errorFound = true;
-                }
-            }
-
-            if (!errorFound)
-            {
-                btnSubmit.Enabled = true;
-            }
-            if (erreur != string.Empty)
-            {
-                MessageBox.Show(erreur, "Check invalides", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
         private void label11_Click(object sender, EventArgs e)
         {
 
@@ -861,6 +766,8 @@ namespace FlightRecorder
                 tbEndFuel.Text = string.Empty;
                 tbEndIata.Text = string.Empty;
                 tbEndPosition.Text = string.Empty;
+                tbCommentaires.Text = string.Empty;
+                btnSubmit.Enabled = false;
             }
         }
 
