@@ -243,8 +243,8 @@ namespace FlightRecorder
                         if (this.aeroports != null)
                         {
                             // Votre code pour utiliser les avions et les aéroports
-                            float fretOnLFMT = await GetFretOnAirport(tbCurrentIata.Text);
-                            lbFret.Text = "Il y a " + fretOnLFMT.ToString() + " Kg de frêt disponible sur cet aéroport";
+                            float fretOnAirport = await GetFretOnAirport(tbCurrentIata.Text);
+                            lbFret.Text = "Il y a " + fretOnAirport.ToString() + " Kg de frêt disponible sur cet aéroport";
                         }
                     }
                 }

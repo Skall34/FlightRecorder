@@ -69,14 +69,14 @@ namespace FlightRecorder
             tbCommentaires = new TextBox();
             label12 = new Label();
             groupBox2 = new GroupBox();
-            btnRefill = new Button();
+            lbFret = new Label();
             tbCurrentPosition = new TextBox();
             tbVSpeed = new TextBox();
             tbCurrentIata = new TextBox();
             label14 = new Label();
             label13 = new Label();
+            btnRefill = new Button();
             groupBox3 = new GroupBox();
-            lbFret = new Label();
             cbImmat = new ComboBox();
             tbDesignationAvion = new TextBox();
             toolTip1 = new ToolTip(components);
@@ -369,7 +369,7 @@ namespace FlightRecorder
             // btnSubmit
             // 
             btnSubmit.Enabled = false;
-            btnSubmit.ForeColor = Color.Gray;
+            btnSubmit.ForeColor = Color.Black;
             btnSubmit.Location = new Point(391, 583);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
@@ -489,18 +489,14 @@ namespace FlightRecorder
             groupBox2.TabStop = false;
             groupBox2.Text = "Dynamic data";
             // 
-            // btnRefill
+            // lbFret
             // 
-            btnRefill.ForeColor = Color.Gray;
-            btnRefill.Location = new Point(355, 80);
-            btnRefill.Name = "btnRefill";
-            btnRefill.Size = new Size(111, 25);
-            btnRefill.TabIndex = 11;
-            btnRefill.Text = "Fuel refill";
-            toolTip1.SetToolTip(btnRefill, "Keep button pressed to refill the tanks");
-            btnRefill.UseVisualStyleBackColor = true;
-            btnRefill.MouseDown += button1_MouseDown;
-            btnRefill.MouseUp += button1_MouseUp;
+            lbFret.AutoSize = true;
+            lbFret.Location = new Point(11, 52);
+            lbFret.Name = "lbFret";
+            lbFret.Size = new Size(110, 18);
+            lbFret.TabIndex = 43;
+            lbFret.Text = "Fret on airport";
             // 
             // tbCurrentPosition
             // 
@@ -551,6 +547,19 @@ namespace FlightRecorder
             label13.Text = "Current position";
             label13.Click += label13_Click;
             // 
+            // btnRefill
+            // 
+            btnRefill.ForeColor = Color.Gray;
+            btnRefill.Location = new Point(355, 80);
+            btnRefill.Name = "btnRefill";
+            btnRefill.Size = new Size(111, 25);
+            btnRefill.TabIndex = 11;
+            btnRefill.Text = "Fuel refill";
+            toolTip1.SetToolTip(btnRefill, "Keep button pressed to refill the tanks");
+            btnRefill.UseVisualStyleBackColor = true;
+            btnRefill.MouseDown += button1_MouseDown;
+            btnRefill.MouseUp += button1_MouseUp;
+            // 
             // groupBox3
             // 
             groupBox3.Controls.Add(cbImmat);
@@ -568,15 +577,6 @@ namespace FlightRecorder
             groupBox3.TabIndex = 41;
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
-            // 
-            // lbFret
-            // 
-            lbFret.AutoSize = true;
-            lbFret.Location = new Point(11, 52);
-            lbFret.Name = "lbFret";
-            lbFret.Size = new Size(110, 18);
-            lbFret.TabIndex = 43;
-            lbFret.Text = "Fret on airport";
             // 
             // cbImmat
             // 
@@ -607,7 +607,7 @@ namespace FlightRecorder
             // 
             // btnReset
             // 
-            btnReset.ForeColor = Color.Gray;
+            btnReset.ForeColor = Color.Black;
             btnReset.Location = new Point(12, 583);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(101, 27);
