@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -17,7 +19,7 @@ namespace FlightRecorder
 
     public class Aeroport
     {
-        public string? Ident { get; set; }
+        public string? ident { get; set; }
         public string? type { get; set; }
         public string? name { get; set; }
         public string? municipality { get; set; }
@@ -33,11 +35,16 @@ namespace FlightRecorder
 
         private const string DBFILE = "aeroports.json";
 
+        public Aeroport()
+        {
+
+        }
+
         public Aeroport(uint id, string _ident, string _type, string _name, double latitude, double longitude)
         {
             type = _type;
             name = _name;
-            Ident = _ident;
+            ident = _ident;
             latitude_deg = latitude;
             longitude_deg = longitude;
         }
@@ -94,12 +101,15 @@ namespace FlightRecorder
             string url = baseUrl + "?query=airports&date=" + epoch.ToString();
             UrlDeserializer dataReader = new UrlDeserializer(url);
             List<Aeroport>? result;
+            Logger.WriteLine("Fechting airport informations from server");
             result = await dataReader.FetchAirportsDataAsync(DBFILE);
+            //if no new airport database, just load the local one.
             if (result.Count == 0)
             {
                 //no airports from the server, try to load the local database.
                 if (File.Exists(DBFILE))
                 {
+                    Logger.WriteLine("Loading local airport database");
                     //read the aeroports.json file.
                     StreamReader sr = new StreamReader(DBFILE);
                     string allData = sr.ReadToEnd();
@@ -132,8 +142,46 @@ namespace FlightRecorder
 
         public static List<Aeroport>? deserializeAeroports(string jsonString)
         {
-            //var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
-            List<Aeroport>? aeroports = JsonConvert.DeserializeObject<List<Aeroport>>(jsonString);
+            ////desrialize the whole aiport list at once. But this is bad because if one airport is bad, the whole
+            ////airport database is fucked up.
+            //List<Aeroport>? aeroports = JsonConvert.DeserializeObject<List<Aeroport>>(jsonString);
+            
+            //instead, deserialize one by one, to skip any wrongly informed airport
+            var data = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(jsonString);
+            List<Aeroport> aeroports = new List<Aeroport>();
+            IFormatProvider provider = CultureInfo.InvariantCulture;
+
+            //index to count the airports, to help finding a potential error in the airports.
+            int i = 1;
+            if (data != null)
+            {
+                foreach (Dictionary<string, string> item in data)
+                {
+                    try
+                    {
+                        Aeroport a = new Aeroport();
+                        a.ident = item.GetValueOrDefault("ident", "unknown"+i);
+                        a.type = item.GetValueOrDefault("type", "unknown" + i);
+                        a.name = item.GetValueOrDefault("name", "unknown" + i);
+                        a.municipality = item.GetValueOrDefault("municipality", "unknown" + i);
+                        a.latitude_deg = double.Parse(item.GetValueOrDefault("latitude_deg", "0"),provider);
+                        a.longitude_deg = double.Parse(item.GetValueOrDefault("longitude_deg", "0"), provider);
+                        a.elevation_ft = double.Parse(item.GetValueOrDefault("ekevation_ft", "0"), provider);
+                        a.Piste = item.GetValueOrDefault("Piste", "unknown" + i);
+                        a.LongueurDePiste = item.GetValueOrDefault("LongueueDePiste", "? " + i);
+                        a.TypeDePiste = item.GetValueOrDefault("TypeDePiste", "unknown" + i);
+                        a.Observations = item.GetValueOrDefault("Observations", "unknown" + i);
+                        a.Wikipedia_Link = item.GetValueOrDefault("Wikipedia_Link", "unknown" + i);
+                        aeroports.Add(a);
+                    }
+                    catch (Exception ex)
+                    {
+                        //badly formed airport. trace it for fix, but skip it.
+                        Logger.WriteLine("Error in airport DB, for entry " + i + " : " + ex.Message);
+                    }
+                    i++;
+                }
+            }
             return aeroports;
         }
 

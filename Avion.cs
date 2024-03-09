@@ -11,6 +11,7 @@ namespace FlightRecorder
         public int Index { get; set; }
         public string? ICAO { get; set; }
         public string? Type { get; set; }
+        public string? Designation { get; set; }
         public string? Immat { get; set; }
         public string? Localisation { get; set; }
         public string? Hub { get; set; }

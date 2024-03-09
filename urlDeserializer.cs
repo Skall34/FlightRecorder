@@ -37,14 +37,15 @@ namespace FlightRecorder
 
                         if ((data!=null) && (data.TryGetValue("flotte", out var flotte)))
                         {
-                            foreach (var item in flotte)
+                            foreach (Dictionary<string,string>item in flotte)
                             {
                                 Avion avion = new Avion
                                 {
                                     Index = int.TryParse(item.TryGetValue("index", out string? index) ? index : "", out int indexValue) ? indexValue : 0,
-                                    ICAO = item.TryGetValue("ICAO", out string? icao) ? icao : "",
-                                    Type = item.TryGetValue("Type", out string? type) ? type : "",
-                                    Immat = item.TryGetValue("Immat", out string? immat) ? immat : "",
+                                    ICAO = item.TryGetValue("ICAO", out string? icao) ? icao : "unknown",
+                                    Designation = item.TryGetValue("Clair", out string? design) ? design : "unknown",
+                                    Type = item.TryGetValue("Type", out string? type) ? type : "unknown",
+                                    Immat = item.TryGetValue("Immat", out string? immat) ? immat : "-----",
                                     Localisation = item.TryGetValue("Localisation", out string? localisation) ? localisation : "",
                                     Hub = item.TryGetValue("Hub", out string? hub) ? hub : "",
                                     CoutHoraire = int.TryParse(item.TryGetValue("Cout Horaire", out string? cout) ? cout : "", out int coutValue) ? coutValue : 0,
@@ -105,17 +106,13 @@ namespace FlightRecorder
                         // Désérialisation du JSON
                         aeroports = Aeroport.deserializeAeroports(jsonString);
                         //if we received airports, store them locally
-                        if (aeroports != null)
+                        if (aeroports.Count > 0)
                         {                           
                             StreamWriter sw= new StreamWriter(filename);
                             JsonSerializer serializer = new JsonSerializer();
                             serializer.Formatting = Formatting.Indented;
                             serializer.Serialize(sw, aeroports);
                             sw.Close();
-                        }
-                        else
-                        {
-                            aeroports=new List<Aeroport>();
                         }
                     }
                     else

@@ -24,7 +24,6 @@ namespace FlightRecorder
 {
     public partial class Form1 : Form
     {
-
         //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
         FsPositionSnapshot? _currentPosition;
         FsPositionSnapshot? _startPosition;
@@ -70,23 +69,23 @@ namespace FlightRecorder
         private List<Aeroport> aeroports;
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
-        
-        private const string BASERURL = "https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec";
-        
-        private const string DEBUGBASEURL = "https://script.google.com/macros/s/AKfycbxeubE-ReLw4TCJHWg9kiLsXGw1-ISAf9KSJw9khJW_/dev";
+
+        //private const string BASERURL = "https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec";
+        private string BASERURL;
 
         //private bool modifiedFuel;
         public Form1()
         {
             InitializeComponent();
 
-            this.Cursor = Cursors.WaitCursor;
-            aeroports = new List<Aeroport>();
-            avions = new List<Avion>();
-            missions = new List<Mission>();
+            //initialize the trace mechanism
+            Logger.init();
+            //logger = new Logger();
 
-            loadAirportsFromSheet();
-            loadDataFromSheet();
+            Logger.WriteLine("Starting flightrecorder");
+
+            //get the google sheet API url from the app settings
+            BASERURL = Settings.Default.GSheetAPIUrl;
 
             // Get the version information of your application
             Assembly? assembly = Assembly.GetEntryAssembly();
@@ -95,9 +94,22 @@ namespace FlightRecorder
                 Version? version = assembly.GetName().Version;
                 // Set the form's title to include the version number
                 this.Text = $"FlightRecorder - Version {version}";
+                Logger.WriteLine($"Version : {version}");
             }
 
+            this.Cursor = Cursors.WaitCursor;
+            aeroports = new List<Aeroport>();
+            avions = new List<Avion>();
+            missions = new List<Mission>();
+
+            Logger.WriteLine("start loading airports database");
+            loadAirportsFromSheet();
+            Logger.WriteLine("start loading planes and missions");
+            loadDataFromSheet();
+
+
             //initialise l'object qui sert à capter les données qui viennent du simu
+            Logger.WriteLine("initialize the connection to the simulator");
             _simData = new simData();
 
             //initialise des variables qui servent à garder un état.
@@ -131,6 +143,7 @@ namespace FlightRecorder
             btnSaveSettings.Enabled = false;
 
             //met à jour l'etat de connection au simu dans la barre de statut
+            Logger.WriteLine("update form status");
             configureForm();
 
             //demarre le timer de connection (fait un essai de connexion toutes les 1000ms)
@@ -149,8 +162,9 @@ namespace FlightRecorder
             }
             else
             {
-                MessageBox.Show("airport database is empty !","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("airport database is empty !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            Logger.WriteLine("done loading airports database");
             this.Cursor = Cursors.Default;
         }
 
@@ -164,7 +178,7 @@ namespace FlightRecorder
             this.avions.AddRange(avions);
             this.missions.AddRange(missions);
 
-            if (avions.Count==0)
+            if (avions.Count == 0)
             {
                 MessageBox.Show("planes database is empty !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -175,6 +189,9 @@ namespace FlightRecorder
 
             remplirComboImmat();
             remplirComboMissions();
+
+            Logger.WriteLine("done loading planes and missions");
+
             this.Cursor = Cursors.Default;
         }
 
@@ -190,12 +207,15 @@ namespace FlightRecorder
             {
                 lbFret.Text = "No fret here";
             }
+            Logger.WriteLine("Found freight " + fret.ToString() + " at airport " + airportIdent);
             return fret;
         }
 
 
         private async void readStaticValues()
         {
+            Logger.WriteLine("Reading static values");
+
             if ((null != _simData) && (_simData.isConnected))
             {
                 //commence à lire qq variables du simu : fuel & cargo, immat avion...
@@ -203,7 +223,7 @@ namespace FlightRecorder
                 maxFuelCapacity = _simData.getMaxFuel();
 
                 this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
-                this.tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
+                this.tbCargo.Text = _simData.getPayload().ToString("0.00");
 
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
@@ -218,11 +238,8 @@ namespace FlightRecorder
                     {
                         string startAirportname = localAirport.name;
                         tbCurrentPosition.Text = startAirportname;
-                        tbCurrentIata.Text = localAirport.Ident;
+                        tbCurrentIata.Text = localAirport.ident;
 
-                        //Ca ne marche pas. Airport est null. 
-                        // Je confonds airports et Aeroport
-                        // Utilisez les avions et les aéroports ici
                         if (this.aeroports != null)
                         {
                             // Votre code pour utiliser les avions et les aéroports
@@ -232,7 +249,7 @@ namespace FlightRecorder
                     }
                 }
                 //recupere le type d'avion donné par le simu.
-                this.tbDesignationAvion.Text = _simData.getAircraftType();
+                Logger.WriteLine("Simulator aircraft loaded : " + _simData.getAircraftType());
             }
         }
 
@@ -245,6 +262,7 @@ namespace FlightRecorder
                 //essaie d'ouvrir la connection. Si ça échoue, une exception sera envoyée
                 _simData.openConnection();
 
+                Logger.WriteLine("Connected to simulator");
                 //si on arrive ici, la connection est bien ouverte, arrete le timer de connection.
                 this.timerConnection.Stop();
 
@@ -297,19 +315,22 @@ namespace FlightRecorder
                 {
                     if (onGround)
                     {
+                        Logger.WriteLine("Takeoff detected !");
                         //we just took off ! read the plane weight
                         takeOffWeight = _simData.getPlaneWeight();
+                        //keep memory that we're airborn
+                        onGround = false;
                     }
-                    //keep memory that we're airborn
-                    onGround = false;
                 }
                 else //we're on ground !
                 {
                     if (!onGround)
                     {
+                        Logger.WriteLine("Landing detected !");
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
                         landingWeight = _simData.getPlaneWeight();
+                        onGround = true;
                     }
                 }
 
@@ -318,6 +339,7 @@ namespace FlightRecorder
                 gearIsUp = _simData.getIsGearUp();
                 if (!gearIsUp && currentGearIsUp)
                 {
+                    Logger.WriteLine("Gear down detected. Measure speed");
                     //get the max air speed while deploying the gears
                     if (airspeedKnots > gearDownSpeed)
                     {
@@ -332,6 +354,7 @@ namespace FlightRecorder
                 //if flaps just went deployed, get the air speed.
                 if ((currentFlapsPosition == 0) && (flapsPosition > 0))
                 {
+                    Logger.WriteLine("Flaps down detected. Measure speed");
                     //only keep the max flaps deployment air speed for this flight
                     if (airspeedKnots > flapsDownSpeed)
                     {
@@ -342,10 +365,12 @@ namespace FlightRecorder
 
                 if (_simData.getOverspeedWarning() != 0)
                 {
+                    Logger.WriteLine("overspeed warning detected");
                     overspeed = true;
                 }
                 if (_simData.getOffRunwayCrashed() != 0)
                 {
+                    Logger.WriteLine("off runway crashed detected");
                     overRunwayCrashed = true;
                 }
                 if (_simData.getCrashedFlag() != 0)
@@ -376,6 +401,8 @@ namespace FlightRecorder
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
                 if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
+                    Logger.WriteLine("First egine start detected for plane"+cbImmat.Text);
+
                     _startPosition = _simData.getPosition(); ;
 
                     double lat = _startPosition.Location.Latitude.DecimalDegrees;
@@ -386,7 +413,7 @@ namespace FlightRecorder
                     {
                         string startAirportname = localAirport.name;
                         tbStartPosition.Text = startAirportname;
-                        tbStartIata.Text = localAirport.Ident;
+                        tbStartIata.Text = localAirport.ident;
                     }
 
                     _startFuel = _simData.getFuelWeight();
@@ -395,25 +422,30 @@ namespace FlightRecorder
                     //0.00 => only keep 2 decimals for the fuel
                     this.tbStartFuel.Text = _startFuel.ToString("0.00");
 
-                    //fix payload, remove the pilot wheight;
-                    //considere que le pilote fait 80Kg;
-                    float fpayload = float.Parse(tbCargo.Text) - 80;
+                    float fpayload = float.Parse(tbCargo.Text);
 
                     //recupere le fret qui etait dispo au depart;
                     float startFret = await Aeroport.fetchFreight(BASERURL, tbStartIata.Text);
                     if (fpayload > startFret)
                     {
-                        fpayload = startFret + 80;
+                        fpayload = startFret;
                         tbCargo.Text = fpayload.ToString();
                         _simData.setPayload(fpayload);
                         lbFret.Text = "Cargo payload maxed to " + fpayload.ToString() + " Kg";
                         Invalidate();
                     }
+
+                    //quand les moteurs sont démarrés, on ne change plus rien
+                    cbImmat.Enabled = false;
+                    tbCargo.Enabled = false;
+                    btnRefill.Enabled = false;
+
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
                 if (_previousEngineStatus && !atLeastOneEngineFiring)
                 {
+                    Logger.WriteLine("Last engine stop detected");
                     // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
                     startDisabled = 300;
                     tbStartFuel.Enabled = false;
@@ -431,7 +463,7 @@ namespace FlightRecorder
                     {
                         string endAirportname = localAirport.name;
                         tbEndPosition.Text = endAirportname;
-                        tbEndIata.Text = localAirport.Ident;
+                        tbEndIata.Text = localAirport.ident;
                     }
 
                     _endFuel = _simData.getFuelWeight(); ;
@@ -445,6 +477,11 @@ namespace FlightRecorder
 
                     //enable the save button
                     btnSubmit.Enabled = true;
+
+                    //moteur arretés, on peut préparer un nouveau vol
+                    cbImmat.Enabled = true;
+                    tbCargo.Enabled = true;
+                    btnRefill.Enabled = true;
 
                 }
 
@@ -485,6 +522,9 @@ namespace FlightRecorder
             this.timerMain.Stop();
             //ferme la connection vers le simu
             FSUIPCConnection.Close();
+
+            //stop and flush the traces 
+            Logger.Dispose();
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -514,7 +554,8 @@ namespace FlightRecorder
 
         private bool checkBeforeSave()
         {
-            if (tbCallsign.Text== string.Empty) {
+            if (tbCallsign.Text == string.Empty)
+            {
                 throw new Exception("Please indicate callsign and click 'Apply'.");
             }
 
@@ -650,6 +691,7 @@ namespace FlightRecorder
                     _simData.setPayload(newPayload);
                     this.lblConnectionStatus.Text = "New payload send to simulator";
                     this.lblConnectionStatus.ForeColor = Color.Green;
+                    Logger.WriteLine("Setting payload to " + newPayload);
                 }
                 catch (Exception)
                 {
@@ -660,7 +702,7 @@ namespace FlightRecorder
             readStaticValues();
 
             modifiedPayload = false;
-            btnRefresh.Enabled = false;
+
         }
 
         private void tbImmat_MouseHover(object sender, EventArgs e)
@@ -738,14 +780,26 @@ namespace FlightRecorder
 
         private void tbCargo_TextChanged(object sender, EventArgs e)
         {
-            modifiedPayload = true;
-            btnRefresh.Enabled = true;
+            //modifiedPayload = true;
+            //btnRefresh.Enabled = true;
+            try
+            {
+                double newPayload = double.Parse(tbCargo.Text);
+                _simData.setPayload(newPayload);
+                this.lblConnectionStatus.Text = "New payload send to simulator";
+                this.lblConnectionStatus.ForeColor = Color.Green;
+                Logger.WriteLine("Setting payload to " + newPayload);
+            }
+            catch (Exception)
+            {
+                //do nothing
+            }
+
         }
 
         private void tbCurrentFuel_TextChanged(object sender, EventArgs e)
         {
-            //modifiedFuel = true;
-            btnRefresh.Enabled = true;
+
         }
 
         private void Form1_Activated(object sender, EventArgs e)
@@ -784,6 +838,8 @@ namespace FlightRecorder
         {
             if ((!refillTimer.Enabled) && (FuelQtty < maxFuelCapacity))
             {
+                Logger.WriteLine("Starting fuel tank refill");
+
                 refillTimer.Interval = 500;
                 refillQtty = 0;
                 refillTimer.Enabled = true;
@@ -794,6 +850,7 @@ namespace FlightRecorder
         {
             refillTimer.Stop();
             _simData.setFuelWheight(FuelQtty);
+            Logger.WriteLine("Stopping fuel tank refill qtty = " + FuelQtty);
         }
 
         private void label11_Click(object sender, EventArgs e)
@@ -828,16 +885,65 @@ namespace FlightRecorder
                 tbEndPosition.Text = string.Empty;
 
                 tbCommentaires.Text = string.Empty;
+                //reset flight infos.
+                overRunwayCrashed = false;
+                crashed = false;
+                stallWarning = false;
+                overspeed = false;
+
                 //reenable start detection at next timer tick
                 startDisabled = 1;
-				
+
+                //on peut préparer un nouveau vol
+                cbImmat.Enabled = true;
+                tbCargo.Enabled = true;
+                btnRefill.Enabled = true;
+
+
                 btnSubmit.Enabled = false;
+
+
+                Logger.WriteLine("Flight reset");
+
             }
         }
 
         private void cbMission_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbCargo_Leave(object sender, EventArgs e)
+        {
+            _simData.refresh();
+            if (modifiedPayload)
+            {
+                try
+                {
+                    double newPayload = double.Parse(tbCargo.Text);
+                    _simData.setPayload(newPayload);
+                    this.lblConnectionStatus.Text = "New payload send to simulator";
+                    this.lblConnectionStatus.ForeColor = Color.Green;
+                    Logger.WriteLine("Setting payload to " + newPayload);
+                }
+                catch (Exception)
+                {
+                    //do nothing
+                }
+            }
+            //update the static values
+            readStaticValues();
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbImmat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
+            tbDesignationAvion.Text = planeDesign;
         }
     }
 }

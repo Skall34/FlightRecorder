@@ -147,6 +147,8 @@ namespace FlightRecorder
 
         public void setPayload(double newWheight)
         {
+            //Add the pilot weight to this payload
+            double adjustedNewWeight = newWheight + 80;
             if (null != payloadServices)
             {
                 List<FsPayloadStation> stations = payloadServices.PayloadStations;
@@ -156,8 +158,8 @@ namespace FlightRecorder
                 foreach (FsPayloadStation s in stations)
                 {
                     //compute the % of this payload regarding the rest : 
-                    double percent = s.WeightKgs / currentPayload;
-                    s.WeightKgs = percent * newWheight;
+                    //double percent = s.WeightKgs / currentPayload;
+                    s.WeightKgs = adjustedNewWeight/nbPayloads;
                 }
                 payloadServices.WriteChanges();
             }
@@ -261,11 +263,17 @@ namespace FlightRecorder
 
         public string getTailNumber() => tailNumber.Value;
 
-        public double getPayloadWheight()
+        public double getPayload()
         {
             if (payloadServices != null)
             {
-                return payloadServices.PayloadWeightKgs;
+                double adujstedPayload = payloadServices.PayloadWeightKgs-80;
+                if (adujstedPayload < 0)
+                {
+                    adujstedPayload = 0;
+                }
+                //remove the pilot weight from this payload
+                return adujstedPayload;
             }
             else
             {

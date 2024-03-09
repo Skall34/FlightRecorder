@@ -41,7 +41,7 @@ namespace FlightRecorder.Tests
 
             Aeroport? closest = Aeroport.FindClosestAirport(aeroports, 43.58, 3.97);
             Assert.IsNotNull(closest);
-            Assert.IsTrue(closest.Ident == "LFMT");
+            Assert.IsTrue(closest.ident == "LFMT");
         }
 
         //[TestMethod()]
