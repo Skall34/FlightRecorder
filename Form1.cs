@@ -69,6 +69,7 @@ namespace FlightRecorder
         private List<Aeroport> aeroports;
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
+        private int endDisabled;
 
         //private const string BASERURL = "https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec";
         private string BASERURL;
@@ -300,6 +301,20 @@ namespace FlightRecorder
                     }
                 }
 
+                if (endDisabled > 0)
+                {
+                    endDisabled -= 1;
+
+                    if (endDisabled <= 0)
+                    {
+                        //the start detection disable timer expired, restore the start textboxes.
+                        tbEndFuel.Enabled = true;
+                        tbEndPosition.Enabled = true;
+                        tbEndTime.Enabled = true;
+                        tbEndIata.Enabled = true;
+                    }
+                }
+
                 //rafraichis les données venant du simu
                 _simData.refresh();
 
@@ -401,7 +416,12 @@ namespace FlightRecorder
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
                 if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
-                    Logger.WriteLine("First egine start detected for plane"+cbImmat.Text);
+                    Logger.WriteLine("First egine start detected for plane" + cbImmat.Text);
+                    endDisabled = 300;
+                    tbEndFuel.Enabled = false;
+                    tbEndPosition.Enabled = false;
+                    tbEndTime.Enabled = false;
+                    tbEndIata.Enabled = false;
 
                     _startPosition = _simData.getPosition(); ;
 
@@ -443,7 +463,7 @@ namespace FlightRecorder
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
-                if (_previousEngineStatus && !atLeastOneEngineFiring)
+                if ((_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled==0))
                 {
                     Logger.WriteLine("Last engine stop detected");
                     // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
@@ -893,6 +913,7 @@ namespace FlightRecorder
 
                 //reenable start detection at next timer tick
                 startDisabled = 1;
+                endDisabled = 1;
 
                 //on peut préparer un nouveau vol
                 cbImmat.Enabled = true;
