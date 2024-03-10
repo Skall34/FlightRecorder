@@ -245,7 +245,7 @@ namespace FlightRecorder
                         {
                             // Votre code pour utiliser les avions et les aéroports
                             float fretOnAirport = await GetFretOnAirport(localAirport.ident);
-                            lbFret.Text = "Il y a " + fretOnAirport.ToString() + " Kg de frêt disponible sur " + startAirportname;
+                            lbFret.Text = fretOnAirport.ToString() + " Kg available " + startAirportname;
                         }
                     }
                 }
@@ -260,6 +260,9 @@ namespace FlightRecorder
             // Try to open the connection
             try
             {
+                if ((aeroports.Count>0)&&(avions.Count>0)&&(missions.Count>0))
+                {
+
                 //essaie d'ouvrir la connection. Si ça échoue, une exception sera envoyée
                 _simData.openConnection();
 
@@ -275,6 +278,11 @@ namespace FlightRecorder
 
                 // met à jour le status de connection dans la barre de statut.
                 configureForm();
+                }
+                else
+                {
+                    Logger.WriteLine("Still waiting for data before connecting to simulator");
+                }
             }
             catch
             {
@@ -294,10 +302,10 @@ namespace FlightRecorder
                     if (startDisabled <= 0)
                     {
                         //the start detection disable timer expired, restore the start textboxes.
-                        tbStartFuel.Enabled = true;
-                        tbStartPosition.Enabled = true;
-                        tbStartTime.Enabled = true;
-                        tbStartIata.Enabled = true;
+                        lbStartFuel.Enabled = true;
+                        lbStartPosition.Enabled = true;
+                        lbStartTime.Enabled = true;
+                        lbStartIata.Enabled = true;
                     }
                 }
 
@@ -308,10 +316,10 @@ namespace FlightRecorder
                     if (endDisabled <= 0)
                     {
                         //the start detection disable timer expired, restore the start textboxes.
-                        tbEndFuel.Enabled = true;
-                        tbEndPosition.Enabled = true;
-                        tbEndTime.Enabled = true;
-                        tbEndIata.Enabled = true;
+                        lbEndFuel.Enabled = true;
+                        lbEndPosition.Enabled = true;
+                        lbEndTime.Enabled = true;
+                        lbEndIata.Enabled = true;
                     }
                 }
 
@@ -406,10 +414,10 @@ namespace FlightRecorder
                 {
                     Logger.WriteLine("First egine start detected for plane" + cbImmat.Text);
                     endDisabled = 300;
-                    tbEndFuel.Enabled = false;
-                    tbEndPosition.Enabled = false;
-                    tbEndTime.Enabled = false;
-                    tbEndIata.Enabled = false;
+                    lbEndFuel.Enabled = false;
+                    lbEndPosition.Enabled = false;
+                    lbEndTime.Enabled = false;
+                    lbEndIata.Enabled = false;
 
                     _startPosition = _simData.getPosition(); ;
 
@@ -420,20 +428,20 @@ namespace FlightRecorder
                     if (localAirport != null)
                     {
                         string startAirportname = localAirport.name;
-                        tbStartPosition.Text = startAirportname;
-                        tbStartIata.Text = localAirport.ident;
+                        lbStartPosition.Text = startAirportname;
+                        lbStartIata.Text = localAirport.ident;
                     }
 
                     _startFuel = _simData.getFuelWeight();
                     _startTime = DateTime.Now;
-                    this.tbStartTime.Text = _startTime.ToShortTimeString();
+                    this.lbStartTime.Text = _startTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
-                    this.tbStartFuel.Text = _startFuel.ToString("0.00");
+                    this.lbStartFuel.Text = _startFuel.ToString("0.00");
 
                     float fpayload = float.Parse(tbCargo.Text);
 
                     //recupere le fret qui etait dispo au depart;
-                    float startFret = await Aeroport.fetchFreight(BASERURL, tbStartIata.Text);
+                    float startFret = await Aeroport.fetchFreight(BASERURL, lbStartIata.Text);
                     if (fpayload > startFret)
                     {
                         fpayload = startFret;
@@ -444,8 +452,10 @@ namespace FlightRecorder
                     }
 
                     //quand les moteurs sont démarrés, on ne change plus rien
-                    cbImmat.Enabled = false;
-                    tbCargo.Enabled = false;
+                    //on ne peut pas faire ça, au cas ou l'acars est lancé APRES demarrage des moteurs,
+                    //c'est bien de pouvoir capter les données "au vol"...
+                    //cbImmat.Enabled = false;
+                    //tbCargo.Enabled = false;
 
                 }
 
@@ -455,10 +465,10 @@ namespace FlightRecorder
                     Logger.WriteLine("Last engine stop detected");
                     // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
                     startDisabled = 300;
-                    tbStartFuel.Enabled = false;
-                    tbStartPosition.Enabled = false;
-                    tbStartTime.Enabled = false;
-                    tbStartIata.Enabled = false;
+                    lbStartFuel.Enabled = false;
+                    lbStartPosition.Enabled = false;
+                    lbStartTime.Enabled = false;
+                    lbStartIata.Enabled = false;
 
                     //on recupere les etats de fin de vol : heure, carbu, position.
                     _endPosition = _simData.getPosition();
@@ -469,15 +479,15 @@ namespace FlightRecorder
                     if (localAirport != null)
                     {
                         string endAirportname = localAirport.name;
-                        tbEndPosition.Text = endAirportname;
-                        tbEndIata.Text = localAirport.ident;
+                        lbEndPosition.Text = endAirportname;
+                        lbEndIata.Text = localAirport.ident;
                     }
 
                     _endFuel = _simData.getFuelWeight(); ;
                     _endTime = DateTime.Now;
-                    this.tbEndTime.Text = _endTime.ToShortTimeString();
+                    this.lbEndTime.Text = _endTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
-                    this.tbEndFuel.Text = _endFuel.ToString("0.00");
+                    this.lbEndFuel.Text = _endFuel.ToString("0.00");
 
                     //compute the note of the flight
                     analyseFlight();
@@ -486,8 +496,10 @@ namespace FlightRecorder
                     btnSubmit.Enabled = true;
 
                     //moteur arretés, on peut préparer un nouveau vol
-                    cbImmat.Enabled = true;
-                    tbCargo.Enabled = true;
+                    //on ne peut pas faire ça, au cas ou l'acars est lancé APRES demarrage des moteurs,
+                    //c'est bien de pouvoir capter les données "au vol"...
+                    //cbImmat.Enabled = true;
+                    //tbCargo.Enabled = true;
 
                 }
 
@@ -604,12 +616,12 @@ namespace FlightRecorder
                     qtype = "json",
                     cs = tbCallsign.Text,
                     plane = cbImmat.Text,
-                    sicao = tbStartIata.Text,
-                    sfuel = tbStartFuel.Text,
-                    stime = tbStartTime.Text,
-                    eicao = tbEndIata.Text,
-                    efuel = tbEndFuel.Text,
-                    etime = tbEndTime.Text,
+                    sicao = lbStartIata.Text,
+                    sfuel = lbStartFuel.Text,
+                    stime = lbStartTime.Text,
+                    eicao = lbEndIata.Text,
+                    efuel = lbEndFuel.Text,
+                    etime = lbEndTime.Text,
                     note = cbNote.Text,
                     mission = cbMission.Text,
                     comment = tbCommentaires.Text,
@@ -879,15 +891,15 @@ namespace FlightRecorder
             if (res == DialogResult.OK)
             {
 
-                tbStartIata.Text = string.Empty;
-                tbStartFuel.Text = string.Empty;
-                tbStartPosition.Text = string.Empty;
-                tbStartTime.Text = string.Empty;
+                lbStartIata.Text = string.Empty;
+                lbStartFuel.Text = string.Empty;
+                lbStartPosition.Text = string.Empty;
+                lbStartTime.Text = string.Empty;
 
-                tbEndTime.Text = string.Empty;
-                tbEndFuel.Text = string.Empty;
-                tbEndIata.Text = string.Empty;
-                tbEndPosition.Text = string.Empty;
+                lbEndTime.Text = string.Empty;
+                lbEndFuel.Text = string.Empty;
+                lbEndIata.Text = string.Empty;
+                lbEndPosition.Text = string.Empty;
 
                 tbCommentaires.Text = string.Empty;
                 //reset flight infos.
@@ -947,7 +959,7 @@ namespace FlightRecorder
         private void cbImmat_SelectedIndexChanged(object sender, EventArgs e)
         {
             string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
-            tbDesignationAvion.Text = planeDesign;
+            lbDesignationAvion.Text = planeDesign;
         }
     }
 }
