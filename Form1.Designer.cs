@@ -50,6 +50,7 @@ namespace FlightRecorder
             btnSaveSettings = new Button();
             btnSubmit = new Button();
             groupBox1 = new GroupBox();
+            label1 = new Label();
             lbEndPosition = new Label();
             lbStartPosition = new Label();
             lbEndIata = new Label();
@@ -79,7 +80,7 @@ namespace FlightRecorder
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 470);
+            statusStrip.Location = new Point(0, 547);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 21, 0);
             statusStrip.Size = new Size(498, 22);
@@ -135,7 +136,7 @@ namespace FlightRecorder
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(324, 21);
+            label7.Location = new Point(320, 21);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
             label7.Size = new Size(36, 18);
@@ -169,12 +170,12 @@ namespace FlightRecorder
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(11, 108);
+            label8.Location = new Point(11, 127);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
-            label8.Size = new Size(66, 18);
+            label8.Size = new Size(104, 18);
             label8.TabIndex = 26;
-            label8.Text = "Position";
+            label8.Text = "Start Position";
             // 
             // label10
             // 
@@ -226,7 +227,7 @@ namespace FlightRecorder
             // 
             btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
-            btnSubmit.Location = new Point(391, 439);
+            btnSubmit.Location = new Point(391, 516);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
@@ -237,6 +238,7 @@ namespace FlightRecorder
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(lbEndPosition);
             groupBox1.Controls.Add(lbStartPosition);
             groupBox1.Controls.Add(lbEndIata);
@@ -258,15 +260,25 @@ namespace FlightRecorder
             groupBox1.Controls.Add(label3);
             groupBox1.Location = new Point(10, 149);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(476, 283);
+            groupBox1.Size = new Size(476, 360);
             groupBox1.TabIndex = 39;
             groupBox1.TabStop = false;
             groupBox1.Text = "Flight summary";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(11, 183);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(98, 18);
+            label1.TabIndex = 41;
+            label1.Text = "End Position";
+            // 
             // lbEndPosition
             // 
             lbEndPosition.AutoSize = true;
-            lbEndPosition.Location = new Point(173, 142);
+            lbEndPosition.Location = new Point(11, 205);
             lbEndPosition.Name = "lbEndPosition";
             lbEndPosition.Size = new Size(17, 18);
             lbEndPosition.TabIndex = 40;
@@ -275,7 +287,7 @@ namespace FlightRecorder
             // lbStartPosition
             // 
             lbStartPosition.AutoSize = true;
-            lbStartPosition.Location = new Point(173, 108);
+            lbStartPosition.Location = new Point(11, 149);
             lbStartPosition.Name = "lbStartPosition";
             lbStartPosition.Size = new Size(17, 18);
             lbStartPosition.TabIndex = 39;
@@ -284,7 +296,7 @@ namespace FlightRecorder
             // lbEndIata
             // 
             lbEndIata.AutoSize = true;
-            lbEndIata.Location = new Point(83, 142);
+            lbEndIata.Location = new Point(140, 183);
             lbEndIata.Name = "lbEndIata";
             lbEndIata.Size = new Size(44, 18);
             lbEndIata.TabIndex = 38;
@@ -293,7 +305,7 @@ namespace FlightRecorder
             // lbStartIata
             // 
             lbStartIata.AutoSize = true;
-            lbStartIata.Location = new Point(83, 108);
+            lbStartIata.Location = new Point(140, 127);
             lbStartIata.Name = "lbStartIata";
             lbStartIata.Size = new Size(44, 18);
             lbStartIata.TabIndex = 37;
@@ -322,7 +334,7 @@ namespace FlightRecorder
             // lbEndTime
             // 
             lbEndTime.AutoSize = true;
-            lbEndTime.Location = new Point(326, 45);
+            lbEndTime.Location = new Point(320, 45);
             lbEndTime.Name = "lbEndTime";
             lbEndTime.Size = new Size(32, 18);
             lbEndTime.TabIndex = 34;
@@ -332,7 +344,7 @@ namespace FlightRecorder
             // lbStartTime
             // 
             lbStartTime.AutoSize = true;
-            lbStartTime.Location = new Point(190, 45);
+            lbStartTime.Location = new Point(184, 45);
             lbStartTime.Name = "lbStartTime";
             lbStartTime.Size = new Size(32, 18);
             lbStartTime.TabIndex = 33;
@@ -342,7 +354,7 @@ namespace FlightRecorder
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(217, 250);
+            label15.Location = new Point(217, 318);
             label15.Margin = new Padding(4, 0, 4, 0);
             label15.Name = "label15";
             label15.Size = new Size(63, 18);
@@ -353,7 +365,7 @@ namespace FlightRecorder
             // 
             cbMission.DropDownStyle = ComboBoxStyle.DropDownList;
             cbMission.FormattingEnabled = true;
-            cbMission.Location = new Point(287, 248);
+            cbMission.Location = new Point(287, 316);
             cbMission.Name = "cbMission";
             cbMission.Size = new Size(121, 26);
             cbMission.TabIndex = 22;
@@ -364,7 +376,7 @@ namespace FlightRecorder
             cbNote.DropDownStyle = ComboBoxStyle.DropDownList;
             cbNote.FormattingEnabled = true;
             cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-            cbNote.Location = new Point(118, 247);
+            cbNote.Location = new Point(118, 315);
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(66, 26);
@@ -375,7 +387,7 @@ namespace FlightRecorder
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(11, 250);
+            label2.Location = new Point(11, 318);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(83, 18);
@@ -384,7 +396,7 @@ namespace FlightRecorder
             // 
             // tbCommentaires
             // 
-            tbCommentaires.Location = new Point(118, 172);
+            tbCommentaires.Location = new Point(118, 240);
             tbCommentaires.Margin = new Padding(5, 4, 5, 4);
             tbCommentaires.Multiline = true;
             tbCommentaires.Name = "tbCommentaires";
@@ -395,7 +407,7 @@ namespace FlightRecorder
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(11, 175);
+            label12.Location = new Point(11, 243);
             label12.Margin = new Padding(5, 0, 5, 0);
             label12.Name = "label12";
             label12.Size = new Size(83, 18);
@@ -456,7 +468,7 @@ namespace FlightRecorder
             // btnReset
             // 
             btnReset.ForeColor = Color.Black;
-            btnReset.Location = new Point(12, 438);
+            btnReset.Location = new Point(10, 516);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(101, 27);
             btnReset.TabIndex = 25;
@@ -469,7 +481,7 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(498, 492);
+            ClientSize = new Size(498, 569);
             Controls.Add(btnReset);
             Controls.Add(groupBox3);
             Controls.Add(groupBox1);
@@ -537,6 +549,7 @@ namespace FlightRecorder
         private Label lbStartFuel;
         private Label lbEndTime;
         private Label lbStartTime;
+        private Label label1;
     }
 }
 

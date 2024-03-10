@@ -122,6 +122,14 @@ namespace FlightRecorder
             _endFuel = 0;
             commentaires = string.Empty;
             onGround = true;
+            lbStartFuel.Text = "Waiting start";
+            lbEndFuel.Text = "Waiting end ...";
+            lbStartIata.Text = "Waiting start";
+            lbEndIata.Text = "Waiting end ...";
+            lbStartPosition.Text = "Waiting start";
+            lbEndPosition.Text = "Waiting end ...";
+            lbStartTime.Text = "Waiting start";
+            lbEndTime.Text = "Waiting end ...";
 
             touchDownVSpeed = 0;
             currentVSpeed = 0;
@@ -238,7 +246,7 @@ namespace FlightRecorder
                     if (localAirport != null)
                     {
                         string startAirportname = localAirport.name;
-                       // tbCurrentPosition.Text = startAirportname;
+                        // tbCurrentPosition.Text = startAirportname;
                         //tbCurrentIata.Text = localAirport.ident;
 
                         if (this.aeroports != null)
@@ -260,24 +268,24 @@ namespace FlightRecorder
             // Try to open the connection
             try
             {
-                if ((aeroports.Count>0)&&(avions.Count>0)&&(missions.Count>0))
+                if ((aeroports.Count > 0) && (avions.Count > 0) && (missions.Count > 0))
                 {
 
-                //essaie d'ouvrir la connection. Si ça échoue, une exception sera envoyée
-                _simData.openConnection();
+                    //essaie d'ouvrir la connection. Si ça échoue, une exception sera envoyée
+                    _simData.openConnection();
 
-                Logger.WriteLine("Connected to simulator");
-                //si on arrive ici, la connection est bien ouverte, arrete le timer de connection.
-                this.timerConnection.Stop();
+                    Logger.WriteLine("Connected to simulator");
+                    //si on arrive ici, la connection est bien ouverte, arrete le timer de connection.
+                    this.timerConnection.Stop();
 
-                //read the value that normally don't change (except change of plane, or cargo)
-                readStaticValues();
+                    //read the value that normally don't change (except change of plane, or cargo)
+                    readStaticValues();
 
-                //demarre le timer principal, qui lit les infos du simu 2x par 1s.
-                this.timerMain.Start();
+                    //demarre le timer principal, qui lit les infos du simu 2x par 1s.
+                    this.timerMain.Start();
 
-                // met à jour le status de connection dans la barre de statut.
-                configureForm();
+                    // met à jour le status de connection dans la barre de statut.
+                    configureForm();
                 }
                 else
                 {
@@ -328,7 +336,7 @@ namespace FlightRecorder
 
                 // Airspeed
                 double airspeedKnots = _simData.getAirSpeed();
-                
+
                 //check if we are in the air
                 if (_simData.getOnground() == 0)
                 {
@@ -436,6 +444,7 @@ namespace FlightRecorder
                     _startTime = DateTime.Now;
                     this.lbStartTime.Text = _startTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
+
                     this.lbStartFuel.Text = _startFuel.ToString("0.00");
 
                     float fpayload = float.Parse(tbCargo.Text);
@@ -460,7 +469,7 @@ namespace FlightRecorder
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
-                if ((_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled==0))
+                if ((_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
                 {
                     Logger.WriteLine("Last engine stop detected");
                     // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
@@ -662,6 +671,9 @@ namespace FlightRecorder
             // Effacez les éléments existants dans la combobox
             cbImmat.Items.Clear();
 
+            // Créez une liste pour stocker les immatriculations
+            List<string> immatriculations = new List<string>();
+
             // Parcourez la liste des avions
             foreach (var avion in avions)
             {
@@ -671,11 +683,20 @@ namespace FlightRecorder
                     // Si le statut est égal à 1, passez à l'itération suivante
                     continue;
                 }
-                // Ajoutez l'immatriculation de l'avion à la combobox
+                // Ajoutez l'immatriculation de l'avion à la liste des immatriculations
                 if (null != avion.Immat)
                 {
-                    cbImmat.Items.Add(avion.Immat);
+                    immatriculations.Add(avion.Immat);
                 }
+            }
+
+            // Tri de la liste des immatriculations
+            immatriculations.Sort();
+
+            // Ajout des immatriculations triées à la ComboBox
+            foreach (var immat in immatriculations)
+            {
+                cbImmat.Items.Add(immat);
             }
 
             //await dataReader.FillComboBoxImmatAsync(cbImmat);
@@ -902,6 +923,17 @@ namespace FlightRecorder
                 lbEndPosition.Text = string.Empty;
 
                 tbCommentaires.Text = string.Empty;
+                cbMission.Text = string.Empty;
+
+                lbStartFuel.Text = "Waiting start";
+                lbEndFuel.Text = "Waiting end ...";
+                lbStartIata.Text = "Waiting start";
+                lbEndIata.Text = "Waiting end ...";
+                lbStartPosition.Text = "Waiting start";
+                lbEndPosition.Text = "Waiting end ...";
+                lbStartTime.Text = "Waiting start";
+                lbEndTime.Text = "Waiting end ...";
+
                 //reset flight infos.
                 overRunwayCrashed = false;
                 crashed = false;
@@ -961,5 +993,6 @@ namespace FlightRecorder
             string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
             lbDesignationAvion.Text = planeDesign;
         }
+
     }
 }
