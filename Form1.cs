@@ -233,7 +233,7 @@ namespace FlightRecorder
 
                 //this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
                 this.tbCargo.Text = _simData.getPayload().ToString("0.00");
-
+               
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
 
@@ -347,6 +347,8 @@ namespace FlightRecorder
                         takeOffWeight = _simData.getPlaneWeight();
                         //keep memory that we're airborn
                         onGround = false;
+                        this.tbCargo.Enabled = false;
+                        this.lbFret.Visible = false;
                     }
                 }
                 else //we're on ground !
@@ -358,6 +360,7 @@ namespace FlightRecorder
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
                         landingWeight = _simData.getPlaneWeight();
                         onGround = true;
+                        this.tbCargo.Enabled = false;
                     }
                 }
 
@@ -937,6 +940,7 @@ namespace FlightRecorder
                 lbEndPosition.Text = "Waiting end ...";
                 lbStartTime.Text = "Waiting start";
                 lbEndTime.Text = "Waiting end ...";
+                lbFret.Visible = true;
 
                 //reset flight infos.
                 overRunwayCrashed = false;
