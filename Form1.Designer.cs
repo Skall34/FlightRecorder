@@ -36,15 +36,11 @@ namespace FlightRecorder
             statusStrip = new StatusStrip();
             lblConnectionStatus = new ToolStripStatusLabel();
             timerMain = new System.Windows.Forms.Timer(components);
-            txtAirspeed = new TextBox();
-            label1 = new Label();
             timerConnection = new System.Windows.Forms.Timer(components);
             label3 = new Label();
             label4 = new Label();
             tbStartTime = new TextBox();
             tbEndTime = new TextBox();
-            label5 = new Label();
-            tbCurrentFuel = new TextBox();
             label6 = new Label();
             label7 = new Label();
             tbStartFuel = new TextBox();
@@ -68,14 +64,7 @@ namespace FlightRecorder
             label2 = new Label();
             tbCommentaires = new TextBox();
             label12 = new Label();
-            groupBox2 = new GroupBox();
             lbFret = new Label();
-            tbCurrentPosition = new TextBox();
-            tbVSpeed = new TextBox();
-            tbCurrentIata = new TextBox();
-            label14 = new Label();
-            label13 = new Label();
-            btnRefill = new Button();
             groupBox3 = new GroupBox();
             cbImmat = new ComboBox();
             tbDesignationAvion = new TextBox();
@@ -84,14 +73,13 @@ namespace FlightRecorder
             btnReset = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 622);
+            statusStrip.Location = new Point(0, 504);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 21, 0);
             statusStrip.Size = new Size(498, 22);
@@ -107,28 +95,6 @@ namespace FlightRecorder
             // timerMain
             // 
             timerMain.Tick += timerMain_Tick;
-            // 
-            // txtAirspeed
-            // 
-            txtAirspeed.Location = new Point(194, 85);
-            txtAirspeed.Margin = new Padding(5, 4, 5, 4);
-            txtAirspeed.Name = "txtAirspeed";
-            txtAirspeed.ReadOnly = true;
-            txtAirspeed.Size = new Size(74, 25);
-            txtAirspeed.TabIndex = 8;
-            txtAirspeed.TabStop = false;
-            txtAirspeed.TextAlign = HorizontalAlignment.Right;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(11, 88);
-            label1.Margin = new Padding(5, 0, 5, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(187, 18);
-            label1.TabIndex = 7;
-            label1.Text = "Indicated Airpeed (Knots)";
-            label1.Click += label1_Click;
             // 
             // timerConnection
             // 
@@ -176,29 +142,6 @@ namespace FlightRecorder
             tbEndTime.TabIndex = 13;
             tbEndTime.TabStop = false;
             tbEndTime.TextAlign = HorizontalAlignment.Right;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(11, 123);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(128, 18);
-            label5.TabIndex = 16;
-            label5.Text = "Current fuel (Kg)";
-            // 
-            // tbCurrentFuel
-            // 
-            tbCurrentFuel.BackColor = SystemColors.Control;
-            tbCurrentFuel.Location = new Point(194, 120);
-            tbCurrentFuel.Margin = new Padding(4);
-            tbCurrentFuel.Name = "tbCurrentFuel";
-            tbCurrentFuel.ReadOnly = true;
-            tbCurrentFuel.Size = new Size(74, 25);
-            tbCurrentFuel.TabIndex = 10;
-            tbCurrentFuel.TabStop = false;
-            tbCurrentFuel.TextAlign = HorizontalAlignment.Right;
-            tbCurrentFuel.TextChanged += tbCurrentFuel_TextChanged;
             // 
             // label6
             // 
@@ -370,7 +313,7 @@ namespace FlightRecorder
             // 
             btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
-            btnSubmit.Location = new Point(391, 583);
+            btnSubmit.Location = new Point(391, 470);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
@@ -400,7 +343,7 @@ namespace FlightRecorder
             groupBox1.Controls.Add(tbStartTime);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
-            groupBox1.Location = new Point(11, 305);
+            groupBox1.Location = new Point(11, 192);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(476, 272);
             groupBox1.TabIndex = 39;
@@ -470,100 +413,19 @@ namespace FlightRecorder
             label12.TabIndex = 7;
             label12.Text = "Comments";
             // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(lbFret);
-            groupBox2.Controls.Add(tbCurrentPosition);
-            groupBox2.Controls.Add(tbVSpeed);
-            groupBox2.Controls.Add(tbCurrentIata);
-            groupBox2.Controls.Add(label14);
-            groupBox2.Controls.Add(label13);
-            groupBox2.Controls.Add(tbCurrentFuel);
-            groupBox2.Controls.Add(label5);
-            groupBox2.Controls.Add(txtAirspeed);
-            groupBox2.Controls.Add(label1);
-            groupBox2.Location = new Point(11, 128);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(476, 171);
-            groupBox2.TabIndex = 40;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Dynamic data";
-            // 
             // lbFret
             // 
             lbFret.AutoSize = true;
-            lbFret.Location = new Point(11, 52);
+            lbFret.Location = new Point(11, 121);
             lbFret.Name = "lbFret";
             lbFret.Size = new Size(110, 18);
             lbFret.TabIndex = 43;
             lbFret.Text = "Fret on airport";
             // 
-            // tbCurrentPosition
-            // 
-            tbCurrentPosition.Location = new Point(236, 18);
-            tbCurrentPosition.Margin = new Padding(4);
-            tbCurrentPosition.Name = "tbCurrentPosition";
-            tbCurrentPosition.ReadOnly = true;
-            tbCurrentPosition.Size = new Size(233, 25);
-            tbCurrentPosition.TabIndex = 7;
-            tbCurrentPosition.TabStop = false;
-            tbCurrentPosition.TextAlign = HorizontalAlignment.Right;
-            // 
-            // tbVSpeed
-            // 
-            tbVSpeed.Location = new Point(376, 86);
-            tbVSpeed.Name = "tbVSpeed";
-            tbVSpeed.Size = new Size(90, 25);
-            tbVSpeed.TabIndex = 9;
-            tbVSpeed.TabStop = false;
-            // 
-            // tbCurrentIata
-            // 
-            tbCurrentIata.Location = new Point(147, 18);
-            tbCurrentIata.Margin = new Padding(4);
-            tbCurrentIata.Name = "tbCurrentIata";
-            tbCurrentIata.ReadOnly = true;
-            tbCurrentIata.Size = new Size(81, 25);
-            tbCurrentIata.TabIndex = 6;
-            tbCurrentIata.TabStop = false;
-            tbCurrentIata.TextAlign = HorizontalAlignment.Right;
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(304, 88);
-            label14.Name = "label14";
-            label14.Size = new Size(63, 18);
-            label14.TabIndex = 18;
-            label14.Text = "VSpeed";
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Location = new Point(11, 21);
-            label13.Name = "label13";
-            label13.Size = new Size(124, 18);
-            label13.TabIndex = 42;
-            label13.Text = "Current position";
-            label13.Click += label13_Click;
-            // 
-            // btnRefill
-            // 
-            btnRefill.ForeColor = Color.Gray;
-            btnRefill.Location = new Point(355, 80);
-            btnRefill.Name = "btnRefill";
-            btnRefill.Size = new Size(111, 25);
-            btnRefill.TabIndex = 11;
-            btnRefill.Text = "Fuel refill";
-            toolTip1.SetToolTip(btnRefill, "Keep button pressed to refill the tanks");
-            btnRefill.UseVisualStyleBackColor = true;
-            btnRefill.MouseDown += button1_MouseDown;
-            btnRefill.MouseUp += button1_MouseUp;
-            // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(lbFret);
             groupBox3.Controls.Add(cbImmat);
-            groupBox3.Controls.Add(btnRefill);
             groupBox3.Controls.Add(tbDesignationAvion);
             groupBox3.Controls.Add(btnSaveSettings);
             groupBox3.Controls.Add(tbCallsign);
@@ -573,7 +435,7 @@ namespace FlightRecorder
             groupBox3.Controls.Add(label9);
             groupBox3.Location = new Point(11, 5);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(476, 117);
+            groupBox3.Size = new Size(476, 184);
             groupBox3.TabIndex = 41;
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
@@ -608,7 +470,7 @@ namespace FlightRecorder
             // btnReset
             // 
             btnReset.ForeColor = Color.Black;
-            btnReset.Location = new Point(12, 583);
+            btnReset.Location = new Point(12, 470);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(101, 27);
             btnReset.TabIndex = 25;
@@ -621,10 +483,9 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(498, 644);
+            ClientSize = new Size(498, 526);
             Controls.Add(btnReset);
             Controls.Add(groupBox3);
-            Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(btnSubmit);
             Controls.Add(statusStrip);
@@ -644,8 +505,6 @@ namespace FlightRecorder
             statusStrip.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
             ResumeLayout(false);
@@ -657,15 +516,11 @@ namespace FlightRecorder
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel lblConnectionStatus;
         private System.Windows.Forms.Timer timerMain;
-        private System.Windows.Forms.TextBox txtAirspeed;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerConnection;
         private Label label3;
         private Label label4;
         private TextBox tbStartTime;
         private TextBox tbEndTime;
-        private Label label5;
-        private TextBox tbCurrentFuel;
         private Label label6;
         private Label label7;
         private TextBox tbStartFuel;
@@ -683,22 +538,15 @@ namespace FlightRecorder
         private Button btnSaveSettings;
         private Button btnSubmit;
         private GroupBox groupBox1;
-        private GroupBox groupBox2;
         private GroupBox groupBox3;
-        private TextBox tbCurrentIata;
         private Label label2;
         private TextBox tbCommentaires;
         private Label label12;
         private ComboBox cbNote;
         private TextBox tbDesignationAvion;
         private ToolTip toolTip1;
-        private TextBox tbVSpeed;
-        private Label label14;
-        private Button btnRefill;
         private System.Windows.Forms.Timer refillTimer;
         private ComboBox cbImmat;
-        private Label label13;
-        private TextBox tbCurrentPosition;
         private Label lbFret;
         private Label label15;
         private ComboBox cbMission;

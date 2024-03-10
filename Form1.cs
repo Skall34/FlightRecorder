@@ -223,7 +223,7 @@ namespace FlightRecorder
                 FuelQtty = _simData.getFuelWeight();
                 maxFuelCapacity = _simData.getMaxFuel();
 
-                this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
+                //this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
                 this.tbCargo.Text = _simData.getPayload().ToString("0.00");
 
                 //recupere l'emplacement courant :
@@ -238,14 +238,14 @@ namespace FlightRecorder
                     if (localAirport != null)
                     {
                         string startAirportname = localAirport.name;
-                        tbCurrentPosition.Text = startAirportname;
-                        tbCurrentIata.Text = localAirport.ident;
+                       // tbCurrentPosition.Text = startAirportname;
+                        //tbCurrentIata.Text = localAirport.ident;
 
                         if (this.aeroports != null)
                         {
                             // Votre code pour utiliser les avions et les aéroports
-                            float fretOnAirport = await GetFretOnAirport(tbCurrentIata.Text);
-                            lbFret.Text = "Il y a " + fretOnAirport.ToString() + " Kg de frêt disponible sur cet aéroport";
+                            float fretOnAirport = await GetFretOnAirport(localAirport.ident);
+                            lbFret.Text = "Il y a " + fretOnAirport.ToString() + " Kg de frêt disponible sur " + startAirportname;
                         }
                     }
                 }
@@ -320,11 +320,7 @@ namespace FlightRecorder
 
                 // Airspeed
                 double airspeedKnots = _simData.getAirSpeed();
-                this.txtAirspeed.Text = airspeedKnots.ToString("F0");
-
-                currentVSpeed = _simData.getVerticalSpeed();
-                tbVSpeed.Text = currentVSpeed.ToString("0.00");
-                // Update the information on the form
+                
                 //check if we are in the air
                 if (_simData.getOnground() == 0)
                 {
@@ -397,14 +393,6 @@ namespace FlightRecorder
                     stallWarning = true;
                 }
 
-                //affiche en live le niveau de barburant
-                //0.00 => only keep 2 decimals for the fuel
-                if (!refillTimer.Enabled)
-                {
-                    tbCurrentFuel.Text = _simData.getFuelWeight().ToString("0.00");
-                }
-                //tbCargo.Text = _simData.getPayloadWheight().ToString("0.00");
-
                 //on va verifier l'etat des moteurs :
 
                 //sauvegarde l'etat precedent des moteurs
@@ -458,7 +446,6 @@ namespace FlightRecorder
                     //quand les moteurs sont démarrés, on ne change plus rien
                     cbImmat.Enabled = false;
                     tbCargo.Enabled = false;
-                    btnRefill.Enabled = false;
 
                 }
 
@@ -501,7 +488,6 @@ namespace FlightRecorder
                     //moteur arretés, on peut préparer un nouveau vol
                     cbImmat.Enabled = true;
                     tbCargo.Enabled = true;
-                    btnRefill.Enabled = true;
 
                 }
 
@@ -636,6 +622,7 @@ namespace FlightRecorder
                     //si tout va bien...
                     this.lblConnectionStatus.Text = "Flight data saved";
                     this.lblConnectionStatus.ForeColor = Color.Green;
+                    MessageBox.Show("Flight saved. Thank you for flying with SKYWINGS :)", "Flight Recorder");
                 }
                 else
                 {
@@ -800,8 +787,6 @@ namespace FlightRecorder
 
         private void tbCargo_TextChanged(object sender, EventArgs e)
         {
-            //modifiedPayload = true;
-            //btnRefresh.Enabled = true;
             try
             {
                 double newPayload = double.Parse(tbCargo.Text);
@@ -850,7 +835,7 @@ namespace FlightRecorder
                     _simData.setFuelWheight(FuelQtty);
                 }
 
-                tbCurrentFuel.Text = FuelQtty.ToString("0.00");
+                //tbCurrentFuel.Text = FuelQtty.ToString("0.00");
             }
         }
 
@@ -918,8 +903,6 @@ namespace FlightRecorder
                 //on peut préparer un nouveau vol
                 cbImmat.Enabled = true;
                 tbCargo.Enabled = true;
-                btnRefill.Enabled = true;
-
 
                 btnSubmit.Enabled = false;
 
