@@ -544,14 +544,18 @@ namespace FlightRecorder
         // Form is closing so stop all the timers and close FSUIPC Connection
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //arrete les timers.
-            this.timerConnection.Stop();
-            this.timerMain.Stop();
-            //ferme la connection vers le simu
-            FSUIPCConnection.Close();
+            DialogResult res = MessageBox.Show("Confirm close ACARS ?", "Flight Recorder", MessageBoxButtons.OKCancel);
+            if (res == DialogResult.OK)
+            {
+                //arrete les timers.
+                this.timerConnection.Stop();
+                this.timerMain.Stop();
+                //ferme la connection vers le simu
+                FSUIPCConnection.Close();
 
-            //stop and flush the traces 
-            Logger.Dispose();
+                //stop and flush the traces 
+                Logger.Dispose();
+            }
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -908,7 +912,7 @@ namespace FlightRecorder
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("Confirm flight reset ?", "Confirm", MessageBoxButtons.OKCancel);
+            DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
 
