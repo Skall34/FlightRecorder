@@ -130,6 +130,7 @@ namespace FlightRecorder
             lbEndPosition.Text = "Waiting end ...";
             lbStartTime.Text = "Waiting start";
             lbEndTime.Text = "Waiting end ...";
+            lbPayload.Text = "Waiting data ...";
 
             touchDownVSpeed = 0;
             currentVSpeed = 0;
@@ -232,7 +233,7 @@ namespace FlightRecorder
                 maxFuelCapacity = _simData.getMaxFuel();
 
                 //this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
-                this.tbCargo.Text = _simData.getPayload().ToString("0.00");
+                this.lbPayload.Text = _simData.getPayload().ToString("0.00");
                
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
@@ -347,7 +348,7 @@ namespace FlightRecorder
                         takeOffWeight = _simData.getPlaneWeight();
                         //keep memory that we're airborn
                         onGround = false;
-                        this.tbCargo.Enabled = false;
+                        this.lbPayload.Enabled = false;
                         this.lbFret.Visible = false;
                     }
                 }
@@ -360,7 +361,7 @@ namespace FlightRecorder
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
                         landingWeight = _simData.getPlaneWeight();
                         onGround = true;
-                        this.tbCargo.Enabled = false;
+                        this.lbPayload.Enabled = false;
                     }
                 }
 
@@ -450,18 +451,18 @@ namespace FlightRecorder
 
                     this.lbStartFuel.Text = _startFuel.ToString("0.00");
 
-                    float fpayload = float.Parse(tbCargo.Text);
+                    //float fpayload = float.Parse(lbPayload.Text);
 
                     //recupere le fret qui etait dispo au depart;
-                    float startFret = await Aeroport.fetchFreight(BASERURL, lbStartIata.Text);
-                    if (fpayload > startFret)
-                    {
-                        fpayload = startFret;
-                        tbCargo.Text = fpayload.ToString();
-                        _simData.setPayload(fpayload);
-                        lbFret.Text = "Cargo payload maxed to " + fpayload.ToString() + " Kg";
-                        Invalidate();
-                    }
+                    //float startFret = await Aeroport.fetchFreight(BASERURL, lbStartIata.Text);
+                    //if (fpayload > startFret)
+                    //{
+                    //fpayload = startFret;
+                    //lbPayload.Text = fpayload.ToString();
+                    //_simData.setPayload(fpayload);
+                    //lbFret.Text = "Cargo payload maxed to " + fpayload.ToString() + " Kg";
+                    //Invalidate();
+                    //}
 
                     //quand les moteurs sont démarrés, on ne change plus rien
                     //on ne peut pas faire ça, au cas ou l'acars est lancé APRES demarrage des moteurs,
@@ -641,7 +642,7 @@ namespace FlightRecorder
                     note = cbNote.Text,
                     mission = cbMission.Text,
                     comment = tbCommentaires.Text,
-                    cargo = tbCargo.Text
+                    cargo = lbPayload.Text
                 };
                 UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
                 int result = await urlDeserializer.PushFlightAsync(data);
@@ -803,18 +804,6 @@ namespace FlightRecorder
 
         private void tbCargo_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                double newPayload = double.Parse(tbCargo.Text);
-                _simData.setPayload(newPayload);
-                this.lblConnectionStatus.Text = "New payload send to simulator";
-                this.lblConnectionStatus.ForeColor = Color.Green;
-                Logger.WriteLine("Setting payload to " + newPayload);
-            }
-            catch (Exception)
-            {
-                //do nothing
-            }
 
         }
 
@@ -930,7 +919,7 @@ namespace FlightRecorder
 
                 //on peut préparer un nouveau vol
                 cbImmat.Enabled = true;
-                tbCargo.Enabled = true;
+                lbPayload.Enabled = true;
 
                 btnSubmit.Enabled = false;
 
@@ -945,28 +934,7 @@ namespace FlightRecorder
 
         }
 
-        private void tbCargo_Leave(object sender, EventArgs e)
-        {
-            _simData.refresh();
-            if (modifiedPayload)
-            {
-                try
-                {
-                    double newPayload = double.Parse(tbCargo.Text);
-                    _simData.setPayload(newPayload);
-                    this.lblConnectionStatus.Text = "New payload send to simulator";
-                    this.lblConnectionStatus.ForeColor = Color.Green;
-                    Logger.WriteLine("Setting payload to " + newPayload);
-                }
-                catch (Exception)
-                {
-                    //do nothing
-                }
-            }
-            //update the static values
-            readStaticValues();
-        }
-
+ 
         private void label13_Click(object sender, EventArgs e)
         {
 

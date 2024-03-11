@@ -42,7 +42,6 @@ namespace FlightRecorder
             label6 = new Label();
             label7 = new Label();
             label9 = new Label();
-            tbCargo = new TextBox();
             label8 = new Label();
             label10 = new Label();
             label11 = new Label();
@@ -72,6 +71,7 @@ namespace FlightRecorder
             toolTip1 = new ToolTip(components);
             refillTimer = new System.Windows.Forms.Timer(components);
             btnReset = new Button();
+            lbPayload = new Label();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -154,18 +154,6 @@ namespace FlightRecorder
             label9.TabIndex = 24;
             label9.Text = "Payload (Kg)";
             label9.Click += label9_Click;
-            // 
-            // tbCargo
-            // 
-            tbCargo.BackColor = Color.FromArgb(192, 255, 192);
-            tbCargo.Location = new Point(118, 80);
-            tbCargo.Margin = new Padding(4);
-            tbCargo.Name = "tbCargo";
-            tbCargo.Size = new Size(109, 25);
-            tbCargo.TabIndex = 4;
-            tbCargo.TextAlign = HorizontalAlignment.Right;
-            tbCargo.TextChanged += tbCargo_TextChanged;
-            tbCargo.Leave += tbCargo_Leave;
             // 
             // label8
             // 
@@ -425,6 +413,7 @@ namespace FlightRecorder
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(lbPayload);
             groupBox3.Controls.Add(lbDesignationAvion);
             groupBox3.Controls.Add(lbFret);
             groupBox3.Controls.Add(cbImmat);
@@ -432,7 +421,6 @@ namespace FlightRecorder
             groupBox3.Controls.Add(tbCallsign);
             groupBox3.Controls.Add(label11);
             groupBox3.Controls.Add(label10);
-            groupBox3.Controls.Add(tbCargo);
             groupBox3.Controls.Add(label9);
             groupBox3.Location = new Point(11, 5);
             groupBox3.Name = "groupBox3";
@@ -475,6 +463,15 @@ namespace FlightRecorder
             btnReset.Text = "Reset flight";
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Click += btnReset_Click;
+            // 
+            // lbPayload
+            // 
+            lbPayload.AutoSize = true;
+            lbPayload.Location = new Point(118, 83);
+            lbPayload.Name = "lbPayload";
+            lbPayload.Size = new Size(50, 18);
+            lbPayload.TabIndex = 45;
+            lbPayload.Text = "label5";
             // 
             // Form1
             // 
@@ -519,7 +516,6 @@ namespace FlightRecorder
         private Label label6;
         private Label label7;
         private Label label9;
-        private TextBox tbCargo;
         private Label label8;
         private Label label10;
         private Label label11;
@@ -549,6 +545,7 @@ namespace FlightRecorder
         private Label lbEndTime;
         private Label lbStartTime;
         private Label label1;
+        private Label lbPayload;
     }
 }
 
