@@ -495,7 +495,6 @@ namespace FlightRecorder
             MaximizeBox = false;
             Name = "Form1";
             Text = "Flight recorder";
-            TopMost = true;
             Activated += Form1_Activated;
             FormClosing += frmMain_FormClosing;
             Load += Form1_Load;

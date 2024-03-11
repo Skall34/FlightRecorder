@@ -727,30 +727,6 @@ namespace FlightRecorder
 
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            _simData.refresh();
-            if (modifiedPayload)
-            {
-                try
-                {
-                    double newPayload = double.Parse(tbCargo.Text);
-                    _simData.setPayload(newPayload);
-                    this.lblConnectionStatus.Text = "New payload send to simulator";
-                    this.lblConnectionStatus.ForeColor = Color.Green;
-                    Logger.WriteLine("Setting payload to " + newPayload);
-                }
-                catch (Exception)
-                {
-                    //do nothing
-                }
-            }
-            //update the static values
-            readStaticValues();
-
-            modifiedPayload = false;
-
-        }
 
         private void tbImmat_MouseHover(object sender, EventArgs e)
         {
