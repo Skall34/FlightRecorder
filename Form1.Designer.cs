@@ -64,7 +64,7 @@ namespace FlightRecorder
             label3 = new Label();
             lbTimeOnGround = new Label();
             lbOnGround = new Label();
-            lbTimeAiborn = new Label();
+            lbTimeAirborn = new Label();
             lbAirborn = new Label();
             label15 = new Label();
             cbMission = new ComboBox();
@@ -190,7 +190,7 @@ namespace FlightRecorder
             groupBox1.Controls.Add(groupBox2);
             groupBox1.Controls.Add(lbTimeOnGround);
             groupBox1.Controls.Add(lbOnGround);
-            groupBox1.Controls.Add(lbTimeAiborn);
+            groupBox1.Controls.Add(lbTimeAirborn);
             groupBox1.Controls.Add(lbAirborn);
             groupBox1.Controls.Add(label15);
             groupBox1.Controls.Add(cbMission);
@@ -418,13 +418,13 @@ namespace FlightRecorder
             // 
             // lbTimeAiborn
             // 
-            lbTimeAiborn.AutoSize = true;
-            lbTimeAiborn.Location = new Point(167, 191);
-            lbTimeAiborn.Name = "lbTimeAiborn";
-            lbTimeAiborn.Size = new Size(32, 18);
-            lbTimeAiborn.TabIndex = 43;
-            lbTimeAiborn.Text = "--:--";
-            lbTimeAiborn.TextAlign = ContentAlignment.MiddleCenter;
+            lbTimeAirborn.AutoSize = true;
+            lbTimeAirborn.Location = new Point(167, 191);
+            lbTimeAirborn.Name = "lbTimeAiborn";
+            lbTimeAirborn.Size = new Size(32, 18);
+            lbTimeAirborn.TabIndex = 43;
+            lbTimeAirborn.Text = "--:--";
+            lbTimeAirborn.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lbAirborn
             // 
@@ -657,7 +657,7 @@ namespace FlightRecorder
         private Label lbPayload;
         private Label lbTimeOnGround;
         private Label lbOnGround;
-        private Label lbTimeAiborn;
+        private Label lbTimeAirborn;
         private Label lbAirborn;
         private Label lbLibelleAvion;
         private Label label5;

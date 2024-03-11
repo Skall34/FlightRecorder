@@ -135,7 +135,7 @@ namespace FlightRecorder
             lbStartTime.Text = "--:--";
             lbEndTime.Text = "--:--";
             lbPayload.Text = "Not Yet Available";
-            lbTimeAiborn.Text = "--:--";
+            lbTimeAirborn.Text = "--:--";
             lbTimeOnGround.Text = "--:--";
             lbLibelleAvion.Text = "Not Yet Available";
 
@@ -359,7 +359,11 @@ namespace FlightRecorder
                         onGround = false;
                         // on veut afficher la date
                         _airborn = DateTime.Now;
-                        this.lbTimeAiborn.Text = _airborn.ToString("HH:mm");
+                        if (lbTimeAirborn.Text == "--:--")
+                        { 
+                            this.lbTimeAirborn.Text = _airborn.ToString("HH:mm");
+                        }
+                        //this.lbTimeAirborn.Enabled = false;
                         this.lbPayload.Enabled = false;
                         this.lbFret.Visible = false;
                     }
@@ -374,7 +378,12 @@ namespace FlightRecorder
                         landingWeight = _simData.getPlaneWeight();
                         landingVerticalAcceleration = _simData.getVerticalAcceleration();
                         _notAirborn = DateTime.Now;
-                        this.lbTimeOnGround.Text = _notAirborn.ToString("HH:mm");
+                        if (lbTimeOnGround.Text == "--:--")
+                        {
+                            this.lbTimeOnGround.Text = _notAirborn.ToString("HH:mm");
+                        }
+                        
+                        //this.lbTimeOnGround.Enabled = false;
                         onGround = true;
                         this.lbPayload.Enabled = false;
                     }
