@@ -70,6 +70,8 @@ namespace FlightRecorder
             label12 = new Label();
             lbFret = new Label();
             groupBox3 = new GroupBox();
+            label5 = new Label();
+            lbLibelleAvion = new Label();
             lbPayload = new Label();
             lbDesignationAvion = new Label();
             cbImmat = new ComboBox();
@@ -84,7 +86,7 @@ namespace FlightRecorder
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 547);
+            statusStrip.Location = new Point(0, 606);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 21, 0);
             statusStrip.Size = new Size(498, 22);
@@ -109,7 +111,7 @@ namespace FlightRecorder
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(11, 45);
+            label3.Location = new Point(7, 45);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(43, 18);
@@ -151,12 +153,12 @@ namespace FlightRecorder
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(6, 83);
+            label9.Location = new Point(6, 120);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(97, 18);
+            label9.Size = new Size(105, 18);
             label9.TabIndex = 24;
-            label9.Text = "Payload (Kg)";
+            label9.Text = "Payload (Kg) :";
             label9.Click += label9_Click;
             // 
             // label8
@@ -219,7 +221,7 @@ namespace FlightRecorder
             // 
             btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
-            btnSubmit.Location = new Point(391, 516);
+            btnSubmit.Location = new Point(391, 568);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
@@ -254,7 +256,7 @@ namespace FlightRecorder
             groupBox1.Controls.Add(label6);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
-            groupBox1.Location = new Point(10, 149);
+            groupBox1.Location = new Point(10, 201);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(476, 360);
             groupBox1.TabIndex = 39;
@@ -455,7 +457,7 @@ namespace FlightRecorder
             // lbFret
             // 
             lbFret.AutoSize = true;
-            lbFret.Location = new Point(6, 113);
+            lbFret.Location = new Point(6, 152);
             lbFret.Name = "lbFret";
             lbFret.Size = new Size(110, 18);
             lbFret.TabIndex = 43;
@@ -463,6 +465,8 @@ namespace FlightRecorder
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(label5);
+            groupBox3.Controls.Add(lbLibelleAvion);
             groupBox3.Controls.Add(lbPayload);
             groupBox3.Controls.Add(lbDesignationAvion);
             groupBox3.Controls.Add(lbFret);
@@ -474,19 +478,38 @@ namespace FlightRecorder
             groupBox3.Controls.Add(label9);
             groupBox3.Location = new Point(11, 5);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(476, 138);
+            groupBox3.Size = new Size(476, 183);
             groupBox3.TabIndex = 41;
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(6, 84);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(156, 18);
+            label5.TabIndex = 47;
+            label5.Text = "Aircraft Designation :";
+            // 
+            // lbLibelleAvion
+            // 
+            lbLibelleAvion.AutoSize = true;
+            lbLibelleAvion.Location = new Point(176, 84);
+            lbLibelleAvion.Name = "lbLibelleAvion";
+            lbLibelleAvion.Size = new Size(126, 18);
+            lbLibelleAvion.TabIndex = 46;
+            lbLibelleAvion.Text = "Not Yet Available";
+            // 
             // lbPayload
             // 
             lbPayload.AutoSize = true;
-            lbPayload.Location = new Point(118, 83);
+            lbPayload.Location = new Point(118, 120);
             lbPayload.Name = "lbPayload";
-            lbPayload.Size = new Size(50, 18);
+            lbPayload.Size = new Size(126, 18);
             lbPayload.TabIndex = 45;
-            lbPayload.Text = "label5";
+            lbPayload.Text = "Not Yet Available";
             // 
             // lbDesignationAvion
             // 
@@ -515,7 +538,7 @@ namespace FlightRecorder
             // btnReset
             // 
             btnReset.ForeColor = Color.Black;
-            btnReset.Location = new Point(10, 516);
+            btnReset.Location = new Point(10, 568);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(101, 27);
             btnReset.TabIndex = 25;
@@ -528,7 +551,7 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(498, 569);
+            ClientSize = new Size(498, 628);
             Controls.Add(btnReset);
             Controls.Add(groupBox3);
             Controls.Add(groupBox1);
@@ -600,6 +623,8 @@ namespace FlightRecorder
         private Label lbOnGround;
         private Label lbTimeAiborn;
         private Label lbAirborn;
+        private Label lbLibelleAvion;
+        private Label label5;
     }
 }
 

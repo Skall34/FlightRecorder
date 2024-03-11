@@ -140,6 +140,7 @@ namespace FlightRecorder
             lbPayload.Text = "N/A ...";
             lbTimeAiborn.Text = "N/A ...";
             lbTimeOnGround.Text = "N/A ...";
+            lbLibelleAvion.Text = "N/A ...";
 
             touchDownVSpeed = 0;
             landingVerticalAcceleration = 0;
@@ -247,6 +248,10 @@ namespace FlightRecorder
                
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
+
+                //Recupere le libellé de l'avion
+                string planeNomComplet = _simData.getAircraftType();
+                lbLibelleAvion.Text = planeNomComplet;
 
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
                 double lon = _currentPosition.Location.Longitude.DecimalDegrees;
@@ -583,10 +588,6 @@ namespace FlightRecorder
             }
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -744,19 +745,6 @@ namespace FlightRecorder
             this.Cursor = Cursors.Default;
         }
 
-        private void tbEndPosition_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void tbImmat_MouseHover(object sender, EventArgs e)
-        {
-            toolTip1.ToolTipTitle = "Set plane immat.";
-            string? tip = toolTip1.GetToolTip(this);
-            toolTip1.Show(tip, this, 5000);
-        }
-
         private int analyseFlight()
         {
             int note = 10;
@@ -824,15 +812,6 @@ namespace FlightRecorder
 
         }
 
-        private void tbCargo_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbCurrentFuel_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void Form1_Activated(object sender, EventArgs e)
         {
@@ -895,11 +874,6 @@ namespace FlightRecorder
 
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnReset_Click(object sender, EventArgs e)
         {
             DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
@@ -957,15 +931,13 @@ namespace FlightRecorder
         }
 
  
-        private void label13_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void cbImmat_SelectedIndexChanged(object sender, EventArgs e)
         {
             string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
             lbDesignationAvion.Text = planeDesign;
+
         }
 
     }
