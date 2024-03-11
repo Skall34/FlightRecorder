@@ -49,6 +49,10 @@ namespace FlightRecorder
             btnSaveSettings = new Button();
             btnSubmit = new Button();
             groupBox1 = new GroupBox();
+            lbTimeOnGround = new Label();
+            lbOnGround = new Label();
+            lbTimeAiborn = new Label();
+            lbAirborn = new Label();
             label1 = new Label();
             lbEndPosition = new Label();
             lbStartPosition = new Label();
@@ -66,12 +70,12 @@ namespace FlightRecorder
             label12 = new Label();
             lbFret = new Label();
             groupBox3 = new GroupBox();
+            lbPayload = new Label();
             lbDesignationAvion = new Label();
             cbImmat = new ComboBox();
             toolTip1 = new ToolTip(components);
             refillTimer = new System.Windows.Forms.Timer(components);
             btnReset = new Button();
-            lbPayload = new Label();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -136,7 +140,7 @@ namespace FlightRecorder
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(320, 21);
+            label7.Location = new Point(422, 21);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
             label7.Size = new Size(36, 18);
@@ -226,6 +230,10 @@ namespace FlightRecorder
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(lbTimeOnGround);
+            groupBox1.Controls.Add(lbOnGround);
+            groupBox1.Controls.Add(lbTimeAiborn);
+            groupBox1.Controls.Add(lbAirborn);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(lbEndPosition);
             groupBox1.Controls.Add(lbStartPosition);
@@ -252,6 +260,48 @@ namespace FlightRecorder
             groupBox1.TabIndex = 39;
             groupBox1.TabStop = false;
             groupBox1.Text = "Flight summary";
+            // 
+            // lbTimeOnGround
+            // 
+            lbTimeOnGround.AutoSize = true;
+            lbTimeOnGround.Location = new Point(337, 45);
+            lbTimeOnGround.Name = "lbTimeOnGround";
+            lbTimeOnGround.Size = new Size(32, 18);
+            lbTimeOnGround.TabIndex = 46;
+            lbTimeOnGround.Text = "--:--";
+            lbTimeOnGround.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lbOnGround
+            // 
+            lbOnGround.AutoSize = true;
+            lbOnGround.Location = new Point(312, 21);
+            lbOnGround.Margin = new Padding(4, 0, 4, 0);
+            lbOnGround.Name = "lbOnGround";
+            lbOnGround.Size = new Size(87, 18);
+            lbOnGround.TabIndex = 45;
+            lbOnGround.Text = "On Ground";
+            lbOnGround.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lbTimeAiborn
+            // 
+            lbTimeAiborn.AutoSize = true;
+            lbTimeAiborn.Location = new Point(256, 45);
+            lbTimeAiborn.Name = "lbTimeAiborn";
+            lbTimeAiborn.Size = new Size(32, 18);
+            lbTimeAiborn.TabIndex = 43;
+            lbTimeAiborn.Text = "--:--";
+            lbTimeAiborn.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lbAirborn
+            // 
+            lbAirborn.AutoSize = true;
+            lbAirborn.Location = new Point(244, 21);
+            lbAirborn.Margin = new Padding(4, 0, 4, 0);
+            lbAirborn.Name = "lbAirborn";
+            lbAirborn.Size = new Size(60, 18);
+            lbAirborn.TabIndex = 42;
+            lbAirborn.Text = "Airborn";
+            lbAirborn.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
@@ -302,7 +352,7 @@ namespace FlightRecorder
             // lbEndFuel
             // 
             lbEndFuel.AutoSize = true;
-            lbEndFuel.Location = new Point(320, 77);
+            lbEndFuel.Location = new Point(422, 77);
             lbEndFuel.Name = "lbEndFuel";
             lbEndFuel.Size = new Size(44, 18);
             lbEndFuel.TabIndex = 36;
@@ -322,7 +372,7 @@ namespace FlightRecorder
             // lbEndTime
             // 
             lbEndTime.AutoSize = true;
-            lbEndTime.Location = new Point(320, 45);
+            lbEndTime.Location = new Point(422, 45);
             lbEndTime.Name = "lbEndTime";
             lbEndTime.Size = new Size(32, 18);
             lbEndTime.TabIndex = 34;
@@ -429,6 +479,15 @@ namespace FlightRecorder
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
+            // lbPayload
+            // 
+            lbPayload.AutoSize = true;
+            lbPayload.Location = new Point(118, 83);
+            lbPayload.Name = "lbPayload";
+            lbPayload.Size = new Size(50, 18);
+            lbPayload.TabIndex = 45;
+            lbPayload.Text = "label5";
+            // 
             // lbDesignationAvion
             // 
             lbDesignationAvion.AutoSize = true;
@@ -463,15 +522,6 @@ namespace FlightRecorder
             btnReset.Text = "Reset flight";
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Click += btnReset_Click;
-            // 
-            // lbPayload
-            // 
-            lbPayload.AutoSize = true;
-            lbPayload.Location = new Point(118, 83);
-            lbPayload.Name = "lbPayload";
-            lbPayload.Size = new Size(50, 18);
-            lbPayload.TabIndex = 45;
-            lbPayload.Text = "label5";
             // 
             // Form1
             // 
@@ -546,6 +596,10 @@ namespace FlightRecorder
         private Label lbStartTime;
         private Label label1;
         private Label lbPayload;
+        private Label lbTimeOnGround;
+        private Label lbOnGround;
+        private Label lbTimeAiborn;
+        private Label lbAirborn;
     }
 }
 

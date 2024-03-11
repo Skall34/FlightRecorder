@@ -29,6 +29,7 @@ namespace FlightRecorder
         private Offset<short> onGround = new Offset<short>(0x0366);
         private Offset<int> verticalSpeed = new Offset<int>(0x02C8);
         private Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
+        private Offset<int> verticalAcceleration = new Offset<int>(0x30D0);
 
         private Offset<byte> stallWarning = new Offset<byte>(0x036C);
         private Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
@@ -201,6 +202,8 @@ namespace FlightRecorder
         public double getAirSpeed() => (double)this.airspeed.Value / 128d;
 
         public double getVerticalSpeed() => ((double)verticalSpeed.Value/256 ) * 60 * 3.28084;
+        
+        public double getVerticalAcceleration() => ((double)verticalAcceleration.Value / 256) * 60 * 3.28084;
 
         public double getLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value/256) * 60 * 3.28084;
 

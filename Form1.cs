@@ -39,6 +39,9 @@ namespace FlightRecorder
         private DateTime _startTime;
         private DateTime _endTime;
 
+        private DateTime _airborn;
+        private DateTime _notAirborn;
+
         //private airportsMgr airportsDatabase;
         private simData _simData;
 
@@ -49,6 +52,7 @@ namespace FlightRecorder
         private bool onGround;
         private double currentVSpeed;
         private double touchDownVSpeed;
+        private double landingVerticalAcceleration;
 
         private bool gearIsUp;
         private uint flapsPosition;
@@ -118,21 +122,27 @@ namespace FlightRecorder
             atLeastOneEngineFiring = false;
             _startTime = DateTime.Now;
             _endTime = DateTime.Now;
+            _airborn = DateTime.Now;
+            _notAirborn = DateTime.Now;
+
             _startFuel = 0;
             _endFuel = 0;
             commentaires = string.Empty;
             onGround = true;
-            lbStartFuel.Text = "Waiting start";
+            lbStartFuel.Text = "N/A ...";
             lbEndFuel.Text = "Waiting end ...";
-            lbStartIata.Text = "Waiting start";
+            lbStartIata.Text = "N/A ...";
             lbEndIata.Text = "Waiting end ...";
-            lbStartPosition.Text = "Waiting start";
+            lbStartPosition.Text = "N/A ...";
             lbEndPosition.Text = "Waiting end ...";
-            lbStartTime.Text = "Waiting start";
+            lbStartTime.Text = "N/A ...";
             lbEndTime.Text = "Waiting end ...";
-            lbPayload.Text = "Waiting data ...";
+            lbPayload.Text = "N/A ...";
+            lbTimeAiborn.Text = "N/A ...";
+            lbTimeOnGround.Text = "N/A ...";
 
             touchDownVSpeed = 0;
+            landingVerticalAcceleration = 0;
             currentVSpeed = 0;
 
             gearIsUp = false;
@@ -348,6 +358,9 @@ namespace FlightRecorder
                         takeOffWeight = _simData.getPlaneWeight();
                         //keep memory that we're airborn
                         onGround = false;
+                        // on veut afficher la date
+                        _airborn = DateTime.Now;
+                        this.lbTimeAiborn.Text = _airborn.ToString("HH:mm");
                         this.lbPayload.Enabled = false;
                         this.lbFret.Visible = false;
                     }
@@ -360,6 +373,9 @@ namespace FlightRecorder
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
                         landingWeight = _simData.getPlaneWeight();
+                        landingVerticalAcceleration = _simData.getVerticalAcceleration();
+                        _notAirborn = DateTime.Now;
+                        this.lbTimeOnGround.Text = _notAirborn.ToString("HH:mm");
                         onGround = true;
                         this.lbPayload.Enabled = false;
                     }
@@ -740,6 +756,7 @@ namespace FlightRecorder
         {
             int note = 10;
             tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed.ToString("0.00") + " fpm ";
+            tbCommentaires.Text += " Vertical acceleration : " + landingVerticalAcceleration.ToString("0.00") + " G";
             tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
             tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg ";
 
