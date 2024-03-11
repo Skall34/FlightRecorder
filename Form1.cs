@@ -576,6 +576,11 @@ namespace FlightRecorder
                 //stop and flush the traces 
                 Logger.Dispose();
             }
+            else
+            {
+                // Si l'utilisateur clique sur Annuler, annule la fermeture de la fenêtre.
+                e.Cancel = true;
+            }
         }
 
         private void label2_Click(object sender, EventArgs e)
