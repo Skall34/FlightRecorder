@@ -37,31 +37,35 @@ namespace FlightRecorder
             lblConnectionStatus = new ToolStripStatusLabel();
             timerMain = new System.Windows.Forms.Timer(components);
             timerConnection = new System.Windows.Forms.Timer(components);
-            label3 = new Label();
-            label4 = new Label();
-            label6 = new Label();
-            label7 = new Label();
             label9 = new Label();
-            label8 = new Label();
             label10 = new Label();
             label11 = new Label();
             tbCallsign = new TextBox();
             btnSaveSettings = new Button();
             btnSubmit = new Button();
             groupBox1 = new GroupBox();
+            groupBox4 = new GroupBox();
+            label1 = new Label();
+            label14 = new Label();
+            label16 = new Label();
+            label17 = new Label();
+            lbEndPosition = new Label();
+            lbEndIata = new Label();
+            lbEndFuel = new Label();
+            lbEndTime = new Label();
+            groupBox2 = new GroupBox();
+            label13 = new Label();
+            lbStartPosition = new Label();
+            lbStartIata = new Label();
+            lbStartFuel = new Label();
+            lbStartTime = new Label();
+            label8 = new Label();
+            label4 = new Label();
+            label3 = new Label();
             lbTimeOnGround = new Label();
             lbOnGround = new Label();
             lbTimeAiborn = new Label();
             lbAirborn = new Label();
-            label1 = new Label();
-            lbEndPosition = new Label();
-            lbStartPosition = new Label();
-            lbEndIata = new Label();
-            lbStartIata = new Label();
-            lbEndFuel = new Label();
-            lbStartFuel = new Label();
-            lbEndTime = new Label();
-            lbStartTime = new Label();
             label15 = new Label();
             cbMission = new ComboBox();
             cbNote = new ComboBox();
@@ -80,16 +84,18 @@ namespace FlightRecorder
             btnReset = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { lblConnectionStatus });
-            statusStrip.Location = new Point(0, 606);
+            statusStrip.Location = new Point(0, 724);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 21, 0);
-            statusStrip.Size = new Size(498, 22);
+            statusStrip.Size = new Size(495, 22);
             statusStrip.TabIndex = 6;
             statusStrip.Text = "statusStrip1";
             // 
@@ -108,48 +114,6 @@ namespace FlightRecorder
             timerConnection.Interval = 1000;
             timerConnection.Tick += timerConnection_Tick;
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(7, 45);
-            label3.Margin = new Padding(4, 0, 4, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(43, 18);
-            label3.TabIndex = 12;
-            label3.Text = "Time";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(11, 77);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(73, 18);
-            label4.TabIndex = 13;
-            label4.Text = "Fuel (Kg)";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(185, 21);
-            label6.Margin = new Padding(4, 0, 4, 0);
-            label6.Name = "label6";
-            label6.Size = new Size(42, 18);
-            label6.TabIndex = 18;
-            label6.Text = "Start";
-            label6.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(422, 21);
-            label7.Margin = new Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(36, 18);
-            label7.TabIndex = 19;
-            label7.Text = "End";
-            label7.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // label9
             // 
             label9.AutoSize = true;
@@ -160,16 +124,6 @@ namespace FlightRecorder
             label9.TabIndex = 24;
             label9.Text = "Payload (Kg) :";
             label9.Click += label9_Click;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(11, 127);
-            label8.Margin = new Padding(4, 0, 4, 0);
-            label8.Name = "label8";
-            label8.Size = new Size(104, 18);
-            label8.TabIndex = 26;
-            label8.Text = "Start Position";
             // 
             // label10
             // 
@@ -221,7 +175,7 @@ namespace FlightRecorder
             // 
             btnSubmit.Enabled = false;
             btnSubmit.ForeColor = Color.Black;
-            btnSubmit.Location = new Point(391, 568);
+            btnSubmit.Location = new Point(391, 686);
             btnSubmit.Margin = new Padding(4);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(96, 27);
@@ -232,41 +186,219 @@ namespace FlightRecorder
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(groupBox4);
+            groupBox1.Controls.Add(groupBox2);
             groupBox1.Controls.Add(lbTimeOnGround);
             groupBox1.Controls.Add(lbOnGround);
             groupBox1.Controls.Add(lbTimeAiborn);
             groupBox1.Controls.Add(lbAirborn);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(lbEndPosition);
-            groupBox1.Controls.Add(lbStartPosition);
-            groupBox1.Controls.Add(lbEndIata);
-            groupBox1.Controls.Add(lbStartIata);
-            groupBox1.Controls.Add(lbEndFuel);
-            groupBox1.Controls.Add(lbStartFuel);
-            groupBox1.Controls.Add(lbEndTime);
-            groupBox1.Controls.Add(lbStartTime);
             groupBox1.Controls.Add(label15);
             groupBox1.Controls.Add(cbMission);
             groupBox1.Controls.Add(cbNote);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(tbCommentaires);
             groupBox1.Controls.Add(label12);
-            groupBox1.Controls.Add(label8);
-            groupBox1.Controls.Add(label7);
-            groupBox1.Controls.Add(label6);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(label3);
             groupBox1.Location = new Point(10, 201);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(476, 360);
+            groupBox1.Size = new Size(476, 478);
             groupBox1.TabIndex = 39;
             groupBox1.TabStop = false;
             groupBox1.Text = "Flight summary";
             // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(label1);
+            groupBox4.Controls.Add(label14);
+            groupBox4.Controls.Add(label16);
+            groupBox4.Controls.Add(label17);
+            groupBox4.Controls.Add(lbEndPosition);
+            groupBox4.Controls.Add(lbEndIata);
+            groupBox4.Controls.Add(lbEndFuel);
+            groupBox4.Controls.Add(lbEndTime);
+            groupBox4.Location = new Point(9, 214);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(455, 141);
+            groupBox4.TabIndex = 53;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "End";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(11, 55);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(110, 18);
+            label1.TabIndex = 59;
+            label1.Text = "Position Name";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(11, 21);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(106, 18);
+            label14.TabIndex = 58;
+            label14.Text = "Position ICAO";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(11, 112);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(73, 18);
+            label16.TabIndex = 57;
+            label16.Text = "Fuel (Kg)";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(11, 84);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(43, 18);
+            label17.TabIndex = 56;
+            label17.Text = "Time";
+            // 
+            // lbEndPosition
+            // 
+            lbEndPosition.AutoSize = true;
+            lbEndPosition.Location = new Point(137, 55);
+            lbEndPosition.Name = "lbEndPosition";
+            lbEndPosition.Size = new Size(17, 18);
+            lbEndPosition.TabIndex = 55;
+            lbEndPosition.Text = "?";
+            // 
+            // lbEndIata
+            // 
+            lbEndIata.AutoSize = true;
+            lbEndIata.Location = new Point(137, 21);
+            lbEndIata.Name = "lbEndIata";
+            lbEndIata.Size = new Size(44, 18);
+            lbEndIata.TabIndex = 54;
+            lbEndIata.Text = "????";
+            // 
+            // lbEndFuel
+            // 
+            lbEndFuel.AutoSize = true;
+            lbEndFuel.Location = new Point(137, 112);
+            lbEndFuel.Name = "lbEndFuel";
+            lbEndFuel.Size = new Size(44, 18);
+            lbEndFuel.TabIndex = 53;
+            lbEndFuel.Text = "????";
+            lbEndFuel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lbEndTime
+            // 
+            lbEndTime.AutoSize = true;
+            lbEndTime.Location = new Point(137, 84);
+            lbEndTime.Name = "lbEndTime";
+            lbEndTime.Size = new Size(32, 18);
+            lbEndTime.TabIndex = 52;
+            lbEndTime.Text = "--:--";
+            lbEndTime.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(label13);
+            groupBox2.Controls.Add(lbStartPosition);
+            groupBox2.Controls.Add(lbStartIata);
+            groupBox2.Controls.Add(lbStartFuel);
+            groupBox2.Controls.Add(lbStartTime);
+            groupBox2.Controls.Add(label8);
+            groupBox2.Controls.Add(label4);
+            groupBox2.Controls.Add(label3);
+            groupBox2.Location = new Point(9, 36);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(455, 141);
+            groupBox2.TabIndex = 52;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Start";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(11, 51);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(110, 18);
+            label13.TabIndex = 55;
+            label13.Text = "Position Name";
+            // 
+            // lbStartPosition
+            // 
+            lbStartPosition.AutoSize = true;
+            lbStartPosition.Location = new Point(137, 51);
+            lbStartPosition.Name = "lbStartPosition";
+            lbStartPosition.Size = new Size(17, 18);
+            lbStartPosition.TabIndex = 54;
+            lbStartPosition.Text = "?";
+            // 
+            // lbStartIata
+            // 
+            lbStartIata.AutoSize = true;
+            lbStartIata.Location = new Point(137, 21);
+            lbStartIata.Name = "lbStartIata";
+            lbStartIata.Size = new Size(44, 18);
+            lbStartIata.TabIndex = 53;
+            lbStartIata.Text = "????";
+            // 
+            // lbStartFuel
+            // 
+            lbStartFuel.AutoSize = true;
+            lbStartFuel.Location = new Point(137, 106);
+            lbStartFuel.Name = "lbStartFuel";
+            lbStartFuel.Size = new Size(44, 18);
+            lbStartFuel.TabIndex = 52;
+            lbStartFuel.Text = "????";
+            lbStartFuel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lbStartTime
+            // 
+            lbStartTime.AutoSize = true;
+            lbStartTime.Location = new Point(137, 79);
+            lbStartTime.Name = "lbStartTime";
+            lbStartTime.Size = new Size(32, 18);
+            lbStartTime.TabIndex = 51;
+            lbStartTime.Text = "--:--";
+            lbStartTime.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(11, 21);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(106, 18);
+            label8.TabIndex = 50;
+            label8.Text = "Position ICAO";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(11, 106);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(73, 18);
+            label4.TabIndex = 49;
+            label4.Text = "Fuel (Kg)";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(11, 79);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(43, 18);
+            label3.TabIndex = 48;
+            label3.Text = "Time";
+            // 
             // lbTimeOnGround
             // 
             lbTimeOnGround.AutoSize = true;
-            lbTimeOnGround.Location = new Point(337, 45);
+            lbTimeOnGround.Location = new Point(374, 191);
             lbTimeOnGround.Name = "lbTimeOnGround";
             lbTimeOnGround.Size = new Size(32, 18);
             lbTimeOnGround.TabIndex = 46;
@@ -276,7 +408,7 @@ namespace FlightRecorder
             // lbOnGround
             // 
             lbOnGround.AutoSize = true;
-            lbOnGround.Location = new Point(312, 21);
+            lbOnGround.Location = new Point(265, 191);
             lbOnGround.Margin = new Padding(4, 0, 4, 0);
             lbOnGround.Name = "lbOnGround";
             lbOnGround.Size = new Size(87, 18);
@@ -287,7 +419,7 @@ namespace FlightRecorder
             // lbTimeAiborn
             // 
             lbTimeAiborn.AutoSize = true;
-            lbTimeAiborn.Location = new Point(256, 45);
+            lbTimeAiborn.Location = new Point(167, 191);
             lbTimeAiborn.Name = "lbTimeAiborn";
             lbTimeAiborn.Size = new Size(32, 18);
             lbTimeAiborn.TabIndex = 43;
@@ -297,7 +429,7 @@ namespace FlightRecorder
             // lbAirborn
             // 
             lbAirborn.AutoSize = true;
-            lbAirborn.Location = new Point(244, 21);
+            lbAirborn.Location = new Point(100, 191);
             lbAirborn.Margin = new Padding(4, 0, 4, 0);
             lbAirborn.Name = "lbAirborn";
             lbAirborn.Size = new Size(60, 18);
@@ -305,96 +437,10 @@ namespace FlightRecorder
             lbAirborn.Text = "Airborn";
             lbAirborn.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(11, 183);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(98, 18);
-            label1.TabIndex = 41;
-            label1.Text = "End Position";
-            // 
-            // lbEndPosition
-            // 
-            lbEndPosition.AutoSize = true;
-            lbEndPosition.Location = new Point(11, 205);
-            lbEndPosition.Name = "lbEndPosition";
-            lbEndPosition.Size = new Size(17, 18);
-            lbEndPosition.TabIndex = 40;
-            lbEndPosition.Text = "?";
-            // 
-            // lbStartPosition
-            // 
-            lbStartPosition.AutoSize = true;
-            lbStartPosition.Location = new Point(11, 149);
-            lbStartPosition.Name = "lbStartPosition";
-            lbStartPosition.Size = new Size(17, 18);
-            lbStartPosition.TabIndex = 39;
-            lbStartPosition.Text = "?";
-            // 
-            // lbEndIata
-            // 
-            lbEndIata.AutoSize = true;
-            lbEndIata.Location = new Point(140, 183);
-            lbEndIata.Name = "lbEndIata";
-            lbEndIata.Size = new Size(44, 18);
-            lbEndIata.TabIndex = 38;
-            lbEndIata.Text = "????";
-            // 
-            // lbStartIata
-            // 
-            lbStartIata.AutoSize = true;
-            lbStartIata.Location = new Point(140, 127);
-            lbStartIata.Name = "lbStartIata";
-            lbStartIata.Size = new Size(44, 18);
-            lbStartIata.TabIndex = 37;
-            lbStartIata.Text = "????";
-            // 
-            // lbEndFuel
-            // 
-            lbEndFuel.AutoSize = true;
-            lbEndFuel.Location = new Point(422, 77);
-            lbEndFuel.Name = "lbEndFuel";
-            lbEndFuel.Size = new Size(44, 18);
-            lbEndFuel.TabIndex = 36;
-            lbEndFuel.Text = "????";
-            lbEndFuel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // lbStartFuel
-            // 
-            lbStartFuel.AutoSize = true;
-            lbStartFuel.Location = new Point(184, 77);
-            lbStartFuel.Name = "lbStartFuel";
-            lbStartFuel.Size = new Size(44, 18);
-            lbStartFuel.TabIndex = 35;
-            lbStartFuel.Text = "????";
-            lbStartFuel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // lbEndTime
-            // 
-            lbEndTime.AutoSize = true;
-            lbEndTime.Location = new Point(422, 45);
-            lbEndTime.Name = "lbEndTime";
-            lbEndTime.Size = new Size(32, 18);
-            lbEndTime.TabIndex = 34;
-            lbEndTime.Text = "--:--";
-            lbEndTime.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // lbStartTime
-            // 
-            lbStartTime.AutoSize = true;
-            lbStartTime.Location = new Point(184, 45);
-            lbStartTime.Name = "lbStartTime";
-            lbStartTime.Size = new Size(32, 18);
-            lbStartTime.TabIndex = 33;
-            lbStartTime.Text = "--:--";
-            lbStartTime.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(217, 318);
+            label15.Location = new Point(215, 443);
             label15.Margin = new Padding(4, 0, 4, 0);
             label15.Name = "label15";
             label15.Size = new Size(63, 18);
@@ -405,7 +451,7 @@ namespace FlightRecorder
             // 
             cbMission.DropDownStyle = ComboBoxStyle.DropDownList;
             cbMission.FormattingEnabled = true;
-            cbMission.Location = new Point(287, 316);
+            cbMission.Location = new Point(285, 441);
             cbMission.Name = "cbMission";
             cbMission.Size = new Size(121, 26);
             cbMission.TabIndex = 22;
@@ -416,7 +462,7 @@ namespace FlightRecorder
             cbNote.DropDownStyle = ComboBoxStyle.DropDownList;
             cbNote.FormattingEnabled = true;
             cbNote.Items.AddRange(new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-            cbNote.Location = new Point(118, 315);
+            cbNote.Location = new Point(116, 440);
             cbNote.MaxDropDownItems = 10;
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(66, 26);
@@ -427,7 +473,7 @@ namespace FlightRecorder
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(11, 318);
+            label2.Location = new Point(9, 443);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(83, 18);
@@ -436,7 +482,7 @@ namespace FlightRecorder
             // 
             // tbCommentaires
             // 
-            tbCommentaires.Location = new Point(118, 240);
+            tbCommentaires.Location = new Point(116, 368);
             tbCommentaires.Margin = new Padding(5, 4, 5, 4);
             tbCommentaires.Multiline = true;
             tbCommentaires.Name = "tbCommentaires";
@@ -447,7 +493,7 @@ namespace FlightRecorder
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(11, 243);
+            label12.Location = new Point(10, 368);
             label12.Margin = new Padding(5, 0, 5, 0);
             label12.Name = "label12";
             label12.Size = new Size(83, 18);
@@ -505,7 +551,7 @@ namespace FlightRecorder
             // lbPayload
             // 
             lbPayload.AutoSize = true;
-            lbPayload.Location = new Point(118, 120);
+            lbPayload.Location = new Point(176, 120);
             lbPayload.Name = "lbPayload";
             lbPayload.Size = new Size(126, 18);
             lbPayload.TabIndex = 45;
@@ -538,7 +584,7 @@ namespace FlightRecorder
             // btnReset
             // 
             btnReset.ForeColor = Color.Black;
-            btnReset.Location = new Point(10, 568);
+            btnReset.Location = new Point(10, 686);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(101, 27);
             btnReset.TabIndex = 25;
@@ -551,7 +597,7 @@ namespace FlightRecorder
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
-            ClientSize = new Size(498, 628);
+            ClientSize = new Size(495, 746);
             Controls.Add(btnReset);
             Controls.Add(groupBox3);
             Controls.Add(groupBox1);
@@ -572,6 +618,10 @@ namespace FlightRecorder
             statusStrip.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
             ResumeLayout(false);
@@ -584,12 +634,7 @@ namespace FlightRecorder
         private System.Windows.Forms.ToolStripStatusLabel lblConnectionStatus;
         private System.Windows.Forms.Timer timerMain;
         private System.Windows.Forms.Timer timerConnection;
-        private Label label3;
-        private Label label4;
-        private Label label6;
-        private Label label7;
         private Label label9;
-        private Label label8;
         private Label label10;
         private Label label11;
         private TextBox tbCallsign;
@@ -609,15 +654,6 @@ namespace FlightRecorder
         private ComboBox cbMission;
         private Button btnReset;
         private Label lbDesignationAvion;
-        private Label lbEndPosition;
-        private Label lbStartPosition;
-        private Label lbEndIata;
-        private Label lbStartIata;
-        private Label lbEndFuel;
-        private Label lbStartFuel;
-        private Label lbEndTime;
-        private Label lbStartTime;
-        private Label label1;
         private Label lbPayload;
         private Label lbTimeOnGround;
         private Label lbOnGround;
@@ -625,6 +661,24 @@ namespace FlightRecorder
         private Label lbAirborn;
         private Label lbLibelleAvion;
         private Label label5;
+        private GroupBox groupBox4;
+        private GroupBox groupBox2;
+        private Label label13;
+        private Label lbStartPosition;
+        private Label lbStartIata;
+        private Label lbStartFuel;
+        private Label lbStartTime;
+        private Label label8;
+        private Label label4;
+        private Label label3;
+        private Label label1;
+        private Label label14;
+        private Label label16;
+        private Label label17;
+        private Label lbEndPosition;
+        private Label lbEndIata;
+        private Label lbEndFuel;
+        private Label lbEndTime;
     }
 }
 

@@ -42,15 +42,13 @@ namespace FlightRecorder
         private DateTime _airborn;
         private DateTime _notAirborn;
 
-        //private airportsMgr airportsDatabase;
-        private simData _simData;
+        private readonly simData _simData;
 
         private bool stallWarning;
         private bool crashed;
         private bool overRunwayCrashed;
         private bool overspeed;
         private bool onGround;
-        private double currentVSpeed;
         private double touchDownVSpeed;
         private double landingVerticalAcceleration;
 
@@ -60,7 +58,6 @@ namespace FlightRecorder
         private double flapsDownSpeed;
         private double gearDownSpeed;
 
-        private bool modifiedPayload; //a flag indicating that the user changed the payload
         private double FuelQtty;
         private int refillQtty;
         private double maxFuelCapacity;
@@ -68,9 +65,9 @@ namespace FlightRecorder
         private double takeOffWeight;
         private double landingWeight;
 
-        private List<Mission> missions;
-        private List<Avion> avions;
-        private List<Aeroport> aeroports;
+        private readonly List<Mission> missions;
+        private readonly List<Avion> avions;
+        private readonly List<Aeroport> aeroports;
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
         private int endDisabled;
@@ -129,22 +126,21 @@ namespace FlightRecorder
             _endFuel = 0;
             commentaires = string.Empty;
             onGround = true;
-            lbStartFuel.Text = "N/A ...";
-            lbEndFuel.Text = "Waiting end ...";
-            lbStartIata.Text = "N/A ...";
-            lbEndIata.Text = "Waiting end ...";
-            lbStartPosition.Text = "N/A ...";
-            lbEndPosition.Text = "Waiting end ...";
-            lbStartTime.Text = "N/A ...";
-            lbEndTime.Text = "Waiting end ...";
-            lbPayload.Text = "N/A ...";
-            lbTimeAiborn.Text = "N/A ...";
-            lbTimeOnGround.Text = "N/A ...";
-            lbLibelleAvion.Text = "N/A ...";
+            lbStartFuel.Text = "Not Yet Available";
+            lbEndFuel.Text = "Waiting end flight ...";
+            lbStartIata.Text = "Not Yet Available";
+            lbEndIata.Text = "Waiting end flight ...";
+            lbStartPosition.Text = "Not Yet Available";
+            lbEndPosition.Text = "Waiting end flight ...";
+            lbStartTime.Text = "--:--";
+            lbEndTime.Text = "--:--";
+            lbPayload.Text = "Not Yet Available";
+            lbTimeAiborn.Text = "--:--";
+            lbTimeOnGround.Text = "--:--";
+            lbLibelleAvion.Text = "Not Yet Available";
 
             touchDownVSpeed = 0;
             landingVerticalAcceleration = 0;
-            currentVSpeed = 0;
 
             gearIsUp = false;
             flapsPosition = 0;
@@ -154,8 +150,6 @@ namespace FlightRecorder
             overRunwayCrashed = false;
             stallWarning = false;
 
-            modifiedPayload = false;
-            //modifiedFuel = false;
             maxFuelCapacity = 0;
 
             //recupere le callsign qui a été sauvegardé en settings de l'application
@@ -245,7 +239,7 @@ namespace FlightRecorder
 
                 //this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
                 this.lbPayload.Text = _simData.getPayload().ToString("0.00");
-               
+
                 //recupere l'emplacement courant :
                 _currentPosition = _simData.getPosition(); ;
 
@@ -471,25 +465,6 @@ namespace FlightRecorder
                     //0.00 => only keep 2 decimals for the fuel
 
                     this.lbStartFuel.Text = _startFuel.ToString("0.00");
-
-                    //float fpayload = float.Parse(lbPayload.Text);
-
-                    //recupere le fret qui etait dispo au depart;
-                    //float startFret = await Aeroport.fetchFreight(BASERURL, lbStartIata.Text);
-                    //if (fpayload > startFret)
-                    //{
-                    //fpayload = startFret;
-                    //lbPayload.Text = fpayload.ToString();
-                    //_simData.setPayload(fpayload);
-                    //lbFret.Text = "Cargo payload maxed to " + fpayload.ToString() + " Kg";
-                    //Invalidate();
-                    //}
-
-                    //quand les moteurs sont démarrés, on ne change plus rien
-                    //on ne peut pas faire ça, au cas ou l'acars est lancé APRES demarrage des moteurs,
-                    //c'est bien de pouvoir capter les données "au vol"...
-                    //cbImmat.Enabled = false;
-                    //tbCargo.Enabled = false;
 
                 }
 
@@ -930,7 +905,7 @@ namespace FlightRecorder
 
         }
 
- 
+
 
 
         private void cbImmat_SelectedIndexChanged(object sender, EventArgs e)
