@@ -354,7 +354,7 @@ namespace FlightRecorder
                             this.lbTimeAirborn.Text = _airborn.ToString("HH:mm");
                         }
                         //this.lbTimeAirborn.Enabled = false;
-                        this.lbPayload.Enabled = false;
+                        //this.lbPayload.Enabled = false;
                         this.lbFret.Visible = false;
                     }
                 }
@@ -367,6 +367,7 @@ namespace FlightRecorder
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
                         landingWeight = _simData.getPlaneWeight();
                         landingVerticalAcceleration = _simData.getVerticalAcceleration();
+                        Logger.WriteLine("get landing vertical acceleration ds timermain :" + landingVerticalAcceleration);
                         _notAirborn = DateTime.Now;
                         if (lbTimeOnGround.Text == "--:--")
                         {
@@ -375,7 +376,7 @@ namespace FlightRecorder
                         
                         //this.lbTimeOnGround.Enabled = false;
                         onGround = true;
-                        this.lbPayload.Enabled = false;
+                        //this.lbPayload.Enabled = false;
                     }
                 }
 
@@ -731,6 +732,7 @@ namespace FlightRecorder
         private int analyseFlight()
         {
             int note = 10;
+            Logger.WriteLine("get landing vertical acceleration ds analyse flight :" + landingVerticalAcceleration.ToString("0.00"));
             tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed.ToString("0.00") + " fpm ";
             tbCommentaires.Text += " Vertical acceleration : " + landingVerticalAcceleration.ToString("0.00") + " G";
             tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
