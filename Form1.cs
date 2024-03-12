@@ -570,7 +570,6 @@ namespace FlightRecorder
             }
         }
 
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             //si l'utilisateur a modifié le texte du callsign, active le bouton pour le sauvrgarder
@@ -843,6 +842,8 @@ namespace FlightRecorder
                 lbEndPosition.Text = "Waiting end ...";
                 lbStartTime.Text = "Waiting start";
                 lbEndTime.Text = "Waiting end ...";
+                lbTimeAirborn.Text = "--:--";
+                lbTimeOnGround.Text = "--:--";
                 lbFret.Visible = true;
 
                 //reset flight infos.
