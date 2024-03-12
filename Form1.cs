@@ -357,6 +357,11 @@ namespace FlightRecorder
                         //this.lbPayload.Enabled = false;
                         this.lbFret.Visible = false;
                     }
+                    landingVerticalAcceleration = _simData.getVerticalAcceleration();
+                    if (landingVerticalAcceleration != 0)
+                    {
+                        Logger.WriteLine("detected vertical acceleration : " + landingVerticalAcceleration.ToString());
+                    }
                 }
                 else //we're on ground !
                 {
@@ -366,7 +371,7 @@ namespace FlightRecorder
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.getLandingVerticalSpeed();
                         landingWeight = _simData.getPlaneWeight();
-                        landingVerticalAcceleration = _simData.getVerticalAcceleration();
+                        //landingVerticalAcceleration = _simData.getVerticalAcceleration();
                         Logger.WriteLine("get landing vertical acceleration ds timermain :" + landingVerticalAcceleration);
                         _notAirborn = DateTime.Now;
                         if (lbTimeOnGround.Text == "--:--")
