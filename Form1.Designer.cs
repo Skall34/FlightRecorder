@@ -80,7 +80,6 @@ namespace FlightRecorder
             lbDesignationAvion = new Label();
             cbImmat = new ComboBox();
             toolTip1 = new ToolTip(components);
-            refillTimer = new System.Windows.Forms.Timer(components);
             btnReset = new Button();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -577,11 +576,6 @@ namespace FlightRecorder
             cbImmat.TabIndex = 2;
             cbImmat.SelectedIndexChanged += cbImmat_SelectedIndexChanged;
             // 
-            // refillTimer
-            // 
-            refillTimer.Interval = 500;
-            refillTimer.Tick += refillTimer_Tick;
-            // 
             // btnReset
             // 
             btnReset.ForeColor = Color.Black;
@@ -648,7 +642,6 @@ namespace FlightRecorder
         private Label label12;
         private ComboBox cbNote;
         private ToolTip toolTip1;
-        private System.Windows.Forms.Timer refillTimer;
         private ComboBox cbImmat;
         private Label lbFret;
         private Label label15;

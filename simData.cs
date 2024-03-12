@@ -29,7 +29,7 @@ namespace FlightRecorder
         private Offset<short> onGround = new Offset<short>(0x0366);
         private Offset<int> verticalSpeed = new Offset<int>(0x02C8);
         private Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
-        private Offset<int> verticalAcceleration = new Offset<int>(0x30D0);
+        private Offset<double> verticalAcceleration = new Offset<double>(0x30D0);
 
         private Offset<byte> stallWarning = new Offset<byte>(0x036C);
         private Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
@@ -146,26 +146,6 @@ namespace FlightRecorder
             return result;
         }
 
-        public void setPayload(double newWheight)
-        {
-            //Add the pilot weight to this payload
-            double adjustedNewWeight = newWheight + 80;
-            if (null != payloadServices)
-            {
-                List<FsPayloadStation> stations = payloadServices.PayloadStations;
-                double currentPayload = payloadServices.PayloadWeightKgs;
-
-                int nbPayloads = payloadServices.PayloadStations.Count;
-                foreach (FsPayloadStation s in stations)
-                {
-                    //compute the % of this payload regarding the rest : 
-                    //double percent = s.WeightKgs / currentPayload;
-                    s.WeightKgs = adjustedNewWeight/nbPayloads;
-                }
-                payloadServices.WriteChanges();
-            }
-        }
-
         public void setFuelWheight(double newFuelWeight)
         {
             if (null != payloadServices)
@@ -203,7 +183,7 @@ namespace FlightRecorder
 
         public double getVerticalSpeed() => ((double)verticalSpeed.Value/256 ) * 60 * 3.28084;
         
-        public double getVerticalAcceleration() => ((double)verticalAcceleration.Value / 256) * 60 * 3.28084;
+        public double getVerticalAcceleration() => ((double)verticalAcceleration.Value);
 
         public double getLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value/256) * 60 * 3.28084;
 

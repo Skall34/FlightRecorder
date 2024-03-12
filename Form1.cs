@@ -58,10 +58,6 @@ namespace FlightRecorder
         private double flapsDownSpeed;
         private double gearDownSpeed;
 
-        private double FuelQtty;
-        private int refillQtty;
-        private double maxFuelCapacity;
-
         private double takeOffWeight;
         private double landingWeight;
 
@@ -150,8 +146,6 @@ namespace FlightRecorder
             overRunwayCrashed = false;
             stallWarning = false;
 
-            maxFuelCapacity = 0;
-
             //recupere le callsign qui a été sauvegardé en settings de l'application
             this.tbCallsign.Text = Settings.Default.callsign;
             //desactive le bouton de maj du setting. Il sera reactivé si le callsign est modifié.
@@ -226,7 +220,6 @@ namespace FlightRecorder
             return fret;
         }
 
-
         private async void readStaticValues()
         {
             Logger.WriteLine("Reading static values");
@@ -234,10 +227,7 @@ namespace FlightRecorder
             if ((null != _simData) && (_simData.isConnected))
             {
                 //commence à lire qq variables du simu : fuel & cargo, immat avion...
-                FuelQtty = _simData.getFuelWeight();
-                maxFuelCapacity = _simData.getMaxFuel();
 
-                //this.tbCurrentFuel.Text = FuelQtty.ToString("0.00");
                 this.lbPayload.Text = _simData.getPayload().ToString("0.00");
 
                 //recupere l'emplacement courant :
@@ -688,6 +678,7 @@ namespace FlightRecorder
         {
 
         }
+        
         private void remplirComboImmat()
         {
             lbFret.Text = "Acars initializing ..... please wait";
@@ -776,6 +767,7 @@ namespace FlightRecorder
 
             return note;
         }
+        
         private void cbNote_MouseHover(object sender, EventArgs e)
         {
             toolTip1.ToolTipTitle = "Flight details";
@@ -805,7 +797,6 @@ namespace FlightRecorder
 
         }
 
-
         private void Form1_Activated(object sender, EventArgs e)
         {
             if (_simData.isConnected)
@@ -813,48 +804,6 @@ namespace FlightRecorder
                 readStaticValues();
             }
 
-        }
-
-        private void refillTimer_Tick(object sender, EventArgs e)
-        {
-            if (FuelQtty < maxFuelCapacity)
-            {
-                FuelQtty++;
-                refillQtty++;
-                //accelerate after a few seconds
-                if ((refillQtty > 5) && (refillTimer.Interval == 500))
-                {
-                    refillTimer.Interval = 100;
-                }
-                //check for overfill
-                if (FuelQtty >= maxFuelCapacity)
-                {
-                    FuelQtty = maxFuelCapacity;
-                    refillTimer.Stop();
-                    _simData.setFuelWheight(FuelQtty);
-                }
-
-                //tbCurrentFuel.Text = FuelQtty.ToString("0.00");
-            }
-        }
-
-        private void button1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if ((!refillTimer.Enabled) && (FuelQtty < maxFuelCapacity))
-            {
-                Logger.WriteLine("Starting fuel tank refill");
-
-                refillTimer.Interval = 500;
-                refillQtty = 0;
-                refillTimer.Enabled = true;
-            }
-        }
-
-        private void button1_MouseUp(object sender, MouseEventArgs e)
-        {
-            refillTimer.Stop();
-            _simData.setFuelWheight(FuelQtty);
-            Logger.WriteLine("Stopping fuel tank refill qtty = " + FuelQtty);
         }
 
         private void label11_Click(object sender, EventArgs e)
@@ -922,9 +871,6 @@ namespace FlightRecorder
         {
 
         }
-
-
-
 
         private void cbImmat_SelectedIndexChanged(object sender, EventArgs e)
         {
