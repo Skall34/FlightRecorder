@@ -107,12 +107,12 @@ namespace FlightRecorder
             // timerMain
             // 
             timerMain.Interval = 500;
-            timerMain.Tick += timerMain_Tick;
+            timerMain.Tick += TimerMain_Tick;
             // 
             // timerConnection
             // 
             timerConnection.Interval = 1000;
-            timerConnection.Tick += timerConnection_Tick;
+            timerConnection.Tick += TimerConnection_Tick;
             // 
             // label9
             // 
@@ -123,7 +123,7 @@ namespace FlightRecorder
             label9.Size = new Size(105, 18);
             label9.TabIndex = 24;
             label9.Text = "Payload (Kg) :";
-            label9.Click += label9_Click;
+            label9.Click += Label9_Click;
             // 
             // label10
             // 
@@ -144,7 +144,7 @@ namespace FlightRecorder
             label11.Size = new Size(98, 18);
             label11.TabIndex = 33;
             label11.Text = "Pilot callsign";
-            label11.Click += label11_Click;
+            label11.Click += Label11_Click;
             // 
             // tbCallsign
             // 
@@ -156,7 +156,7 @@ namespace FlightRecorder
             tbCallsign.Size = new Size(111, 25);
             tbCallsign.TabIndex = 0;
             tbCallsign.TextAlign = HorizontalAlignment.Right;
-            tbCallsign.TextChanged += textBox1_TextChanged;
+            tbCallsign.TextChanged += TextBox1_TextChanged;
             // 
             // btnSaveSettings
             // 
@@ -169,7 +169,7 @@ namespace FlightRecorder
             btnSaveSettings.TabIndex = 1;
             btnSaveSettings.Text = "Apply";
             btnSaveSettings.UseVisualStyleBackColor = true;
-            btnSaveSettings.Click += btnSaveSettings_Click;
+            btnSaveSettings.Click += BtnSaveSettings_Click;
             // 
             // btnSubmit
             // 
@@ -182,7 +182,7 @@ namespace FlightRecorder
             btnSubmit.TabIndex = 24;
             btnSubmit.Text = "Save flight";
             btnSubmit.UseVisualStyleBackColor = true;
-            btnSubmit.Click += btnSubmit_Click;
+            btnSubmit.Click += BtnSubmit_Click;
             // 
             // groupBox1
             // 
@@ -455,7 +455,7 @@ namespace FlightRecorder
             cbMission.Name = "cbMission";
             cbMission.Size = new Size(121, 26);
             cbMission.TabIndex = 22;
-            cbMission.SelectedIndexChanged += cbMission_SelectedIndexChanged;
+            cbMission.SelectedIndexChanged += CbMission_SelectedIndexChanged;
             // 
             // cbNote
             // 
@@ -467,8 +467,7 @@ namespace FlightRecorder
             cbNote.Name = "cbNote";
             cbNote.Size = new Size(66, 26);
             cbNote.TabIndex = 21;
-            cbNote.SelectedIndexChanged += cbNote_SelectedIndexChanged;
-            cbNote.MouseHover += cbNote_MouseHover;
+            cbNote.MouseHover += CbNote_MouseHover;
             // 
             // label2
             // 
@@ -574,7 +573,7 @@ namespace FlightRecorder
             cbImmat.Name = "cbImmat";
             cbImmat.Size = new Size(109, 26);
             cbImmat.TabIndex = 2;
-            cbImmat.SelectedIndexChanged += cbImmat_SelectedIndexChanged;
+            cbImmat.SelectedIndexChanged += CbImmat_SelectedIndexChanged;
             // 
             // btnReset
             // 
@@ -585,7 +584,7 @@ namespace FlightRecorder
             btnReset.TabIndex = 25;
             btnReset.Text = "Reset flight";
             btnReset.UseVisualStyleBackColor = true;
-            btnReset.Click += btnReset_Click;
+            btnReset.Click += BtnReset_Click;
             // 
             // Form1
             // 
@@ -607,7 +606,7 @@ namespace FlightRecorder
             Name = "Form1";
             Text = "Flight recorder";
             Activated += Form1_Activated;
-            FormClosing += frmMain_FormClosing;
+            FormClosing += FrmMain_FormClosing;
             Load += Form1_Load;
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
