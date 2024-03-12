@@ -107,6 +107,7 @@ namespace FlightRecorder
             // 
             // timerMain
             // 
+            timerMain.Interval = 500;
             timerMain.Tick += timerMain_Tick;
             // 
             // timerConnection
@@ -416,11 +417,11 @@ namespace FlightRecorder
             lbOnGround.Text = "On Ground";
             lbOnGround.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // lbTimeAiborn
+            // lbTimeAirborn
             // 
             lbTimeAirborn.AutoSize = true;
             lbTimeAirborn.Location = new Point(167, 191);
-            lbTimeAirborn.Name = "lbTimeAiborn";
+            lbTimeAirborn.Name = "lbTimeAirborn";
             lbTimeAirborn.Size = new Size(32, 18);
             lbTimeAirborn.TabIndex = 43;
             lbTimeAirborn.Text = "--:--";

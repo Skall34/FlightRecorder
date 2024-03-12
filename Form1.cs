@@ -553,7 +553,15 @@ namespace FlightRecorder
         // Form is closing so stop all the timers and close FSUIPC Connection
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult res = MessageBox.Show("Confirm close ACARS ?", "Flight Recorder", MessageBoxButtons.OKCancel);
+            
+            string message = "Confirm close ACARS ?";
+            if (this.btnSubmit.Enabled == true)
+            {
+                //Le vol n'a PAS été envoyé
+                message += "\r\n !!! Le vol n'a pas été envoyé !!!";
+            }
+
+            DialogResult res = MessageBox.Show(message, "Flight Recorder", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
                 //arrete les timers.
@@ -664,6 +672,7 @@ namespace FlightRecorder
                     //en, cas d'erreur, affiche une popup avec le message
                     MessageBox.Show("Error while sending flight data.");
                 }
+                // On grise le bouton save flight pour éviter les doubles envois
                 btnSubmit.Enabled = false;
             }
             catch (Exception ex)
