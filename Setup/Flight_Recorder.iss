@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Flight Recorder"
-#define MyAppVersion "2.0.0.4"
+#define MyAppVersion GetStringFileInfo("..\bin\Release\net8.0-windows7.0\FlightRecorder.exe", "FileVersion")
 #define MyAppExeName "FlightRecorder.exe"
 
 [Setup]
@@ -16,9 +16,9 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\jfk_1\Documents\GitHub\FlightRecorder\Setup
+OutputDir=..\Build
 OutputBaseFilename=Flight_Recorder
-SetupIconFile=C:\Users\jfk_1\Documents\GitHub\FlightRecorder\flightrec.ico
+SetupIconFile=..\flightrec.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -31,90 +31,7 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\airports_tests.csv"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\coverlet.collector.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\coverlet.collector.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\coverlet.collector.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\coverlet.collector.targets"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\coverlet.core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\coverlet.core.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Flightrec.bak"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Flightrec.log"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorder.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorder.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorder.dll.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorder.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorder.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorderTestsProject.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorderTestsProject.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorderTestsProject.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorderTestsProject.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\FlightRecorderTestsProject.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\fsuipcClient.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Google.Apis.Auth.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Google.Apis.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Google.Apis.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Google.Apis.Sheets.v4.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.CodeCoverage.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.CodeCoverage.Instrumentation.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.CodeCoverage.Interprocess.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.CodeCoverage.props"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.CodeCoverage.targets"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.CSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.DiaSymReader.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.DotNet.PlatformAbstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.Extensions.DependencyModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.Extensions.FileSystemGlobbing.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.TestPlatform.AdapterUtilities.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.TestPlatform.CommunicationUtilities.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.TestPlatform.CoreUtilities.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.TestPlatform.CrossPlatEngine.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.TestPlatform.PlatformAbstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.TestPlatform.Utilities.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.CodeCoverage.Shim.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.TestFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Microsoft.VisualStudio.TraceDataCollector.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Mono.Cecil.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Mono.Cecil.Mdb.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Mono.Cecil.Pdb.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Mono.Cecil.Rocks.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\NuGet.Frameworks.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.AppContext.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Dynamic.Runtime.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.IO.FileSystem.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Linq.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Linq.Expressions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Management.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.ObjectModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Reflection.Emit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Reflection.Emit.ILGeneration.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Reflection.Emit.Lightweight.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Reflection.Metadata.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Reflection.TypeExtensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Runtime.Serialization.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Text.RegularExpressions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Threading.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Xml.ReaderWriter.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\System.Xml.XDocument.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\testhost.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\testhost.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\jfk_1\Desktop\Flight_Recorder_V2.0.0.3\ThirdPartyNotices.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Release\net8.0-windows7.0\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

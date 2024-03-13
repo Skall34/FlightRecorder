@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>flightrec.ico</ApplicationIcon>
-    <AssemblyVersion>2.0.0.2</AssemblyVersion>
+    <AssemblyVersion>Debug</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
