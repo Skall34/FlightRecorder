@@ -19,8 +19,8 @@ DisableProgramGroupPage=yes
 OutputDir=..\Build
 OutputBaseFilename=Flight_Recorder_setup_{#MyAppVersion}
 SetupIconFile=..\flightrec.ico
-Compression=zip
-SolidCompression=yes
+Compression=bzip/2
+SolidCompression=no
 WizardStyle=modern
 
 [Languages]
