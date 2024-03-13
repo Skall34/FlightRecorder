@@ -46,8 +46,14 @@ jobs:
         path: Setup/Flight_Recorder.iss
         options: /O+
     
-#    - name: Publish the project
-#      run: dotnet publish --configuration Release --output publish_output
+    - name: Publish the project
+      run: dotnet publish --configuration Release --output publish_output
+
+    - name: Upload archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: flight_recorder_${{ steps.previoustag.outputs.tag }}
+        path: publish_output/*.*
 
     - name: Upload setup
       uses: actions/upload-artifact@v2
