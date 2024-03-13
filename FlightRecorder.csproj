@@ -9,6 +9,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>flightrec.ico</ApplicationIcon>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
