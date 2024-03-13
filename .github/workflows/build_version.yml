@@ -40,11 +40,17 @@ jobs:
     - name: Build the project
       run: dotnet build --configuration Release
 
-    - name: Publish the project
-      run: dotnet publish --configuration Release --output publish_output
+    - name: Compile .ISS to .EXE Installer
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+      with:
+        path: Setup/FlightRecorder.iss
+        options: /O+
+    
+#    - name: Publish the project
+#      run: dotnet publish --configuration Release --output publish_output
 
-    - name: Upload zip artifact
+    - name: Upload setup
       uses: actions/upload-artifact@v2
       with:
-        name: flight_recorder_${{ steps.previoustag.outputs.tag }}
-        path: publish_output/*
+        name: flight_recorder_setup_${{ steps.previoustag.outputs.tag }}
+        path: Build/flight_recorder_setup_${{ steps.previoustag.outputs.tag }}.exe
