@@ -1,0 +1,54 @@
+name: Manually build setup
+
+on:
+  workflow_dispatch
+      
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+       
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'  # Adjust the version if needed
+
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 9.9.9.9 # Optional fallback tag to use when no tag can be found
+        #workingDirectory: another/path/where/a/git/repo/is/checked/out # Optional alternative working directory
+
+    - name: Get the version from tag
+      id: get_version
+      run: echo ::set-output name=VERSION::${{ steps.previoustag.outputs.tag }}
+
+    - name: set version in assembly
+      id: update
+      uses: vers-one/dotnet-project-version-updater@v1.4
+      with:
+        file: "FlightRecorder.csproj"
+        version: ${{ steps.previoustag.outputs.tag }}
+
+    - name: Build the project
+      run: dotnet build --configuration Release
+
+    - name: Compile .ISS to .EXE Installer
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+      with:
+        path: Setup/FlightRecorder.iss
+        options: /O+
+    
+#    - name: Publish the project
+#      run: dotnet publish --configuration Release --output publish_output
+
+    - name: Upload setup
+      uses: actions/upload-artifact@v2
+      with:
+        name: flight_recorder_setup_${{ steps.previoustag.outputs.tag }}
+        path: Build/flight_recorder_setup_${{ steps.previoustag.outputs.tag }}.exe
