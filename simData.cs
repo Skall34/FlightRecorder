@@ -15,9 +15,9 @@ namespace FlightRecorder
         // DECLARE OFFSETS YOU WANT TO USE HERE
         // =====================================
         //https://www.projectmagenta.com/all-fsuipc-offsets/
-        private Offset<uint> airspeed = new Offset<uint>(0x02BC);
-        private Offset<string> startSituation = new Offset<string>(0x0024, 256);
-        private Offset<uint> avionicsMaster = new Offset<uint>(0x2E80);
+        private readonly Offset<uint> airspeed = new Offset<uint>(0x02BC);
+        private readonly Offset<string> startSituation = new Offset<string>(0x0024, 256);
+        private readonly Offset<uint> avionicsMaster = new Offset<uint>(0x2E80);
         //private Offset<byte> navLights = new Offset<byte>(0x0280);
         //private Offset<byte> beaconStrobe = new Offset<byte>(0x0281);
         //private Offset<byte> landingLights = new Offset<byte>(0x02BC);
@@ -26,21 +26,21 @@ namespace FlightRecorder
         //whilst the “on ground” flag(0366) is set.Can be used to check
         //hardness of touchdown(but watch out for bounces which may
         //change this). 
-        private Offset<short> onGround = new Offset<short>(0x0366);
-        private Offset<int> verticalSpeed = new Offset<int>(0x02C8);
-        private Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
-        private Offset<double> verticalAcceleration = new Offset<double>(0x3068);
+        private readonly Offset<short> onGround = new Offset<short>(0x0366);
+        private readonly Offset<int> verticalSpeed = new Offset<int>(0x02C8);
+        private readonly Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
+        private readonly Offset<double> verticalAcceleration = new Offset<double>(0x3068);
 
-        private Offset<byte> stallWarning = new Offset<byte>(0x036C);
-        private Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
-        private Offset<short> crashed = new Offset<short>(0x0840);
-        private Offset<short> offRunwayCrashed = new Offset<short>(0x0848);
+        private readonly Offset<byte> stallWarning = new Offset<byte>(0x036C);
+        private readonly Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
+        private readonly Offset<short> crashed = new Offset<short>(0x0840);
+        private readonly Offset<short> offRunwayCrashed = new Offset<short>(0x0848);
 
-        private Offset<uint> flapsAvailable = new Offset<uint>(0x778);
-        private Offset<uint> flapsPosition = new Offset<uint>(0xBE0);
+        private readonly Offset<uint> flapsAvailable = new Offset<uint>(0x778);
+        private readonly Offset<uint> flapsPosition = new Offset<uint>(0xBE0);
 
-        private Offset<uint> gearRetractableFlag = new Offset<uint>(0x60C);
-        private Offset<uint> gearPosition = new Offset<uint>(0xBF0);
+        private readonly Offset<uint> gearRetractableFlag = new Offset<uint>(0x60C);
+        private readonly Offset<uint> gearPosition = new Offset<uint>(0xBF0);
 
 
 
@@ -50,42 +50,36 @@ namespace FlightRecorder
         //private Offset<uint> heading = new Offset<uint>(0x0580);
 
 
-        private Offset<short> engineNumber = new Offset<short>(0x0AEC);
+        private readonly Offset<short> engineNumber = new Offset<short>(0x0AEC);
 
-        private Offset<short> engine1Firing = new Offset<short>(0x0894);
-        private Offset<short> engine2Firing = new Offset<short>(0x092C);
-        private Offset<short> engine3Firing = new Offset<short>(0x09C4);
-        private Offset<short> engine4Firing = new Offset<short>(0x0A5C);
+        private readonly Offset<short> engine1Firing = new Offset<short>(0x0894);
+        private readonly Offset<short> engine2Firing = new Offset<short>(0x092C);
+        private readonly Offset<short> engine3Firing = new Offset<short>(0x09C4);
+        private readonly Offset<short> engine4Firing = new Offset<short>(0x0A5C);
 
-        private Offset<short> fuelWheight = new Offset<short>(0x0AF4); //pounds per gallons * 256
+        //private readonly Offset<short> fuelWheight = new Offset<short>(0x0AF4); //pounds per gallons * 256
 
-        private Offset<uint> centerTankLevelPercent = new Offset<uint>(0x0B74); // % * 128 * 65536
-        private Offset<uint> centerTankGallonsCapacity = new Offset<uint>(0x0B78);
+        //private readonly Offset<uint> centerTankLevelPercent = new Offset<uint>(0x0B74); // % * 128 * 65536
+        //private readonly Offset<uint> centerTankGallonsCapacity = new Offset<uint>(0x0B78);
 
-        private Offset<uint> leftTankLevelPercent = new Offset<uint>(0x0B7C); // % * 128 * 65536
-        private Offset<uint> leftTankGallonsCapacity = new Offset<uint>(0x0B80);
+        //private readonly Offset<uint> leftTankLevelPercent = new Offset<uint>(0x0B7C); // % * 128 * 65536
+        //private readonly Offset<uint> leftTankGallonsCapacity = new Offset<uint>(0x0B80);
 
-        private Offset<uint> rightTankLevelPercent = new Offset<uint>(0x0B94); // % * 128 * 65536
-        private Offset<uint> rightTankGallonsCapacity = new Offset<uint>(0x0B98);
+        //private readonly Offset<uint> rightTankLevelPercent = new Offset<uint>(0x0B94); // % * 128 * 65536
+        //private readonly Offset<uint> rightTankGallonsCapacity = new Offset<uint>(0x0B98);
 
-        private Offset<uint> payloadNumber = new Offset<uint>(0x13FC);
+        //private readonly Offset<uint> payloadNumber = new Offset<uint>(0x13FC);
         //private Offset<FsPayloadStation> payloads = new Offset<FsPayloadStation>(0x1400, 48);
 
-        private Offset<string> aircraftModel = new Offset<string>(0x3500, 24);
+        private readonly Offset<string> aircraftModel = new Offset<string>(0x3500, 24);
 
-        private Offset<string> aircraftType = new Offset<string>(0x3D00, 256);
-        private Offset<string> flightNumber = new Offset<string>(0x3130, 12);
-        private Offset<string> tailNumber = new Offset<string>(0x313C, 12);
-        private Offset<string> airlineName = new Offset<string>(0x3148, 24);
+        private readonly Offset<string> aircraftType = new Offset<string>(0x3D00, 256);
+        private readonly Offset<string> flightNumber = new Offset<string>(0x3130, 12);
+        private readonly Offset<string> tailNumber = new Offset<string>(0x313C, 12);
+        //private readonly Offset<string> airlineName = new Offset<string>(0x3148, 24);
 
         private PayloadServices? payloadServices;
-        private PlayerLocationInfo locationInfos = new PlayerLocationInfo();
-
-        //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
-        //FsPositionSnapshot _startPosition;
-        //FsPositionSnapshot _endPosition;
-
-        //private bool atLeastOneEngineFiring;
+        //private readonly PlayerLocationInfo locationInfos = new PlayerLocationInfo();
 
         private bool _isConnected;
         public bool isConnected { get {
@@ -102,7 +96,7 @@ namespace FlightRecorder
             _isConnected = false;
         }
 
-        public void openConnection()
+        public void OpenConnection()
         {
             FSUIPCConnection.Open();
             _isConnected = true;
@@ -111,22 +105,19 @@ namespace FlightRecorder
             payloadServices.RefreshData();
         }
 
-        public void refresh()
+        public void Refresh()
         {
             try
             {
                 FSUIPCConnection.Process();
-                if (null != payloadServices)
-                {
-                    payloadServices.RefreshData();
-                }
+                payloadServices?.RefreshData();
             }catch(Exception)
             {
                 _isConnected=false;
             }
         }
 
-        public double getFuelWeight()
+        public double GetFuelWeight()
         {
             double result = 0;
             if (null != payloadServices)
@@ -136,7 +127,7 @@ namespace FlightRecorder
             return result;
         }
 
-        public double getPlaneWeight()
+        public double GetPlaneWeight()
         {
             double result = 0;
             if (null != payloadServices)
@@ -146,7 +137,7 @@ namespace FlightRecorder
             return result;
         }
 
-        public void setFuelWheight(double newFuelWeight)
+        public void SetFuelWheight(double newFuelWeight)
         {
             if (null != payloadServices)
             {
@@ -155,7 +146,7 @@ namespace FlightRecorder
             }
         }
 
-        public double getMaxFuel()
+        public double GetMaxFuel()
         {
             if (null != payloadServices)
             {
@@ -167,9 +158,9 @@ namespace FlightRecorder
             }
         }
 
-        public short getOnground() => onGround.Value;
+        public short GetOnground() => onGround.Value;
 
-        public Double getCargoWeight()
+        public Double GetCargoWeight()
         {
             double result = 0;
             if (null != payloadServices)
@@ -179,33 +170,33 @@ namespace FlightRecorder
             return result;
         }
 
-        public double getAirSpeed() => (double)this.airspeed.Value / 128d;
+        public double GetAirSpeed() => (double)this.airspeed.Value / 128d;
 
-        public double getVerticalSpeed() => ((double)verticalSpeed.Value/256 ) * 60 * 3.28084;
+        public double GetVerticalSpeed() => ((double)verticalSpeed.Value/256 ) * 60 * 3.28084;
         
-        public double getVerticalAcceleration() => ((double)verticalAcceleration.Value / 32.174);
+        public double GetVerticalAcceleration() => ((double)verticalAcceleration.Value / 32.174);
 
-        public double getLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value/256) * 60 * 3.28084;
+        public double GetLandingVerticalSpeed() => ((double)landingVerticalSpeed.Value/256) * 60 * 3.28084;
 
-        public byte getStallWarning() => stallWarning.Value;
+        public byte GetStallWarning() => stallWarning.Value;
 
-        public byte getOverspeedWarning() => overSpeedWarning.Value;
+        public byte GetOverspeedWarning() => overSpeedWarning.Value;
 
-        public short getCrashedFlag() => crashed.Value;
+        public short GetCrashedFlag() => crashed.Value;
 
-        public short getOffRunwayCrashed() => offRunwayCrashed.Value;
+        public short GetOffRunwayCrashed() => offRunwayCrashed.Value;
 
-        public uint getGearRetractableFlag() => gearRetractableFlag.Value;
+        public uint GetGearRetractableFlag() => gearRetractableFlag.Value;
 
-        public bool getIsGearUp() =>
+        public bool GetIsGearUp() =>
             // gear down = 16383
             gearPosition.Value == 0;
 
-        public uint getFlapsAvailableFlag() => flapsAvailable.Value;
+        public uint GetFlapsAvailableFlag() => flapsAvailable.Value;
 
-        public uint getFlapsPosition() => flapsPosition.Value;
+        public uint GetFlapsPosition() => flapsPosition.Value;
 
-        public bool isAtLeastOneEngineFiring()
+        public bool IsAtLeastOneEngineFiring()
         {
             bool result = false;
             switch (this.engineNumber.Value)
@@ -236,17 +227,17 @@ namespace FlightRecorder
             return result;
         }
 
-        public FsPositionSnapshot getPosition() => FSUIPCConnection.GetPositionSnapshot();
+        public FsPositionSnapshot GetPosition() => FSUIPCConnection.GetPositionSnapshot();
 
-        public string getAircraftType() => aircraftType.Value;
-        public string getAircraftModel() => aircraftModel.Value;
+        public string GetAircraftType() => aircraftType.Value;
+        public string GetAircraftModel() => aircraftModel.Value;
 
-        public string getFlightNumber() => flightNumber.Value;
+        public string GetFlightNumber() => flightNumber.Value;
 
 
-        public string getTailNumber() => tailNumber.Value;
+        public string GetTailNumber() => tailNumber.Value;
 
-        public double getPayload()
+        public double GetPayload()
         {
             if (payloadServices != null)
             {

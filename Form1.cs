@@ -65,7 +65,7 @@ namespace FlightRecorder
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
         private int endDisabled;
 
-        private string BASERURL;
+        private readonly string BASERURL;
 
         //private bool modifiedFuel;
         public Form1()
@@ -220,13 +220,13 @@ namespace FlightRecorder
             if ((null != _simData) && (_simData.isConnected))
             {
                 //commence à lire qq variables du simu : fuel & cargo, immat avion...
-                this.lbPayload.Text = _simData.getPayload().ToString("0.00");
+                this.lbPayload.Text = _simData.GetPayload().ToString("0.00");
 
                 //recupere l'emplacement courant :
-                _currentPosition = _simData.getPosition(); ;
+                _currentPosition = _simData.GetPosition(); ;
 
                 //Recupere le libellé de l'avion
-                string planeNomComplet = _simData.getAircraftType();
+                string planeNomComplet = _simData.GetAircraftType();
                 lbLibelleAvion.Text = planeNomComplet;
 
                 double lat = _currentPosition.Location.Latitude.DecimalDegrees;
@@ -248,7 +248,7 @@ namespace FlightRecorder
                     }
                 }
                 //recupere le type d'avion donné par le simu.
-                Logger.WriteLine("Simulator aircraft loaded : " + _simData.getAircraftType());
+                Logger.WriteLine("Simulator aircraft loaded : " + _simData.GetAircraftType());
             }
         }
 
@@ -262,7 +262,7 @@ namespace FlightRecorder
                 {
 
                     //essaie d'ouvrir la connection. Si ça échoue, une exception sera envoyée
-                    _simData.openConnection();
+                    _simData.OpenConnection();
 
                     Logger.WriteLine("Connected to simulator");
                     //si on arrive ici, la connection est bien ouverte, arrete le timer de connection.
@@ -322,19 +322,19 @@ namespace FlightRecorder
                 }
 
                 //rafraichis les données venant du simu
-                _simData.refresh();
+                _simData.Refresh();
 
                 // Airspeed
-                double airspeedKnots = _simData.getAirSpeed();
+                double airspeedKnots = _simData.GetAirSpeed();
 
                 //check if we are in the air
-                if (_simData.getOnground() == 0)
+                if (_simData.GetOnground() == 0)
                 {
                     if (onGround)
                     {
                         Logger.WriteLine("Takeoff detected !");
                         //we just took off ! read the plane weight
-                        takeOffWeight = _simData.getPlaneWeight();
+                        takeOffWeight = _simData.GetPlaneWeight();
                         //keep memory that we're airborn
                         onGround = false;
                         // on veut afficher la date
@@ -347,7 +347,7 @@ namespace FlightRecorder
                         // On cache le label du Fret après le décollage. On en a plus besoin
                         this.lbFret.Visible = false;
                     }
-                    landingVerticalAcceleration = _simData.getVerticalAcceleration();
+                    landingVerticalAcceleration = _simData.GetVerticalAcceleration();
                     if (landingVerticalAcceleration != 0)
                     {
                         Logger.WriteLine("detected vertical acceleration : " + landingVerticalAcceleration.ToString());
@@ -359,8 +359,8 @@ namespace FlightRecorder
                     {
                         Logger.WriteLine("Landing detected !");
                         //only update the touchDownVSpeed if we've been airborn once
-                        touchDownVSpeed = _simData.getLandingVerticalSpeed();
-                        landingWeight = _simData.getPlaneWeight();
+                        touchDownVSpeed = _simData.GetLandingVerticalSpeed();
+                        landingWeight = _simData.GetPlaneWeight();
                         
                         _notAirborn = DateTime.Now;
                         if (lbTimeOnGround.Text == "--:--")
@@ -374,7 +374,7 @@ namespace FlightRecorder
 
                 //check gear position, if gear just deployed, get the airspeed
                 bool currentGearIsUp = gearIsUp;
-                gearIsUp = _simData.getIsGearUp();
+                gearIsUp = _simData.GetIsGearUp();
                 if (!gearIsUp && currentGearIsUp)
                 {
                     Logger.WriteLine("Gear down detected. Measure speed");
@@ -388,7 +388,7 @@ namespace FlightRecorder
 
                 //check the flaps deployment speed
                 uint currentFlapsPosition = flapsPosition;
-                flapsPosition = _simData.getFlapsPosition();
+                flapsPosition = _simData.GetFlapsPosition();
                 //if flaps just went deployed, get the air speed.
                 if ((currentFlapsPosition == 0) && (flapsPosition > 0))
                 {
@@ -401,21 +401,21 @@ namespace FlightRecorder
                 }
 
 
-                if (_simData.getOverspeedWarning() != 0)
+                if (_simData.GetOverspeedWarning() != 0)
                 {
                     Logger.WriteLine("overspeed warning detected");
                     overspeed = true;
                 }
-                if (_simData.getOffRunwayCrashed() != 0)
+                if (_simData.GetOffRunwayCrashed() != 0)
                 {
                     Logger.WriteLine("off runway crashed detected");
                     overRunwayCrashed = true;
                 }
-                if (_simData.getCrashedFlag() != 0)
+                if (_simData.GetCrashedFlag() != 0)
                 {
                     crashed = true;
                 }
-                if (_simData.getStallWarning() != 0)
+                if (_simData.GetStallWarning() != 0)
                 {
                     stallWarning = true;
                 }
@@ -425,7 +425,7 @@ namespace FlightRecorder
                 //sauvegarde l'etat precedent des moteurs
                 bool _previousEngineStatus = atLeastOneEngineFiring;
                 //lit le nouvel etat.
-                atLeastOneEngineFiring = _simData.isAtLeastOneEngineFiring();
+                atLeastOneEngineFiring = _simData.IsAtLeastOneEngineFiring();
 
                 //si aucun moteur de tournait, mais que maintenant, au moins un moteur tourne, on commence a enregistrer.
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
@@ -438,7 +438,7 @@ namespace FlightRecorder
                     lbEndTime.Enabled = false;
                     lbEndIata.Enabled = false;
 
-                    _startPosition = _simData.getPosition(); ;
+                    _startPosition = _simData.GetPosition(); ;
 
                     double lat = _startPosition.Location.Latitude.DecimalDegrees;
                     double lon = _startPosition.Location.Longitude.DecimalDegrees;
@@ -451,7 +451,7 @@ namespace FlightRecorder
                         lbStartIata.Text = localAirport.ident;
                     }
 
-                    _startFuel = _simData.getFuelWeight();
+                    _startFuel = _simData.GetFuelWeight();
                     _startTime = DateTime.Now;
                     this.lbStartTime.Text = _startTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
@@ -472,7 +472,7 @@ namespace FlightRecorder
                     lbStartIata.Enabled = false;
 
                     //on recupere les etats de fin de vol : heure, carbu, position.
-                    _endPosition = _simData.getPosition();
+                    _endPosition = _simData.GetPosition();
                     double lat = _endPosition.Location.Latitude.DecimalDegrees;
                     double lon = _endPosition.Location.Longitude.DecimalDegrees;
 
@@ -484,7 +484,7 @@ namespace FlightRecorder
                         lbEndIata.Text = localAirport.ident;
                     }
 
-                    _endFuel = _simData.getFuelWeight(); ;
+                    _endFuel = _simData.GetFuelWeight(); ;
                     _endTime = DateTime.Now;
                     this.lbEndTime.Text = _endTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
@@ -730,7 +730,7 @@ namespace FlightRecorder
             tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
             tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg ";
 
-            if (_simData.getFlapsAvailableFlag() == 1)
+            if (_simData.GetFlapsAvailableFlag() == 1)
             {
                 if (flapsDownSpeed > 130)
                 {
@@ -738,7 +738,7 @@ namespace FlightRecorder
                 }
             }
 
-            if (_simData.getGearRetractableFlag() == 1)
+            if (_simData.GetGearRetractableFlag() == 1)
             {
                 if (gearDownSpeed > 130)
                 {
@@ -771,11 +771,11 @@ namespace FlightRecorder
             if (overRunwayCrashed) tipText += "Over runway crashed \n";
             if (crashed) tipText += "Crashed \n";
             tipText += "vertical speed at touchdown: " + touchDownVSpeed + " fpm";
-            if (_simData.getGearRetractableFlag() == 1)
+            if (_simData.GetGearRetractableFlag() == 1)
             {
                 tipText += "gear down speed : " + gearDownSpeed + " m/s";
             }
-            if (_simData.getFlapsAvailableFlag() == 1)
+            if (_simData.GetFlapsAvailableFlag() == 1)
             {
                 tipText += "flaps down speed : " + flapsDownSpeed + " m/s";
             }

@@ -8,10 +8,10 @@ namespace FlightRecorder
 {
     internal class GoogleFormsSubmissionService
     {
-        private string _baseUrl;
-        private Dictionary<string, string> _field;
-        private Dictionary<string, string[]> _checkbox;
-        private HttpClient _client;
+        private readonly string _baseUrl;
+        private readonly Dictionary<string, string> _field;
+        private readonly Dictionary<string, string[]> _checkbox;
+        private readonly HttpClient _client;
 
         public GoogleFormsSubmissionService(string formUrl)
         {
