@@ -26,11 +26,15 @@ jobs:
 
     - name: Get latest tag pushed
       id: previoustag
-      uses: younited/get-previous-tag-action@v1.0.0
-
+      uses: oprypin/find-latest-tag@v1
+      with:
+        repository: Skall34/FlightRecorder
+        releases-only: false
+        
+        
     - name: Get the version from tag
       id: get_version
-      run: echo ::set-output name=VERSION::${{ steps.previoustag.outputs.previous-tag }}
+      run: echo ::set-output name=VERSION::${{ steps.previoustag.outputs.tag }}
 
     - name: set version in assembly
       id: update
