@@ -39,7 +39,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Compile .ISS to .EXE Installer
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.4
       with:
         path: Setup/Flight_Recorder.iss
         options: /O+
