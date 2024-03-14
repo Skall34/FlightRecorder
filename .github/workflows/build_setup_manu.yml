@@ -60,3 +60,4 @@ jobs:
       with:
         name: flight_recorder_setup_${{ steps.previoustag.outputs.tag }}
         path: Build/flight_recorder_setup_${{ steps.previoustag.outputs.tag }}.exe
+        compression-level: 9 # no compression
