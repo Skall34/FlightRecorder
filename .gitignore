@@ -237,6 +237,9 @@ ClientBin/
 *.dbproj.schemaview
 *.jfm
 # *.pfx
+#ignore private key
+*.pvk
+
 *.publishsettings
 orleans.codegen.cs
 
