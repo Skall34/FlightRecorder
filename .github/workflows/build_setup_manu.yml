@@ -17,12 +17,16 @@ jobs:
       with:
         dotnet-version: '8.0.x'  # Adjust the version if needed
 
-    - name: 'Get Previous tag'
+#    - name: 'Get Previous tag'
+#      id: previoustag
+#      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+#      with:
+#        fallback: 9.9.9.9 # Optional fallback tag to use when no tag can be found
+#        #workingDirectory: another/path/where/a/git/repo/is/checked/out # Optional alternative working directory
+
+    - name: Get latest tag
       id: previoustag
-      uses: "WyriHaximus/github-action-get-previous-tag@v1"
-      with:
-        fallback: 9.9.9.9 # Optional fallback tag to use when no tag can be found
-        #workingDirectory: another/path/where/a/git/repo/is/checked/out # Optional alternative working directory
+      uses: actions-ecosystem/action-get-latest-tag@v1
 
     - name: Get the version from tag
       id: get_version
