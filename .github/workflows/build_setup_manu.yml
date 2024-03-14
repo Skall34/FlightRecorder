@@ -56,7 +56,7 @@ jobs:
 #      run: dotnet publish --configuration Release --output publish_output
 
     - name: sign setup
-      uses: GabrielAcostaEngler/signtool-code-sign@main
+      uses: GabrielAcostaEngler/signtool-code-sign@1.0.6
       with:
        certificate: '${{ secrets.CERTIFICATE }}'
        cert-password: '${{ secrets.PASSWORD }}'
