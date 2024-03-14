@@ -22,7 +22,6 @@ SetupIconFile=..\flightrec.ico
 Compression=lzma2/ultra
 SolidCompression=yes
 WizardStyle=modern
-Password=skywings
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
