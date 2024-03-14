@@ -24,9 +24,12 @@ jobs:
 #        fallback: 9.9.9.9 # Optional fallback tag to use when no tag can be found
 #        #workingDirectory: another/path/where/a/git/repo/is/checked/out # Optional alternative working directory
 
-    - name: Get latest tag
+    - name: Get latest tag pushed
       id: previoustag
-      uses: actions-ecosystem/action-get-latest-tag@v1
+      uses: 32teeth/action-github-tag@v1
+      with:
+        # Return only the tag number (e.g., v1.0.0 -> 1.0.0)
+        numbers_only: true
 
     - name: Get the version from tag
       id: get_version
