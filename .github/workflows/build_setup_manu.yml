@@ -60,7 +60,7 @@ jobs:
       with:
        certificate: '${{ secrets.CERTIFICATE }}'
        cert-password: '${{ secrets.PASSWORD }}'
-       cert-sha1: '${{ secrets.CERTHASH }}'
+       cert-sha1: '${{ secrets.SHA1 }}'
        cert-description: 'Skywing'
        folder: 'Build'
        recursive: false
