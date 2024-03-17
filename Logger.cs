@@ -13,6 +13,8 @@ namespace FlightRecorder
     {
         static TraceListener logger;
 
+        const string logFileName = "FlightRecorder";
+
         static string GetCallingMethodName()
         {
             try
@@ -35,12 +37,27 @@ namespace FlightRecorder
 
         public static void init()
         {
-            if (File.Exists("Flightrec.log"))
+            // Get the application name
+            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+
+            // Get the path to the user's AppData folder
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            // Combine the AppData path with the folder name
+            string fullPath = Path.Combine(appDataPath, appName);
+
+            // Ensure the directory exists, if not, create it
+            Directory.CreateDirectory(fullPath);
+
+            string logFile = Path.Combine(fullPath, logFileName);
+
+            if (File.Exists(logFile+".log"))
             {
-                File.Move("Flightrec.log", "Flightrec.bak", true);
+                File.Move(logFile + ".log", logFile + ".bak", true);
             }
-            logger = new TextWriterTraceListener("Flightrec.log");
+            logger = new TextWriterTraceListener(logFile + ".log");
             Trace.Listeners.Add(logger);
+            Trace.AutoFlush = true;
         }
 
         public static void Dispose()
