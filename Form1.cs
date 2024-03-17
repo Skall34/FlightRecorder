@@ -48,6 +48,7 @@ namespace FlightRecorder
         private bool onGround;
         private double touchDownVSpeed;
         private double landingVerticalAcceleration;
+        private double landingSpeed;
 
         private bool gearIsUp;
         private uint flapsPosition;
@@ -130,6 +131,7 @@ namespace FlightRecorder
 
             touchDownVSpeed = 0;
             landingVerticalAcceleration = 0;
+            landingSpeed = 0;
 
             gearIsUp = false;
             flapsPosition = 0;
@@ -346,12 +348,13 @@ namespace FlightRecorder
 
                         // On cache le label du Fret après le décollage. On en a plus besoin
                         this.lbFret.Visible = false;
+
+                        //just incase of rebound during takeoff, reset the onground label
+                        lbTimeOnGround.Text = "--:--";                    
                     }
+
                     landingVerticalAcceleration = _simData.GetVerticalAcceleration();
-                    if (landingVerticalAcceleration != 0)
-                    {
-                        Logger.WriteLine("detected vertical acceleration : " + landingVerticalAcceleration.ToString());
-                    }
+                    landingSpeed = _simData.GetAirSpeed();
                 }
                 else //we're on ground !
                 {
@@ -731,8 +734,9 @@ namespace FlightRecorder
         {
             int note = 10;
             Logger.WriteLine("get landing vertical acceleration ds analyse flight :" + landingVerticalAcceleration.ToString("0.00"));
-            tbCommentaires.Text = "VSpeed @touchdown : " + touchDownVSpeed.ToString("0.00") + " fpm ";
-            tbCommentaires.Text += " Vertical acceleration : " + landingVerticalAcceleration.ToString("0.00") + " G";
+            tbCommentaires.Text = "Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+            tbCommentaires.Text += " Landing vertical speed : " + touchDownVSpeed.ToString("0.00") + " fpm ";
+            tbCommentaires.Text += " Landing vertical acceleration : " + landingVerticalAcceleration.ToString("0.00") + " G ";
             tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
             tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg ";
 
