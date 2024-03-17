@@ -55,6 +55,7 @@ jobs:
 #    - name: Publish the project
 #      run: dotnet publish --configuration Release --output publish_output
 
+#rem sign OK, but verify fails because auto-signed
     - name: sign setup
       uses: GabrielAcostaEngler/signtool-code-sign@1.0.6
       with:
