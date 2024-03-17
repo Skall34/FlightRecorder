@@ -44,5 +44,17 @@ namespace FlightRecorder.Properties {
                 return ((string)(this["GSheetAPIUrl"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastImmat {
+            get {
+                return ((string)(this["lastImmat"]));
+            }
+            set {
+                this["lastImmat"] = value;
+            }
+        }
     }
 }

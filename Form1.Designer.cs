@@ -106,7 +106,6 @@ namespace FlightRecorder
             // 
             // timerMain
             // 
-            timerMain.Interval = 500;
             timerMain.Tick += TimerMain_Tick;
             // 
             // timerConnection

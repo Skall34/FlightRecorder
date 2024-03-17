@@ -705,7 +705,13 @@ namespace FlightRecorder
                 cbImmat.Items.Add(immat);
             }
 
-            //await dataReader.FillComboBoxImmatAsync(cbImmat);
+            //pre-select the last used immat (stored as setting)
+            string lastImmat = Settings.Default.lastImmat;
+            if ((lastImmat != string.Empty)&&(immatriculations.Contains(lastImmat)))
+            {
+                cbImmat.SelectedItem = lastImmat;
+            }
+
             cbImmat.DisplayMember = "Immat";
             this.Cursor = Cursors.Default;
         }
@@ -866,7 +872,9 @@ namespace FlightRecorder
         {
             string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
             lbDesignationAvion.Text = planeDesign;
-
+            // #34 sauvegarder la derniere immat utilisée
+            Settings.Default.lastImmat = cbImmat.Text;
+            Settings.Default.Save();
         }
 
     }
