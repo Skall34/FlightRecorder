@@ -59,7 +59,7 @@ jobs:
        timestamp-server: 'http://timestamp.digicert.com'
 
     - name: Publish the project
-      run: dotnet publish --configuration Release --output publish_output
+      run: dotnet publish FlightRecorder.csproj --configuration Release --output publish_output
 
     - name: Upload archive
       uses: actions/upload-artifact@v2
