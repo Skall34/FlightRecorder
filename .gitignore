@@ -236,9 +236,12 @@ ClientBin/
 *.dbmdl
 *.dbproj.schemaview
 *.jfm
-# *.pfx
-#ignore private key
+*.pfx
+*.p12
 *.pvk
+sha1
+*.key
+*.crt
 
 *.publishsettings
 orleans.codegen.cs
