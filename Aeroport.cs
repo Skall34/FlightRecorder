@@ -35,9 +35,28 @@ namespace FlightRecorder
 
         private const string DBFILE = "aeroports.json";
 
+        private static string DBFILEPATH;
+
+
         public Aeroport()
         {
+        }
 
+        private static void initPath()
+        {
+            // Get the application name
+            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+
+            // Get the path to the user's AppData folder
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            // Combine the AppData path with the folder name
+            string fullPath = Path.Combine(appDataPath, appName);
+
+            // Ensure the directory exists, if not, create it
+            Directory.CreateDirectory(fullPath);
+
+            DBFILEPATH = Path.Combine(fullPath, DBFILE);
         }
 
         public Aeroport(uint id, string _ident, string _type, string _name, double latitude, double longitude)
@@ -90,10 +109,11 @@ namespace FlightRecorder
 
         public static async Task<List<Aeroport>> fetchAirports(string baseUrl, DateTime lastUpdateFileTime)
         {
+            initPath();
             long epoch = 0; // lastUpdateFileTime.ToFileTime();
-            if (File.Exists(DBFILE))
+            if (File.Exists(DBFILEPATH))
             {
-                FileInfo fi = new FileInfo(DBFILE);
+                FileInfo fi = new FileInfo(DBFILEPATH);
                 DateTime creationTime = fi.CreationTime;
                 epoch = (long)(creationTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
             }
@@ -102,16 +122,16 @@ namespace FlightRecorder
             UrlDeserializer dataReader = new UrlDeserializer(url);
             List<Aeroport>? result;
             Logger.WriteLine("Fechting airport informations from server");
-            result = await dataReader.FetchAirportsDataAsync(DBFILE);
+            result = await dataReader.FetchAirportsDataAsync(DBFILEPATH);
             //if no new airport database, just load the local one.
             if (result.Count == 0)
             {
                 //no airports from the server, try to load the local database.
-                if (File.Exists(DBFILE))
+                if (File.Exists(DBFILEPATH))
                 {
                     Logger.WriteLine("Loading local airport database");
                     //read the aeroports.json file.
-                    StreamReader sr = new StreamReader(DBFILE);
+                    StreamReader sr = new StreamReader(DBFILEPATH);
                     string allData = sr.ReadToEnd();
                     result = deserializeAeroports(allData);
                     if (null == result)
