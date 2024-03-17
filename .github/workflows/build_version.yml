@@ -45,7 +45,19 @@ jobs:
       with:
         path: Setup/Flight_Recorder.iss
         options: /O+
-    
+
+    #rem sign OK, but verify fails because auto-signed
+    - name: sign setup
+      uses: GabrielAcostaEngler/signtool-code-sign@1.0.6
+      with:
+       certificate: '${{ secrets.CERTIFICATE }}'
+       cert-password: '${{ secrets.PASSWORD }}'
+       cert-sha1: '${{ secrets.SHA1 }}'
+       cert-description: 'Skywing'
+       folder: 'Build'
+       recursive: false
+       timestamp-server: 'http://timestamp.digicert.com'
+
     - name: Publish the project
       run: dotnet publish --configuration Release --output publish_output
 
