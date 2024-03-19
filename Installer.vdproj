@@ -15,13 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_F31ED4929EA34E699AA19FE72BB2E348"
+        "MsmKey" = "8:_3E9D64170A854153AF30BF98F6D0B254"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_FDD1250C146241AD97408D53BE8D0D49"
+        "MsmKey" = "8:_E5DC72EBF9F640159B06875BB0226A25"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -43,6 +43,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -59,6 +67,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -90,9 +106,9 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FDD1250C146241AD97408D53BE8D0D49"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3E9D64170A854153AF30BF98F6D0B254"
             {
-            "SourcePath" = "8:..\\flightrec.ico"
+            "SourcePath" = "8:flightrec.ico"
             "TargetName" = "8:flightrec.ico"
             "Tag" = "8:"
             "Folder" = "8:_83CB230A9F0B4230A866853DBDFEAAFF"
@@ -184,7 +200,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:https://github.com/Skall34/FlightRecorder"
-        "ARPPRODUCTICON" = "8:_FDD1250C146241AD97408D53BE8D0D49"
+        "ARPPRODUCTICON" = "8:_3E9D64170A854153AF30BF98F6D0B254"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -686,9 +702,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F31ED4929EA34E699AA19FE72BB2E348"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E5DC72EBF9F640159B06875BB0226A25"
             {
-            "SourcePath" = "8:..\\obj\\Release\\net8.0-windows7.0\\apphost.exe"
+            "SourcePath" = "8:obj\\Release\\net8.0-windows7.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_83CB230A9F0B4230A866853DBDFEAAFF"

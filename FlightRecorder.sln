@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightRecorder", "FlightRec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightRecorderTestsProject", "FlightRecorderTestsProject\FlightRecorderTestsProject.csproj", "{42034660-60C1-4D16-9E50-CBDB33FC819E}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{40094D1A-27FC-436E-B384-C7093A5DBAB5}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer.vdproj", "{EECE6A6D-E2E5-4E3C-A32F-23D37C1B0905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,8 +23,10 @@ Global
 		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40094D1A-27FC-436E-B384-C7093A5DBAB5}.Debug|Any CPU.ActiveCfg = Debug
-		{40094D1A-27FC-436E-B384-C7093A5DBAB5}.Release|Any CPU.ActiveCfg = Release
+		{EECE6A6D-E2E5-4E3C-A32F-23D37C1B0905}.Debug|Any CPU.ActiveCfg = Debug
+		{EECE6A6D-E2E5-4E3C-A32F-23D37C1B0905}.Debug|Any CPU.Build.0 = Debug
+		{EECE6A6D-E2E5-4E3C-A32F-23D37C1B0905}.Release|Any CPU.ActiveCfg = Release
+		{EECE6A6D-E2E5-4E3C-A32F-23D37C1B0905}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
