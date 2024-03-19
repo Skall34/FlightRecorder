@@ -241,7 +241,7 @@ ClientBin/
 *.pvk
 sha1
 *.key
-*.crt
+# *.crt
 
 *.publishsettings
 orleans.codegen.cs
