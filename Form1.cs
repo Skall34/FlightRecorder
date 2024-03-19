@@ -239,9 +239,9 @@ namespace FlightRecorder
                     Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
                     if (localAirport != null)
                     {
-                        string startAirportname = localAirport.name;
+                        string? startAirportname = localAirport.name;
 
-                        if (this.aeroports != null)
+                        if ((this.aeroports != null)&&(startAirportname!=null))
                         {
                             // Votre code pour utiliser les avions et les aéroports
                             float fretOnAirport = await GetFretOnAirport(localAirport.ident);
