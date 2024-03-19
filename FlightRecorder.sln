@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightRecorder", "FlightRecorder.csproj", "{AC689816-0CBE-4CDE-BDEE-F874DB888583}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightRecorderTestsProject", "FlightRecorderTestsProject\FlightRecorderTestsProject.csproj", "{42034660-60C1-4D16-9E50-CBDB33FC819E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightRecorderTestsProject", "FlightRecorderTestsProject\FlightRecorderTestsProject.csproj", "{42034660-60C1-4D16-9E50-CBDB33FC819E}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{40094D1A-27FC-436E-B384-C7093A5DBAB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,8 @@ Global
 		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42034660-60C1-4D16-9E50-CBDB33FC819E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40094D1A-27FC-436E-B384-C7093A5DBAB5}.Debug|Any CPU.ActiveCfg = Debug
+		{40094D1A-27FC-436E-B384-C7093A5DBAB5}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
