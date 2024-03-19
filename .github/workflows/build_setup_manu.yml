@@ -33,7 +33,7 @@ jobs:
       uses: vers-one/dotnet-project-version-updater@v1.4
       with:
         file: |
-          "FlightRecorder.csproj", "installer.vdproj"
+          "FlightRecorder.csproj"
         version: ${{ steps.previoustag.outputs.tag }}
 
     - name: Build the project
