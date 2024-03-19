@@ -38,6 +38,7 @@ jobs:
 
     - name: Build the project
       run: dotnet build FlightRecorder.csproj  --configuration Release
+      
     - name: Setup VS Dev Environment
       uses: seanmiddleditch/gha-setup-vsdevenv@v4
       
