@@ -22,7 +22,7 @@ jobs:
         dotnet-version: '8.0.x'  # Adjust the version if needed
 
     - name: Build the project
-      run: dotnet build --configuration Release
+      run: dotnet build FlightRecorder.csproj --configuration Release
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
