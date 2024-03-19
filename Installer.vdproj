@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_17B0458902544011B9F293A6C1850CB0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3E9D64170A854153AF30BF98F6D0B254"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -74,6 +80,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -183,7 +197,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FlightRecorder"
         "ProductCode" = "8:{FA512F2C-A9C6-41A3-A79E-17AA2C0D415E}"
-        "PackageCode" = "8:{CB996ADC-8CA5-4792-9737-8451EED7A442}"
+        "PackageCode" = "8:{363E1FDE-3F3F-4EF7-B80D-0A44F1A403B2}"
         "UpgradeCode" = "8:{F82F6899-1F3E-4D3B-9D31-D503B37BBFDC}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -303,6 +317,34 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_38B84DE9E6C14A90B600A5959C9A1176"
+            {
+            "Name" = "8:FlightRecorder"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_E5DC72EBF9F640159B06875BB0226A25"
+            "Folder" = "8:_5D1E5F2247984C28B5FB53D5CE60B3B8"
+            "WorkingFolder" = "8:_83CB230A9F0B4230A866853DBDFEAAFF"
+            "Icon" = "8:_3E9D64170A854153AF30BF98F6D0B254"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_85D259F289384CBC8A0F10B5E432DF05"
+            {
+            "Name" = "8:FlightRecorder"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_E5DC72EBF9F640159B06875BB0226A25"
+            "Folder" = "8:_4FA25EDB941F4F59B0E1A49165775363"
+            "WorkingFolder" = "8:_83CB230A9F0B4230A866853DBDFEAAFF"
+            "Icon" = "8:_3E9D64170A854153AF30BF98F6D0B254"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -702,6 +744,35 @@
         }
         "ProjectOutput"
         {
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_17B0458902544011B9F293A6C1850CB0"
+            {
+            "SourcePath" = "8:obj\\Release\\net8.0-windows7.0\\apphost.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_83CB230A9F0B4230A866853DBDFEAAFF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{AC689816-0CBE-4CDE-BDEE-F874DB888583}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                "ExcludeFilter" = "8:*.exe"
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E5DC72EBF9F640159B06875BB0226A25"
             {
             "SourcePath" = "8:obj\\Release\\net8.0-windows7.0\\apphost.exe"
@@ -728,6 +799,9 @@
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
+                "ExcludeFilter" = "8:*.json"
+                "ExcludeFilter" = "8:*.config"
+                "ExcludeFilter" = "8:*.dll"
                 }
             }
         }
