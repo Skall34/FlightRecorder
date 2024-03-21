@@ -352,8 +352,6 @@ namespace FlightRecorder
                         //just incase of rebound during takeoff, reset the onground label
                         lbTimeOnGround.Text = "--:--";
 
-                        //Update the google sheet database indicating that this plane is flying
-                        updatePlaneStatus(1);
                     }
 
                     landingVerticalAcceleration = _simData.GetVerticalAcceleration();
@@ -375,9 +373,6 @@ namespace FlightRecorder
                         }
                         
                         onGround = true;
-
-                        //Update the google sheet database indicating that this plane is flying
-                        updatePlaneStatus(0);
                     }
                 }
 
@@ -440,7 +435,7 @@ namespace FlightRecorder
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
                 if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
-                    Logger.WriteLine("First egine start detected for plane" + cbImmat.Text);
+                    Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
                     endDisabled = 300;
                     lbEndFuel.Enabled = false;
                     lbEndPosition.Enabled = false;
@@ -466,6 +461,9 @@ namespace FlightRecorder
                     //0.00 => only keep 2 decimals for the fuel
 
                     this.lbStartFuel.Text = _startFuel.ToString("0.00");
+
+                    //Update the google sheet database indicating that this plane is being used
+                    updatePlaneStatus(1);
 
                 }
 
@@ -501,6 +499,9 @@ namespace FlightRecorder
 
                     //compute the note of the flight
                     AnalyseFlight();
+
+                    //Update the google sheet database indicating that this plane is no more used
+                    updatePlaneStatus(0);
 
                     //enable the save button
                     btnSubmit.Enabled = true;
