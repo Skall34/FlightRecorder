@@ -188,6 +188,17 @@ namespace FlightRecorder
             public string? comment { get; set; }
         }
 
+        [Serializable]
+        public class PlaneUpdateQuery
+        {
+            public string? qtype { get; set; }
+            public string? query { get; set; }
+            public string? cs { get; set; }
+            public string? plane { get; set; }
+            public string? sicao { get; set; }
+            public int? flying{ get; set; }
+        }
+
         public async Task<int> PushFlightAsync(SaveFlightQuery data)
         {
             int result;
@@ -220,5 +231,40 @@ namespace FlightRecorder
             }
             return result;
         }
+
+        public async  Task<int> PushJSonAsync<Serializable>(Serializable data)
+        {
+            int result;
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+
+                    HttpResponseMessage response = await client.PostAsJsonAsync<Serializable>(_url, data);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string res = await response.Content.ReadAsStringAsync();
+                        result = 1;
+                        //if we received airports, store them locally
+                    }
+                    else
+                    {
+                        result = 0;
+                        // Gérer les erreurs si la requête n'a pas réussi
+                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = 0;
+                    // Gérer les exceptions
+                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                }
+            }
+            return result;
+        }
+
+
     }
 }

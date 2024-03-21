@@ -350,7 +350,10 @@ namespace FlightRecorder
                         this.lbFret.Visible = false;
 
                         //just incase of rebound during takeoff, reset the onground label
-                        lbTimeOnGround.Text = "--:--";                    
+                        lbTimeOnGround.Text = "--:--";
+
+                        //Update the google sheet database indicating that this plane is flying
+                        updatePlaneStatus(1);
                     }
 
                     landingVerticalAcceleration = _simData.GetVerticalAcceleration();
@@ -372,6 +375,9 @@ namespace FlightRecorder
                         }
                         
                         onGround = true;
+
+                        //Update the google sheet database indicating that this plane is flying
+                        updatePlaneStatus(0);
                     }
                 }
 
@@ -644,7 +650,8 @@ namespace FlightRecorder
                     cargo = lbPayload.Text
                 };
                 UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
-                int result = await urlDeserializer.PushFlightAsync(data);
+                int result = await urlDeserializer.PushJSonAsync<UrlDeserializer.SaveFlightQuery>(data);
+                //int result = await urlDeserializer.PushFlightAsync(data);
                 if (0 != result)
                 {
                     //si tout va bien...
@@ -668,6 +675,45 @@ namespace FlightRecorder
             this.Cursor = Cursors.Default;
 
         }
+
+        private async void updatePlaneStatus(int isFlying)
+        {
+            try
+            {
+                //crée un dictionnaire des valeurs à envoyer
+                Dictionary<string, string> values = new Dictionary<string, string>();
+                UrlDeserializer.PlaneUpdateQuery data = new UrlDeserializer.PlaneUpdateQuery
+                {
+                    query = "updatePlaneStatus",
+                    qtype = "json",
+                    cs = tbCallsign.Text,
+                    plane = cbImmat.Text,
+                    sicao = lbStartIata.Text,
+                    flying = isFlying
+                };
+                UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
+                int result = await urlDeserializer.PushJSonAsync<UrlDeserializer.PlaneUpdateQuery>(data);
+                //int result = await urlDeserializer.PushFlightAsync(data);
+                if (0 != result)
+                {
+                    //si tout va bien...
+                    this.lblConnectionStatus.Text = "Plane data updated";
+                    this.lblConnectionStatus.ForeColor = Color.Green;
+                }
+                else
+                {
+                    //si tout va bien...
+                    this.lblConnectionStatus.Text = "Error while updating plane data";
+                    this.lblConnectionStatus.ForeColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                //in case if check error, or exception durong save, show a messagebox containing the error message
+                MessageBox.Show(ex.Message);
+            }
+        }
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
