@@ -29,7 +29,7 @@ namespace FlightRecorder
         private readonly Offset<short> onGround = new Offset<short>(0x0366);
         private readonly Offset<int> verticalSpeed = new Offset<int>(0x02C8);
         private readonly Offset<int> landingVerticalSpeed = new Offset<int>(0x30C);
-        private readonly Offset<double> verticalAcceleration = new Offset<double>(0x11BA);
+        private readonly Offset<short> verticalAcceleration = new Offset<short>(0x11BA);
 
         private readonly Offset<byte> stallWarning = new Offset<byte>(0x036C);
         private readonly Offset<byte> overSpeedWarning = new Offset<byte>(0x036D);
