@@ -463,7 +463,7 @@ namespace FlightRecorder
                     this.lbStartFuel.Text = _startFuel.ToString("0.00");
 
                     //Update the google sheet database indicating that this plane is being used
-                    updatePlaneStatus(1);
+                    UpdatePlaneStatus(1);
 
                 }
 
@@ -501,7 +501,7 @@ namespace FlightRecorder
                     AnalyseFlight();
 
                     //Update the google sheet database indicating that this plane is no more used
-                    updatePlaneStatus(0);
+                    UpdatePlaneStatus(0);
 
                     //enable the save button
                     btnSubmit.Enabled = true;
@@ -577,7 +577,6 @@ namespace FlightRecorder
         {
             //si l'utilisateur a modifié le texte du callsign, active le bouton pour le sauvrgarder
             btnSaveSettings.Enabled = true;
-
         }
 
         //sauvegarde du callsign comme setting de l'application
@@ -677,7 +676,7 @@ namespace FlightRecorder
 
         }
 
-        private async void updatePlaneStatus(int isFlying)
+        private async void UpdatePlaneStatus(int isFlying)
         {
             try
             {
@@ -703,7 +702,7 @@ namespace FlightRecorder
                 }
                 else
                 {
-                    //si tout va bien...
+                    //si tout va mal ...
                     this.lblConnectionStatus.Text = "Error while updating plane data";
                     this.lblConnectionStatus.ForeColor = Color.Red;
                 }
@@ -715,12 +714,6 @@ namespace FlightRecorder
             }
         }
 
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-        
         private void RemplirComboImmat()
         {
             lbFret.Text = "Acars initializing ..... please wait";
@@ -851,16 +844,6 @@ namespace FlightRecorder
 
         }
 
-        private void Label11_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void BtnReset_Click(object sender, EventArgs e)
         {
             DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
@@ -914,11 +897,6 @@ namespace FlightRecorder
             }
         }
 
-        private void CbMission_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void CbImmat_SelectedIndexChanged(object sender, EventArgs e)
         {
             string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
@@ -927,6 +905,5 @@ namespace FlightRecorder
             Settings.Default.lastImmat = cbImmat.Text;
             Settings.Default.Save();
         }
-
     }
 }

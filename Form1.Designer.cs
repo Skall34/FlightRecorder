@@ -122,7 +122,6 @@ namespace FlightRecorder
             label9.Size = new Size(105, 18);
             label9.TabIndex = 24;
             label9.Text = "Payload (Kg) :";
-            label9.Click += Label9_Click;
             // 
             // label10
             // 
@@ -143,7 +142,6 @@ namespace FlightRecorder
             label11.Size = new Size(98, 18);
             label11.TabIndex = 33;
             label11.Text = "Pilot callsign";
-            label11.Click += Label11_Click;
             // 
             // tbCallsign
             // 
@@ -454,7 +452,6 @@ namespace FlightRecorder
             cbMission.Name = "cbMission";
             cbMission.Size = new Size(121, 26);
             cbMission.TabIndex = 22;
-            cbMission.SelectedIndexChanged += CbMission_SelectedIndexChanged;
             // 
             // cbNote
             // 
@@ -606,7 +603,6 @@ namespace FlightRecorder
             Text = "Flight recorder";
             Activated += Form1_Activated;
             FormClosing += FrmMain_FormClosing;
-            Load += Form1_Load;
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             groupBox1.ResumeLayout(false);
