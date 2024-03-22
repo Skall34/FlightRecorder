@@ -20,5 +20,6 @@ namespace FlightRecorder
         public int Status { get; set; }
         public string? Horametre { get; set; }
         public string? DernierUtilisateur { get; set; }
+        public int? EnVol {  get; set; }
     }
 }

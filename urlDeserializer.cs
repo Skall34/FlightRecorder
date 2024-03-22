@@ -52,7 +52,8 @@ namespace FlightRecorder
                                     Etat = int.TryParse(item.TryGetValue("Etat", out string? etat) ? etat : "", out int etatValue) ? etatValue : 0,
                                     Status = int.TryParse(item.TryGetValue("Status", out string? status) ? status : "", out int statusValue) ? statusValue : 0,
                                     Horametre = item.TryGetValue("Horametre", out string? horametre) ? horametre : "",
-                                    DernierUtilisateur = item.TryGetValue("Dernier utilisateur", out string? utilisateur) ? utilisateur : ""
+                                    DernierUtilisateur = item.TryGetValue("Dernier utilisateur", out string? utilisateur) ? utilisateur : "",
+                                    EnVol = int.TryParse(item.TryGetValue("En vol", out string? envol) ? envol : "", out int envolValue) ? envolValue : 0
                                 };
 
                                 avions.Add(avion);

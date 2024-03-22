@@ -727,9 +727,11 @@ namespace FlightRecorder
             foreach (var avion in avions)
             {
                 // Vérifiez si le statut de l'avion est égal à 1
-                if (avion.Status == 1 || avion.Status == 2)
+                if (avion.Status == 1 || avion.Status == 2 || avion.EnVol == 1)
                 {
-                    // Si le statut est égal à 1, passez à l'itération suivante
+                    // Si le statut est égal à 1 ou 2, il est en maintenance,
+                    // passez à l'itération suivante
+                    // Si l'avion est en vol, on ne le liste pas
                     continue;
                 }
                 // Ajoutez l'immatriculation de l'avion à la liste des immatriculations
