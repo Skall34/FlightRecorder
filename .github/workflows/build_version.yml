@@ -39,7 +39,7 @@ jobs:
 
     - name: set version in installer
       shell: pwsh
-      run: updateVersion.ps1 ${{ steps.previoustag.outputs.tag }}
+      run: ./updateVersion.ps1 ${{ steps.previoustag.outputs.tag }}
 
     - name: Build the project
       run: dotnet build --configuration Release
