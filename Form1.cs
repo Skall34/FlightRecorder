@@ -62,6 +62,7 @@ namespace FlightRecorder
         private readonly List<Mission> missions;
         private readonly List<Avion> avions;
         private readonly List<Aeroport> aeroports;
+        private Aeroport? localAirport;
 
         private int startDisabled; // if startDisabled==0, then start is possible, if not, start is disabled. each 100ms, the counter will be decremented
         private int endDisabled;
@@ -205,11 +206,11 @@ namespace FlightRecorder
             float fret = await Aeroport.fetchFreight(BASERURL, airportIdent);
             if (fret > 0)
             {
-                lbFret.Text = "Available fret: " + fret.ToString();
+                lbFret.Text = "Available freight at " + airportIdent + " : " + fret.ToString();
             }
             else
             {
-                lbFret.Text = "No fret here";
+                lbFret.Text = "No freight here";
             }
             Logger.WriteLine("Found freight " + fret.ToString() + " at airport " + airportIdent);
             return fret;
@@ -236,16 +237,17 @@ namespace FlightRecorder
 
                 if ((aeroports != null) && (aeroports.Count > 0))
                 {
-                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
-                    if (localAirport != null)
+                    Aeroport? currentAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
+                    if ((currentAirport != null)&&(currentAirport!= localAirport))
                     {
+                        localAirport = currentAirport;
                         string? startAirportname = localAirport.name;
 
                         if ((this.aeroports != null)&&(startAirportname!=null))
                         {
                             // Votre code pour utiliser les avions et les aéroports
                             float fretOnAirport = await GetFretOnAirport(localAirport.ident);
-                            lbFret.Text = fretOnAirport.ToString() + " Kg available " + startAirportname;
+                            //lbFret.Text = fretOnAirport.ToString() + " Kg available " + startAirportname;
                         }
                     }
                 }
@@ -374,6 +376,13 @@ namespace FlightRecorder
                         
                         onGround = true;
                     }
+
+                    //si on est au sol, et moteur arretés, alors on continue de rafraichir les données statiques.
+                    //sinon (en vol, ou des que les moteurs sont allumés, on ne change plus ça).
+                    if (!atLeastOneEngineFiring)
+                    {
+                        ReadStaticValues();
+                    }
                 }
 
                 //check gear position, if gear just deployed, get the airspeed
@@ -417,10 +426,12 @@ namespace FlightRecorder
                 }
                 if (_simData.GetCrashedFlag() != 0)
                 {
+                    Logger.WriteLine("crash detected");
                     crashed = true;
                 }
                 if (_simData.GetStallWarning() != 0)
                 {
+                    Logger.WriteLine("stall warning detected");
                     stallWarning = true;
                 }
 
@@ -505,12 +516,6 @@ namespace FlightRecorder
 
                     //enable the save button
                     btnSubmit.Enabled = true;
-
-                    //moteur arretés, on peut préparer un nouveau vol
-                    //on ne peut pas faire ça, au cas ou l'acars est lancé APRES demarrage des moteurs,
-                    //c'est bien de pouvoir capter les données "au vol"...
-                    //cbImmat.Enabled = true;
-                    //tbCargo.Enabled = true;
 
                 }
 
@@ -839,10 +844,6 @@ namespace FlightRecorder
 
         private void Form1_Activated(object sender, EventArgs e)
         {
-            if (_simData.isConnected)
-            {
-                ReadStaticValues();
-            }
 
         }
 
@@ -882,6 +883,7 @@ namespace FlightRecorder
                 crashed = false;
                 stallWarning = false;
                 overspeed = false;
+                atLeastOneEngineFiring = false;
 
                 //reenable start detection at next timer tick
                 startDisabled = 1;
