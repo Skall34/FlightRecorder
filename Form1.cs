@@ -562,6 +562,11 @@ namespace FlightRecorder
             DialogResult res = MessageBox.Show(message, "Flight Recorder", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
+                if (atLeastOneEngineFiring) { 
+                    // Libère l'avion sur le fichier en cas de fermeture de l'acars avant la fin du vol
+                    // on ne le fait que si un moteur tourne encore ==> vol interrompu avant la fin
+                    UpdatePlaneStatus(0);
+                }
                 //arrete les timers.
                 this.timerConnection.Stop();
                 this.timerMain.Stop();
