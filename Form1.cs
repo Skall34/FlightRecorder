@@ -503,7 +503,7 @@ namespace FlightRecorder
                         lbEndIata.Text = localAirport.ident;
                     }
 
-                    _endFuel = _simData.GetFuelWeight(); ;
+                    _endFuel = _simData.GetFuelWeight();
                     _endTime = DateTime.Now;
                     this.lbEndTime.Text = _endTime.ToShortTimeString();
                     //0.00 => only keep 2 decimals for the fuel
