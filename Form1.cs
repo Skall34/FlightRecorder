@@ -473,6 +473,7 @@ namespace FlightRecorder
 
                     this.lbStartFuel.Text = _startFuel.ToString("0.00");
 
+                    this.WindowState = FormWindowState.Minimized;
                     //Update the google sheet database indicating that this plane is being used
                     UpdatePlaneStatus(1);
 
@@ -511,6 +512,7 @@ namespace FlightRecorder
                     //compute the note of the flight
                     AnalyseFlight();
 
+                    this.WindowState = FormWindowState.Normal;
                     //Update the google sheet database indicating that this plane is no more used
                     UpdatePlaneStatus(0);
 
