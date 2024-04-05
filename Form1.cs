@@ -292,6 +292,68 @@ namespace FlightRecorder
             }
         }
 
+        private void getStartOfFlightData()
+        {
+            endDisabled = 300;
+            lbEndFuel.Enabled = false;
+            lbEndPosition.Enabled = false;
+            lbEndTime.Enabled = false;
+            lbEndIata.Enabled = false;
+
+            _startPosition = _simData.GetPosition();
+
+            double lat = _startPosition.Location.Latitude.DecimalDegrees;
+            double lon = _startPosition.Location.Longitude.DecimalDegrees;
+
+            Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
+            if (localAirport != null)
+            {
+                string startAirportname = localAirport.name;
+                lbStartPosition.Text = startAirportname;
+                lbStartIata.Text = localAirport.ident;
+            }
+
+            _startFuel = _simData.GetFuelWeight();
+            _startTime = DateTime.Now;
+            this.lbStartTime.Text = _startTime.ToShortTimeString();
+            //0.00 => only keep 2 decimals for the fuel
+
+            this.lbStartFuel.Text = _startFuel.ToString("0.00");
+
+        }
+
+        private void getEndOfFlightData()
+        {
+            // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
+            startDisabled = 300;
+            lbStartFuel.Enabled = false;
+            lbStartPosition.Enabled = false;
+            lbStartTime.Enabled = false;
+            lbStartIata.Enabled = false;
+
+            //on recupere les etats de fin de vol : heure, carbu, position.
+            _endPosition = _simData.GetPosition();
+            double lat = _endPosition.Location.Latitude.DecimalDegrees;
+            double lon = _endPosition.Location.Longitude.DecimalDegrees;
+
+            Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
+            if (localAirport != null)
+            {
+                string endAirportname = localAirport.name;
+                lbEndPosition.Text = endAirportname;
+                lbEndIata.Text = localAirport.ident;
+            }
+
+            _endFuel = _simData.GetFuelWeight();
+            _endTime = DateTime.Now;
+            this.lbEndTime.Text = _endTime.ToShortTimeString();
+            //0.00 => only keep 2 decimals for the fuel
+            this.lbEndFuel.Text = _endFuel.ToString("0.00");
+
+            //compute the note of the flight
+            AnalyseFlight();
+        }
+
         // This method runs 2 times per second (every 500ms). This is set on the timerMain properties.
         private async void TimerMain_Tick(object sender, EventArgs e)
         {
@@ -375,6 +437,9 @@ namespace FlightRecorder
                         }
 
                         onGround = true;
+
+                        //enable the save button
+                        btnSubmit.Enabled = true;
                     }
 
                     //si on est au sol, et moteur arretés, alors on continue de rafraichir les données statiques.
@@ -447,35 +512,13 @@ namespace FlightRecorder
                 if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
                     Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
-                    endDisabled = 300;
-                    lbEndFuel.Enabled = false;
-                    lbEndPosition.Enabled = false;
-                    lbEndTime.Enabled = false;
-                    lbEndIata.Enabled = false;
 
-                    _startPosition = _simData.GetPosition();
-
-                    double lat = _startPosition.Location.Latitude.DecimalDegrees;
-                    double lon = _startPosition.Location.Longitude.DecimalDegrees;
-
-                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
-                    if (localAirport != null)
-                    {
-                        string startAirportname = localAirport.name;
-                        lbStartPosition.Text = startAirportname;
-                        lbStartIata.Text = localAirport.ident;
-                    }
-
-                    _startFuel = _simData.GetFuelWeight();
-                    _startTime = DateTime.Now;
-                    this.lbStartTime.Text = _startTime.ToShortTimeString();
-                    //0.00 => only keep 2 decimals for the fuel
-
-                    this.lbStartFuel.Text = _startFuel.ToString("0.00");
+                    getStartOfFlightData();
 
                     this.WindowState = FormWindowState.Minimized;
                     //Update the google sheet database indicating that this plane is being used
                     UpdatePlaneStatus(1);
+
 
                 }
 
@@ -483,42 +526,12 @@ namespace FlightRecorder
                 if ((_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
                 {
                     Logger.WriteLine("Last engine stop detected");
-                    // disable start detection for 300 x 100 ms =30s  disable the start text boxes.
-                    startDisabled = 300;
-                    lbStartFuel.Enabled = false;
-                    lbStartPosition.Enabled = false;
-                    lbStartTime.Enabled = false;
-                    lbStartIata.Enabled = false;
 
-                    //on recupere les etats de fin de vol : heure, carbu, position.
-                    _endPosition = _simData.GetPosition();
-                    double lat = _endPosition.Location.Latitude.DecimalDegrees;
-                    double lon = _endPosition.Location.Longitude.DecimalDegrees;
-
-                    Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
-                    if (localAirport != null)
-                    {
-                        string endAirportname = localAirport.name;
-                        lbEndPosition.Text = endAirportname;
-                        lbEndIata.Text = localAirport.ident;
-                    }
-
-                    _endFuel = _simData.GetFuelWeight();
-                    _endTime = DateTime.Now;
-                    this.lbEndTime.Text = _endTime.ToShortTimeString();
-                    //0.00 => only keep 2 decimals for the fuel
-                    this.lbEndFuel.Text = _endFuel.ToString("0.00");
-
-                    //compute the note of the flight
-                    AnalyseFlight();
+                    getEndOfFlightData();
 
                     this.WindowState = FormWindowState.Normal;
                     //Update the google sheet database indicating that this plane is no more used
                     UpdatePlaneStatus(0);
-
-                    //enable the save button
-                    btnSubmit.Enabled = true;
-
                 }
 
             }
@@ -647,6 +660,13 @@ namespace FlightRecorder
             this.Cursor = Cursors.WaitCursor;
             try
             {
+                //if end of flight is not detected, get the data
+                if (atLeastOneEngineFiring)
+                {
+                    Logger.WriteLine("Forcing end of flight detection before save");
+                    getEndOfFlightData();
+                }
+
                 CheckBeforeSave();
 
                 //crée un dictionnaire des valeurs à envoyer
@@ -677,6 +697,8 @@ namespace FlightRecorder
                     this.lblConnectionStatus.Text = "Flight data saved";
                     this.lblConnectionStatus.ForeColor = Color.Green;
                     MessageBox.Show("Flight saved. Thank you for flying with SKYWINGS :)", "Flight Recorder");
+
+                    resetFlight();
                 }
                 else
                 {
@@ -865,57 +887,62 @@ namespace FlightRecorder
 
         }
 
+        private void resetFlight()
+        {
+            Logger.WriteLine("Reseting flight");
+            lbStartIata.Text = string.Empty;
+            lbStartFuel.Text = string.Empty;
+            lbStartPosition.Text = string.Empty;
+            lbStartTime.Text = string.Empty;
+
+            lbEndTime.Text = string.Empty;
+            lbEndFuel.Text = string.Empty;
+            lbEndIata.Text = string.Empty;
+            lbEndPosition.Text = string.Empty;
+
+            tbCommentaires.Text = string.Empty;
+            cbMission.Text = string.Empty;
+
+            lbStartFuel.Text = "Waiting start";
+            lbEndFuel.Text = "Waiting end ...";
+            lbStartIata.Text = "Waiting start";
+            lbEndIata.Text = "Waiting end ...";
+            lbStartPosition.Text = "Waiting start";
+            lbEndPosition.Text = "Waiting end ...";
+            lbStartTime.Text = "Waiting start";
+            lbEndTime.Text = "Waiting end ...";
+            lbTimeAirborn.Text = "--:--";
+            lbTimeOnGround.Text = "--:--";
+            lbFret.Visible = true;
+
+            //reset flight infos.
+            overRunwayCrashed = false;
+            crashed = false;
+            stallWarning = false;
+            overspeed = false;
+            atLeastOneEngineFiring = false;
+
+            //reenable start detection at next timer tick
+            startDisabled = 1;
+            endDisabled = 1;
+
+            //on peut préparer un nouveau vol
+            cbImmat.Enabled = true;
+            lbPayload.Enabled = true;
+
+            btnSubmit.Enabled = false;
+
+
+            Logger.WriteLine("Flight reset");
+
+        }
+
         private void BtnReset_Click(object sender, EventArgs e)
         {
             DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
-
-                lbStartIata.Text = string.Empty;
-                lbStartFuel.Text = string.Empty;
-                lbStartPosition.Text = string.Empty;
-                lbStartTime.Text = string.Empty;
-
-                lbEndTime.Text = string.Empty;
-                lbEndFuel.Text = string.Empty;
-                lbEndIata.Text = string.Empty;
-                lbEndPosition.Text = string.Empty;
-
-                tbCommentaires.Text = string.Empty;
-                cbMission.Text = string.Empty;
-
-                lbStartFuel.Text = "Waiting start";
-                lbEndFuel.Text = "Waiting end ...";
-                lbStartIata.Text = "Waiting start";
-                lbEndIata.Text = "Waiting end ...";
-                lbStartPosition.Text = "Waiting start";
-                lbEndPosition.Text = "Waiting end ...";
-                lbStartTime.Text = "Waiting start";
-                lbEndTime.Text = "Waiting end ...";
-                lbTimeAirborn.Text = "--:--";
-                lbTimeOnGround.Text = "--:--";
-                lbFret.Visible = true;
-
-                //reset flight infos.
-                overRunwayCrashed = false;
-                crashed = false;
-                stallWarning = false;
-                overspeed = false;
-                atLeastOneEngineFiring = false;
-
-                //reenable start detection at next timer tick
-                startDisabled = 1;
-                endDisabled = 1;
-
-                //on peut préparer un nouveau vol
-                cbImmat.Enabled = true;
-                lbPayload.Enabled = true;
-
-                btnSubmit.Enabled = false;
-
-
-                Logger.WriteLine("Flight reset");
-
+                resetFlight();
             }
         }
 
