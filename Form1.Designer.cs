@@ -603,6 +603,7 @@ namespace FlightRecorder
             Text = "Flight recorder";
             Activated += Form1_Activated;
             FormClosing += FrmMain_FormClosing;
+            FormClosed += Form1_FormClosed;
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             groupBox1.ResumeLayout(false);

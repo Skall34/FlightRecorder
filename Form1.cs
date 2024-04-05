@@ -238,12 +238,12 @@ namespace FlightRecorder
                 if ((aeroports != null) && (aeroports.Count > 0))
                 {
                     Aeroport? currentAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
-                    if ((currentAirport != null)&&(currentAirport!= localAirport))
+                    if ((currentAirport != null) && (currentAirport != localAirport))
                     {
                         localAirport = currentAirport;
                         string? startAirportname = localAirport.name;
 
-                        if ((this.aeroports != null)&&(startAirportname!=null))
+                        if ((this.aeroports != null) && (startAirportname != null))
                         {
                             // Votre code pour utiliser les avions et les aéroports
                             float fretOnAirport = await GetFretOnAirport(localAirport.ident);
@@ -344,7 +344,7 @@ namespace FlightRecorder
                         // on veut afficher la date
                         _airborn = DateTime.Now;
                         if (lbTimeAirborn.Text == "--:--")
-                        { 
+                        {
                             this.lbTimeAirborn.Text = _airborn.ToString("HH:mm");
                         }
 
@@ -367,13 +367,13 @@ namespace FlightRecorder
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.GetLandingVerticalSpeed();
                         landingWeight = _simData.GetPlaneWeight();
-                        
+
                         _notAirborn = DateTime.Now;
                         if (lbTimeOnGround.Text == "--:--")
                         {
                             this.lbTimeOnGround.Text = _notAirborn.ToString("HH:mm");
                         }
-                        
+
                         onGround = true;
                     }
 
@@ -453,7 +453,7 @@ namespace FlightRecorder
                     lbEndTime.Enabled = false;
                     lbEndIata.Enabled = false;
 
-                    _startPosition = _simData.GetPosition(); ;
+                    _startPosition = _simData.GetPosition();
 
                     double lat = _startPosition.Location.Latitude.DecimalDegrees;
                     double lon = _startPosition.Location.Longitude.DecimalDegrees;
@@ -553,7 +553,7 @@ namespace FlightRecorder
         // Form is closing so stop all the timers and close FSUIPC Connection
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            
+
             string message = "Confirm close ACARS ?";
             if (this.btnSubmit.Enabled == true)
             {
@@ -564,10 +564,17 @@ namespace FlightRecorder
             DialogResult res = MessageBox.Show(message, "Flight Recorder", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
-                if (atLeastOneEngineFiring) { 
+                if (atLeastOneEngineFiring)
+                {
+                    this.Cursor = Cursors.WaitCursor;
+                    this.lblConnectionStatus.Text = "Freeing plane...";
+                    this.lblConnectionStatus.ForeColor = Color.Green;
                     // Libère l'avion sur le fichier en cas de fermeture de l'acars avant la fin du vol
                     // on ne le fait que si un moteur tourne encore ==> vol interrompu avant la fin
                     UpdatePlaneStatus(0);
+
+                    System.Threading.Thread.Sleep(1000);
+                    this.Cursor = Cursors.Default;
                 }
                 //arrete les timers.
                 this.timerConnection.Stop();
@@ -689,7 +696,7 @@ namespace FlightRecorder
         }
 
         private async void UpdatePlaneStatus(int isFlying)
-        {
+        {            
             try
             {
                 //crée un dictionnaire des valeurs à envoyer
@@ -708,15 +715,19 @@ namespace FlightRecorder
                 //int result = await urlDeserializer.PushFlightAsync(data);
                 if (0 != result)
                 {
+                    Logger.WriteLine("Plane data updated");
                     //si tout va bien...
                     this.lblConnectionStatus.Text = "Plane data updated";
                     this.lblConnectionStatus.ForeColor = Color.Green;
+
                 }
                 else
                 {
+                    Logger.WriteLine("Error while updating plane data");
                     //si tout va mal ...
                     this.lblConnectionStatus.Text = "Error while updating plane data";
                     this.lblConnectionStatus.ForeColor = Color.Red;
+
                 }
             }
             catch (Exception ex)
@@ -764,7 +775,7 @@ namespace FlightRecorder
 
             //pre-select the last used immat (stored as setting)
             string lastImmat = Settings.Default.lastImmat;
-            if ((lastImmat != string.Empty)&&(immatriculations.Contains(lastImmat)))
+            if ((lastImmat != string.Empty) && (immatriculations.Contains(lastImmat)))
             {
                 cbImmat.SelectedItem = lastImmat;
             }
@@ -824,7 +835,7 @@ namespace FlightRecorder
 
             return note;
         }
-        
+
         private void CbNote_MouseHover(object sender, EventArgs e)
         {
             toolTip1.ToolTipTitle = "Flight details";
@@ -915,6 +926,11 @@ namespace FlightRecorder
             // #34 sauvegarder la derniere immat utilisée
             Settings.Default.lastImmat = cbImmat.Text;
             Settings.Default.Save();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
         }
     }
 }
