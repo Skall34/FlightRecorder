@@ -663,8 +663,14 @@ namespace FlightRecorder
                 //if end of flight is not detected, get the data
                 if (atLeastOneEngineFiring)
                 {
+                    //garde le commentaire entré manuellement
+                    string flightComment = tbCommentaires.Text;
                     Logger.WriteLine("Forcing end of flight detection before save");
                     getEndOfFlightData();
+                    //get the computed flight comments.
+                    string autoComment = tbCommentaires.Text;
+                    //concatene les deux commentaires.
+                    tbCommentaires.Text = flightComment + " " + autoComment;
                 }
 
                 CheckBeforeSave();
