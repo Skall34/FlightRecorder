@@ -399,6 +399,7 @@ namespace FlightRecorder
                     if (onGround)
                     {
                         Logger.WriteLine("Takeoff detected !");
+                        this.WindowState = FormWindowState.Minimized;
                         //we just took off ! read the plane weight
                         takeOffWeight = _simData.GetPlaneWeight();
                         //keep memory that we're airborn
@@ -426,6 +427,7 @@ namespace FlightRecorder
                     if (!onGround)
                     {
                         Logger.WriteLine("Landing detected !");
+                        this.WindowState = FormWindowState.Normal;
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.GetLandingVerticalSpeed();
                         landingWeight = _simData.GetPlaneWeight();
@@ -515,7 +517,6 @@ namespace FlightRecorder
 
                     getStartOfFlightData();
 
-                    this.WindowState = FormWindowState.Minimized;
                     //Update the google sheet database indicating that this plane is being used
                     UpdatePlaneStatus(1);
 
@@ -529,7 +530,6 @@ namespace FlightRecorder
 
                     getEndOfFlightData();
 
-                    this.WindowState = FormWindowState.Normal;
                     //Update the google sheet database indicating that this plane is no more used
                     UpdatePlaneStatus(0);
                 }
