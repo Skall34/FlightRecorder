@@ -399,7 +399,7 @@ namespace FlightRecorder
                     if (onGround)
                     {
                         Logger.WriteLine("Takeoff detected !");
-                        this.WindowState = FormWindowState.Minimized;
+                        
                         //we just took off ! read the plane weight
                         takeOffWeight = _simData.GetPlaneWeight();
                         //keep memory that we're airborn
@@ -427,7 +427,7 @@ namespace FlightRecorder
                     if (!onGround)
                     {
                         Logger.WriteLine("Landing detected !");
-                        this.WindowState = FormWindowState.Normal;
+                        
                         //only update the touchDownVSpeed if we've been airborn once
                         touchDownVSpeed = _simData.GetLandingVerticalSpeed();
                         landingWeight = _simData.GetPlaneWeight();
@@ -514,7 +514,7 @@ namespace FlightRecorder
                 if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
                     Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
-
+                    this.WindowState = FormWindowState.Minimized;
                     getStartOfFlightData();
 
                     //Update the google sheet database indicating that this plane is being used
@@ -527,7 +527,7 @@ namespace FlightRecorder
                 if ((_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
                 {
                     Logger.WriteLine("Last engine stop detected");
-
+                    this.WindowState = FormWindowState.Normal;
                     getEndOfFlightData();
 
                     //Update the google sheet database indicating that this plane is no more used
