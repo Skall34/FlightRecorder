@@ -519,8 +519,6 @@ namespace FlightRecorder
 
                     //Update the google sheet database indicating that this plane is being used
                     UpdatePlaneStatus(1);
-
-
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
@@ -827,7 +825,7 @@ namespace FlightRecorder
         {
             int note = 10;
             Logger.WriteLine("get landing vertical acceleration ds analyse flight :" + landingVerticalAcceleration.ToString("0.00"));
-            tbCommentaires.Text = "Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+            tbCommentaires.Text += " Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
             tbCommentaires.Text += " Landing vertical speed : " + touchDownVSpeed.ToString("0.00") + " fpm ";
             tbCommentaires.Text += " Landing vertical acceleration : " + landingVerticalAcceleration.ToString("0.00") + " G ";
             tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
