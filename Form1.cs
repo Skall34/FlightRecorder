@@ -824,10 +824,15 @@ namespace FlightRecorder
         private int AnalyseFlight()
         {
             int note = 10;
-            Logger.WriteLine("get landing vertical acceleration ds analyse flight :" + landingVerticalAcceleration.ToString("0.00"));
-            tbCommentaires.Text += " Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+            if (tbCommentaires.Text.Length > 0)
+            {
+                tbCommentaires.Text += " Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+            } else
+            {
+                tbCommentaires.Text = "Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+            }
+            
             tbCommentaires.Text += " Landing vertical speed : " + touchDownVSpeed.ToString("0.00") + " fpm ";
-            tbCommentaires.Text += " Landing vertical acceleration : " + landingVerticalAcceleration.ToString("0.00") + " G ";
             tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
             tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg ";
 
@@ -918,6 +923,7 @@ namespace FlightRecorder
             lbTimeAirborn.Text = "--:--";
             lbTimeOnGround.Text = "--:--";
             lbFret.Visible = true;
+            cbNote.SelectedItem = 8;
 
             //reset flight infos.
             overRunwayCrashed = false;
