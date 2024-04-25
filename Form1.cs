@@ -584,7 +584,7 @@ namespace FlightRecorder
                     // on ne le fait que si un moteur tourne encore ==> vol interrompu avant la fin
                     UpdatePlaneStatus(0);
 
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(2000);
                     this.Cursor = Cursors.Default;
                 }
                 //arrete les timers.
