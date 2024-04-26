@@ -519,6 +519,8 @@ namespace FlightRecorder
 
                     //Update the google sheet database indicating that this plane is being used
                     UpdatePlaneStatus(1);
+                    cbImmat.Enabled = false;
+
                 }
 
                 //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
@@ -530,6 +532,8 @@ namespace FlightRecorder
 
                     //Update the google sheet database indicating that this plane is no more used
                     UpdatePlaneStatus(0);
+                    cbImmat.Enabled = true;
+
                 }
 
             }
@@ -583,7 +587,7 @@ namespace FlightRecorder
                     // Libère l'avion sur le fichier en cas de fermeture de l'acars avant la fin du vol
                     // on ne le fait que si un moteur tourne encore ==> vol interrompu avant la fin
                     UpdatePlaneStatus(0);
-
+                    cbImmat.Enabled = true;
                     System.Threading.Thread.Sleep(2000);
                     this.Cursor = Cursors.Default;
                 }
@@ -662,13 +666,13 @@ namespace FlightRecorder
                 if (atLeastOneEngineFiring)
                 {
                     //garde le commentaire entré manuellement
-                    string flightComment = tbCommentaires.Text;
+                    //string flightComment = tbCommentaires.Text;
                     Logger.WriteLine("Forcing end of flight detection before save");
                     getEndOfFlightData();
                     //get the computed flight comments.
-                    string autoComment = tbCommentaires.Text;
+                    //string autoComment = tbCommentaires.Text;
                     //concatene les deux commentaires.
-                    tbCommentaires.Text = flightComment + " " + autoComment;
+                    //tbCommentaires.Text = flightComment + " " + autoComment;
                 }
 
                 CheckBeforeSave();
