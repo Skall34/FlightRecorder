@@ -68,6 +68,7 @@ namespace FlightRecorder
         private int endDisabled;
 
         private readonly string BASERURL;
+        Version version;
 
         //private bool modifiedFuel;
         public Form1()
@@ -86,7 +87,14 @@ namespace FlightRecorder
             Assembly? assembly = Assembly.GetEntryAssembly();
             if (null != assembly)
             {
-                Version? version = assembly.GetName().Version;
+                if (assembly.GetName().Version! != null)
+                {
+                    version = assembly.GetName().Version;
+                }
+                else
+                {
+                    version = new Version("unknown");
+                }
                 // Set the form's title to include the version number
                 this.Text = $"FlightRecorder - Version {version}";
                 Logger.WriteLine($"Version : {version}");
@@ -677,6 +685,7 @@ namespace FlightRecorder
 
                 CheckBeforeSave();
 
+                string fullComment = tbCommentaires.Text +" v" + version;
                 //crée un dictionnaire des valeurs à envoyer
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
@@ -693,7 +702,7 @@ namespace FlightRecorder
                     etime = lbEndTime.Text,
                     note = cbNote.Text,
                     mission = cbMission.Text,
-                    comment = tbCommentaires.Text,
+                    comment = fullComment,
                     cargo = lbPayload.Text
                 };
                 UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
