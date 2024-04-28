@@ -41,23 +41,14 @@ namespace FlightRecorder
 
         private readonly simData _simData;
 
-        private bool stallWarning;
-        private bool crashed;
-        private bool overRunwayCrashed;
-        private bool overspeed;
-        private bool onGround;
-        private double touchDownVSpeed;
-        private double landingVerticalAcceleration;
-        private double landingSpeed;
 
+        private FlightPerfs flightPerfs;
+
+        public bool onGround;
         private bool gearIsUp;
         private uint flapsPosition;
 
-        private double flapsDownSpeed;
-        private double gearDownSpeed;
 
-        private double takeOffWeight;
-        private double landingWeight;
 
         private readonly List<Mission> missions;
         private readonly List<Avion> avions;
@@ -105,6 +96,8 @@ namespace FlightRecorder
             avions = new List<Avion>();
             missions = new List<Mission>();
 
+            flightPerfs = new FlightPerfs();
+
             Logger.WriteLine("start loading airports database");
             LoadAirportsFromSheet();
             Logger.WriteLine("start loading planes and missions");
@@ -124,7 +117,6 @@ namespace FlightRecorder
 
             _startFuel = 0;
             _endFuel = 0;
-            onGround = true;
             lbStartFuel.Text = "Not Yet Available";
             lbEndFuel.Text = "Waiting end flight ...";
             lbStartIata.Text = "Not Yet Available";
@@ -138,17 +130,9 @@ namespace FlightRecorder
             lbTimeOnGround.Text = "--:--";
             lbLibelleAvion.Text = "Not Yet Available";
 
-            touchDownVSpeed = 0;
-            landingVerticalAcceleration = 0;
-            landingSpeed = 0;
-
+            onGround = true;
             gearIsUp = false;
             flapsPosition = 0;
-
-            overspeed = false;
-            crashed = false;
-            overRunwayCrashed = false;
-            stallWarning = false;
 
             //recupere le callsign qui a été sauvegardé en settings de l'application
             this.tbCallsign.Text = Settings.Default.callsign;
@@ -407,9 +391,9 @@ namespace FlightRecorder
                     if (onGround)
                     {
                         Logger.WriteLine("Takeoff detected !");
-                        
+
                         //we just took off ! read the plane weight
-                        takeOffWeight = _simData.GetPlaneWeight();
+                        flightPerfs.takeOffWeight = _simData.GetPlaneWeight();
                         //keep memory that we're airborn
                         onGround = false;
                         // on veut afficher la date
@@ -427,18 +411,18 @@ namespace FlightRecorder
 
                     }
 
-                    landingVerticalAcceleration = _simData.GetVerticalAcceleration();
-                    landingSpeed = _simData.GetAirSpeed();
+                    flightPerfs.landingVerticalAcceleration = _simData.GetVerticalAcceleration();
+                    flightPerfs.landingSpeed = _simData.GetAirSpeed();
                 }
                 else //we're on ground !
                 {
                     if (!onGround)
                     {
                         Logger.WriteLine("Landing detected !");
-                        
+
                         //only update the touchDownVSpeed if we've been airborn once
-                        touchDownVSpeed = _simData.GetLandingVerticalSpeed();
-                        landingWeight = _simData.GetPlaneWeight();
+                        flightPerfs.touchDownVSpeed = _simData.GetLandingVerticalSpeed();
+                        flightPerfs.landingWeight = _simData.GetPlaneWeight();
 
                         _notAirborn = DateTime.Now;
                         if (lbTimeOnGround.Text == "--:--")
@@ -460,31 +444,37 @@ namespace FlightRecorder
                     }
                 }
 
-                //check gear position, if gear just deployed, get the airspeed
-                bool currentGearIsUp = gearIsUp;
-                gearIsUp = _simData.GetIsGearUp();
-                if (!gearIsUp && currentGearIsUp)
+                if (_simData.GetGearRetractableFlag() == 1)
                 {
-                    Logger.WriteLine("Gear down detected. Measure speed");
-                    //get the max air speed while deploying the gears
-                    if (airspeedKnots > gearDownSpeed)
+                    //check gear position, if gear just deployed, get the airspeed
+                    bool currentGearIsUp = gearIsUp;
+                    gearIsUp = _simData.GetIsGearUp();
+                    if (!gearIsUp && currentGearIsUp)
                     {
-                        //gear just went to be deployed ! check the current speed !!!
-                        gearDownSpeed = airspeedKnots;
+                        Logger.WriteLine("Gear down detected. Measure speed");
+                        //get the max air speed while deploying the gears
+                        if (airspeedKnots > flightPerfs.gearDownSpeed)
+                        {
+                            //gear just went to be deployed ! check the current speed !!!
+                            flightPerfs.gearDownSpeed = airspeedKnots;
+                        }
                     }
                 }
 
-                //check the flaps deployment speed
-                uint currentFlapsPosition = flapsPosition;
-                flapsPosition = _simData.GetFlapsPosition();
-                //if flaps just went deployed, get the air speed.
-                if ((currentFlapsPosition == 0) && (flapsPosition > 0))
+                if (_simData.GetFlapsAvailableFlag() == 1)
                 {
-                    Logger.WriteLine("Flaps down detected. Measure speed");
-                    //only keep the max flaps deployment air speed for this flight
-                    if (airspeedKnots > flapsDownSpeed)
+                    //check the flaps deployment speed
+                    uint currentFlapsPosition = flapsPosition;
+                    flapsPosition = _simData.GetFlapsPosition();
+                    //if flaps just went deployed, get the air speed.
+                    if ((currentFlapsPosition == 0) && (flapsPosition > 0))
                     {
-                        flapsDownSpeed = airspeedKnots;
+                        Logger.WriteLine("Flaps down detected. Measure speed");
+                        //only keep the max flaps deployment air speed for this flight
+                        if (airspeedKnots > flightPerfs.flapsDownSpeed)
+                        {
+                            flightPerfs.flapsDownSpeed = airspeedKnots;
+                        }
                     }
                 }
 
@@ -492,22 +482,22 @@ namespace FlightRecorder
                 if (_simData.GetOverspeedWarning() != 0)
                 {
                     Logger.WriteLine("overspeed warning detected");
-                    overspeed = true;
+                    flightPerfs.overspeed = true;
                 }
                 if (_simData.GetOffRunwayCrashed() != 0)
                 {
                     Logger.WriteLine("off runway crashed detected");
-                    overRunwayCrashed = true;
+                    flightPerfs.overRunwayCrashed = true;
                 }
                 if (_simData.GetCrashedFlag() != 0)
                 {
                     Logger.WriteLine("crash detected");
-                    crashed = true;
+                    flightPerfs.crashed = true;
                 }
                 if (_simData.GetStallWarning() != 0)
                 {
                     Logger.WriteLine("stall warning detected");
-                    stallWarning = true;
+                    flightPerfs.stallWarning = true;
                 }
 
                 //on va verifier l'etat des moteurs :
@@ -685,7 +675,7 @@ namespace FlightRecorder
 
                 CheckBeforeSave();
 
-                string fullComment = tbCommentaires.Text +" v" + version;
+                string fullComment = tbCommentaires.Text ;
                 //crée un dictionnaire des valeurs à envoyer
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
@@ -836,68 +826,27 @@ namespace FlightRecorder
 
         private int AnalyseFlight()
         {
-            int note = 10;
+            
+            string comment = flightPerfs.getFlightComment();
+
             if (tbCommentaires.Text.Length > 0)
             {
-                tbCommentaires.Text += " Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+                tbCommentaires.Text += " " + comment;
             } else
             {
-                tbCommentaires.Text = "Landing speed : " + landingSpeed.ToString("0.00") + " Knts ";
+                tbCommentaires.Text = comment;
             }
-            
-            tbCommentaires.Text += " Landing vertical speed : " + touchDownVSpeed.ToString("0.00") + " fpm ";
-            tbCommentaires.Text += " Takeoff weight : " + takeOffWeight.ToString("0.00") + " Kg ";
-            tbCommentaires.Text += " Landing weight : " + landingWeight.ToString("0.00") + " Kg ";
+            tbCommentaires.Text += " (" + version + ")";
 
-            if (_simData.GetFlapsAvailableFlag() == 1)
-            {
-                if (flapsDownSpeed > 130)
-                {
-                    note -= 1; // pareil que note = note -1
-                }
-            }
-
-            if (_simData.GetGearRetractableFlag() == 1)
-            {
-                if (gearDownSpeed > 130)
-                {
-                    note -= 1;
-                }
-            }
-
-            if (touchDownVSpeed > 500)
-            {
-                note -= 2;
-            }
-
-            if (overspeed) note -= 2; // note = note -2
-            if (stallWarning) note -= 2;
-            if (overRunwayCrashed) note = 2;
-            if (crashed) note = 1;
-
+            int note = flightPerfs.getFlightNote();
             cbNote.Text = note.ToString();
-
             return note;
         }
 
         private void CbNote_MouseHover(object sender, EventArgs e)
         {
             toolTip1.ToolTipTitle = "Flight details";
-            string tipText = "";
-
-            if (overspeed) tipText += "Overspeed detected \n";
-            if (stallWarning) tipText += "Stall warning detected \n";
-            if (overRunwayCrashed) tipText += "Over runway crashed \n";
-            if (crashed) tipText += "Crashed \n";
-            tipText += "vertical speed at touchdown: " + touchDownVSpeed + " fpm";
-            if (_simData.GetGearRetractableFlag() == 1)
-            {
-                tipText += "gear down speed : " + gearDownSpeed + " m/s";
-            }
-            if (_simData.GetFlapsAvailableFlag() == 1)
-            {
-                tipText += "flaps down speed : " + flapsDownSpeed + " m/s";
-            }
+            string tipText = flightPerfs.getFlightNoteDetails();
 
             toolTip1.SetToolTip((Control)sender, tipText);
 
@@ -939,10 +888,11 @@ namespace FlightRecorder
             cbNote.SelectedItem = 8;
 
             //reset flight infos.
-            overRunwayCrashed = false;
-            crashed = false;
-            stallWarning = false;
-            overspeed = false;
+            flightPerfs.overRunwayCrashed = false;
+            flightPerfs.crashed = false;
+            flightPerfs.stallWarning = false;
+            flightPerfs.overspeed = false;
+
             atLeastOneEngineFiring = false;
 
             //reenable start detection at next timer tick
