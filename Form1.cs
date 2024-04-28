@@ -405,7 +405,8 @@ namespace FlightRecorder
 
                         // On cache le label du Fret après le décollage. On en a plus besoin
                         this.lbFret.Visible = false;
-
+                        //on grise le bouton save flight en vol
+                        btnSubmit.Enabled = false;
                         //just incase of rebound during takeoff, reset the onground label
                         lbTimeOnGround.Text = "--:--";
 
@@ -836,7 +837,7 @@ namespace FlightRecorder
             {
                 tbCommentaires.Text = comment;
             }
-            tbCommentaires.Text += " (" + version + ")";
+            tbCommentaires.Text += " (F.R. V" + version + ")";
 
             int note = flightPerfs.getFlightNote();
             cbNote.Text = note.ToString();
