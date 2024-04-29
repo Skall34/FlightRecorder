@@ -450,7 +450,7 @@ namespace FlightRecorder
             cbMission.FormattingEnabled = true;
             cbMission.Location = new Point(285, 441);
             cbMission.Name = "cbMission";
-            cbMission.Size = new Size(121, 26);
+            cbMission.Size = new Size(179, 26);
             cbMission.TabIndex = 22;
             // 
             // cbNote
