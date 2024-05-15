@@ -15,6 +15,9 @@ namespace FlightRecorder
 
         const string logFileName = "FlightRecorder";
 
+        private static string _logFileName;
+
+        private static string lastLine="";
         static string GetCallingMethodName()
         {
             try
@@ -50,26 +53,62 @@ namespace FlightRecorder
             Directory.CreateDirectory(fullPath);
 
             string logFile = Path.Combine(fullPath, logFileName);
-
+            
             if (File.Exists(logFile+".log"))
             {
                 File.Move(logFile + ".log", logFile + ".bak", true);
             }
             logger = new TextWriterTraceListener(logFile + ".log");
+            _logFileName = logFile + ".log";
+
             Trace.Listeners.Add(logger);
             Trace.AutoFlush = true;
         }
 
         public static void Dispose()
         {
+            Trace.WriteLine(DateTime.Now.ToLongTimeString() + " : " + lastLine);
             logger.Flush();
             logger.Close();
             Trace.Listeners.Remove(logger);
         }
 
+        public static void suspend()
+        {
+            Trace.WriteLine(DateTime.Now.ToLongTimeString() + " : " + lastLine);
+            logger.Flush();
+            logger.Close();
+            Trace.Listeners.Remove(logger);
+        }
+
+        public static void restart()
+        {
+            logger = new TextWriterTraceListener(_logFileName);
+            Trace.Listeners.Add(logger);
+            Trace.AutoFlush = true;
+        }
+
         public static void WriteLine(string message) {
             string callingFunc = GetCallingMethodName();
-            Trace.WriteLine(DateTime.Now.ToLongTimeString()+ " : " + callingFunc + " : " + message);
+            string newLine = callingFunc + " : " + message;
+            if (newLine != lastLine)
+            {
+                Trace.WriteLine(DateTime.Now.ToLongTimeString() + " : " + lastLine);
+                lastLine = newLine;
+            }
+        }
+
+        public static List<string> getFullLog()
+        {
+            List<string> result = new List<string>();
+            using (StreamReader reader = File.OpenText(_logFileName))
+            {
+                while (!reader.EndOfStream)
+                {
+                    result.Add(reader.ReadLine());
+                }
+            }
+            return result;
         }
     }
 }

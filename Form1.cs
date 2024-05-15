@@ -655,8 +655,7 @@ namespace FlightRecorder
             return true;
         }
 
-        //envoi des données au google form
-        private async void BtnSubmit_Click(object sender, EventArgs e)
+        private async void saveFlight()
         {
             this.Cursor = Cursors.WaitCursor;
             try
@@ -676,7 +675,7 @@ namespace FlightRecorder
 
                 CheckBeforeSave();
 
-                string fullComment = tbCommentaires.Text ;
+                string fullComment = tbCommentaires.Text;
                 //crée un dictionnaire des valeurs à envoyer
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 UrlDeserializer.SaveFlightQuery data = new UrlDeserializer.SaveFlightQuery
@@ -724,9 +723,14 @@ namespace FlightRecorder
             this.Cursor = Cursors.Default;
 
         }
+        //envoi des données au google form
+        private async void BtnSubmit_Click(object sender, EventArgs e)
+        {
+            saveFlight();
+        }
 
         private async void UpdatePlaneStatus(int isFlying)
-        {            
+        {
             try
             {
                 //crée un dictionnaire des valeurs à envoyer
@@ -827,13 +831,14 @@ namespace FlightRecorder
 
         private int AnalyseFlight()
         {
-            
+
             string comment = flightPerfs.getFlightComment();
 
             if (tbCommentaires.Text.Length > 0)
             {
                 tbCommentaires.Text += " " + comment;
-            } else
+            }
+            else
             {
                 tbCommentaires.Text = comment;
             }
@@ -931,6 +936,32 @@ namespace FlightRecorder
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void resetFlightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            resetFlight();
+        }
+
+        private void submitFlightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFlight();
+        }
+
+        private void submitBugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logger.suspend();
+            List<string> allLog = Logger.getFullLog();
+            Logger.restart();
+
+            BugForm bf = new BugForm(tbCallsign.Text, allLog);
+            bf.ShowDialog();
 
         }
     }

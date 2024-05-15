@@ -81,11 +81,17 @@ namespace FlightRecorder
             cbImmat = new ComboBox();
             toolTip1 = new ToolTip(components);
             btnReset = new Button();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            resetFlightToolStripMenuItem = new ToolStripMenuItem();
+            submitFlightToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            submitBugToolStripMenuItem = new ToolStripMenuItem();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
@@ -582,12 +588,45 @@ namespace FlightRecorder
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Click += BtnReset_Click;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { resetFlightToolStripMenuItem, submitFlightToolStripMenuItem, toolStripSeparator1, submitBugToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 98);
+            // 
+            // resetFlightToolStripMenuItem
+            // 
+            resetFlightToolStripMenuItem.Name = "resetFlightToolStripMenuItem";
+            resetFlightToolStripMenuItem.Size = new Size(180, 22);
+            resetFlightToolStripMenuItem.Text = "Reset flight";
+            resetFlightToolStripMenuItem.Click += resetFlightToolStripMenuItem_Click;
+            // 
+            // submitFlightToolStripMenuItem
+            // 
+            submitFlightToolStripMenuItem.Name = "submitFlightToolStripMenuItem";
+            submitFlightToolStripMenuItem.Size = new Size(180, 22);
+            submitFlightToolStripMenuItem.Text = "Save Flight";
+            submitFlightToolStripMenuItem.Click += submitFlightToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(177, 6);
+            // 
+            // submitBugToolStripMenuItem
+            // 
+            submitBugToolStripMenuItem.Name = "submitBugToolStripMenuItem";
+            submitBugToolStripMenuItem.Size = new Size(180, 22);
+            submitBugToolStripMenuItem.Text = "Submit bug";
+            submitBugToolStripMenuItem.Click += submitBugToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 18F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 128, 0);
             ClientSize = new Size(495, 746);
+            ContextMenuStrip = contextMenuStrip1;
             Controls.Add(btnReset);
             Controls.Add(groupBox3);
             Controls.Add(groupBox1);
@@ -604,6 +643,7 @@ namespace FlightRecorder
             Activated += Form1_Activated;
             FormClosing += FrmMain_FormClosing;
             FormClosed += Form1_FormClosed;
+            Load += Form1_Load;
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -614,6 +654,7 @@ namespace FlightRecorder
             groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -668,6 +709,11 @@ namespace FlightRecorder
         private Label lbEndIata;
         private Label lbEndFuel;
         private Label lbEndTime;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem resetFlightToolStripMenuItem;
+        private ToolStripMenuItem submitFlightToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem submitBugToolStripMenuItem;
     }
 }
 
