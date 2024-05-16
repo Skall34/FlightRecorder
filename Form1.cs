@@ -522,8 +522,8 @@ namespace FlightRecorder
 
                 }
 
-                //Si au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
-                if ((_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
+                //Si on est au sol ET au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
+                if (onGround && (_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
                 {
                     Logger.WriteLine("Last engine stop detected");
                     this.WindowState = FormWindowState.Normal;
@@ -532,7 +532,6 @@ namespace FlightRecorder
                     //Update the google sheet database indicating that this plane is no more used
                     UpdatePlaneStatus(0);
                     cbImmat.Enabled = true;
-
                 }
 
             }
