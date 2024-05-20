@@ -86,6 +86,8 @@ namespace FlightRecorder
             submitFlightToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             submitBugToolStripMenuItem = new ToolStripMenuItem();
+            tbEndICAO = new TextBox();
+            lbEndICAO = new Label();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -512,6 +514,8 @@ namespace FlightRecorder
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(lbEndICAO);
+            groupBox3.Controls.Add(tbEndICAO);
             groupBox3.Controls.Add(label5);
             groupBox3.Controls.Add(lbLibelleAvion);
             groupBox3.Controls.Add(lbPayload);
@@ -592,33 +596,55 @@ namespace FlightRecorder
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { resetFlightToolStripMenuItem, submitFlightToolStripMenuItem, toolStripSeparator1, submitBugToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 98);
+            contextMenuStrip1.Size = new Size(137, 76);
             // 
             // resetFlightToolStripMenuItem
             // 
             resetFlightToolStripMenuItem.Name = "resetFlightToolStripMenuItem";
-            resetFlightToolStripMenuItem.Size = new Size(180, 22);
+            resetFlightToolStripMenuItem.Size = new Size(136, 22);
             resetFlightToolStripMenuItem.Text = "Reset flight";
             resetFlightToolStripMenuItem.Click += resetFlightToolStripMenuItem_Click;
             // 
             // submitFlightToolStripMenuItem
             // 
             submitFlightToolStripMenuItem.Name = "submitFlightToolStripMenuItem";
-            submitFlightToolStripMenuItem.Size = new Size(180, 22);
+            submitFlightToolStripMenuItem.Size = new Size(136, 22);
             submitFlightToolStripMenuItem.Text = "Save Flight";
             submitFlightToolStripMenuItem.Click += submitFlightToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(133, 6);
             // 
             // submitBugToolStripMenuItem
             // 
             submitBugToolStripMenuItem.Name = "submitBugToolStripMenuItem";
-            submitBugToolStripMenuItem.Size = new Size(180, 22);
+            submitBugToolStripMenuItem.Size = new Size(136, 22);
             submitBugToolStripMenuItem.Text = "Submit bug";
             submitBugToolStripMenuItem.Click += submitBugToolStripMenuItem_Click;
+            // 
+            // tbEndICAO
+            // 
+            tbEndICAO.BackColor = Color.White;
+            tbEndICAO.Location = new Point(352, 145);
+            tbEndICAO.Margin = new Padding(4);
+            tbEndICAO.Name = "tbEndICAO";
+            tbEndICAO.ShortcutsEnabled = false;
+            tbEndICAO.Size = new Size(111, 25);
+            tbEndICAO.TabIndex = 48;
+            tbEndICAO.TextAlign = HorizontalAlignment.Right;
+            // 
+            // lbEndICAO
+            // 
+            lbEndICAO.AutoSize = true;
+            lbEndICAO.Font = new Font("Arial", 10F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lbEndICAO.Location = new Point(360, 127);
+            lbEndICAO.Margin = new Padding(4, 0, 4, 0);
+            lbEndICAO.Name = "lbEndICAO";
+            lbEndICAO.Size = new Size(104, 16);
+            lbEndICAO.TabIndex = 49;
+            lbEndICAO.Text = "Opt: End ICAO";
             // 
             // Form1
             // 
@@ -714,6 +740,8 @@ namespace FlightRecorder
         private ToolStripMenuItem submitFlightToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem submitBugToolStripMenuItem;
+        private TextBox tbEndICAO;
+        private Label lbEndICAO;
     }
 }
 

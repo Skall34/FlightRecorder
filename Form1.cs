@@ -879,6 +879,8 @@ namespace FlightRecorder
             tbCommentaires.Text = string.Empty;
             cbMission.Text = string.Empty;
 
+            tbEndICAO.Text = string.Empty;
+
             lbStartFuel.Text = "Waiting start";
             lbEndFuel.Text = "Waiting end ...";
             lbStartIata.Text = "Waiting start";
