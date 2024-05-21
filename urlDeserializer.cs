@@ -198,6 +198,7 @@ namespace FlightRecorder
             public string? plane { get; set; }
             public string? sicao { get; set; }
             public int? flying{ get; set; }
+            public string? endIcao { get; set; }
         }
 
         public async Task<int> PushFlightAsync(SaveFlightQuery data)

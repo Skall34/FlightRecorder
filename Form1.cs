@@ -741,7 +741,8 @@ namespace FlightRecorder
                     cs = tbCallsign.Text,
                     plane = cbImmat.Text,
                     sicao = lbStartIata.Text,
-                    flying = isFlying
+                    flying = isFlying,
+                    endIcao = tbEndICAO.Text
                 };
                 UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
                 int result = await urlDeserializer.PushJSonAsync<UrlDeserializer.PlaneUpdateQuery>(data);
