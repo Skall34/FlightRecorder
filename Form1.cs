@@ -521,6 +521,7 @@ namespace FlightRecorder
                     //Update the google sheet database indicating that this plane is being used
                     UpdatePlaneStatus(1);
                     cbImmat.Enabled = false;
+                    tbEndICAO.Enabled = false;
 
                 }
 
@@ -534,6 +535,7 @@ namespace FlightRecorder
                     //Update the google sheet database indicating that this plane is no more used
                     UpdatePlaneStatus(0);
                     cbImmat.Enabled = true;
+                    tbEndICAO.Enabled = true;
                 }
 
             }
@@ -588,6 +590,7 @@ namespace FlightRecorder
                     // on ne le fait que si un moteur tourne encore ==> vol interrompu avant la fin
                     UpdatePlaneStatus(0);
                     cbImmat.Enabled = true;
+                    tbEndICAO.Enabled = true;
                     System.Threading.Thread.Sleep(2000);
                     this.Cursor = Cursors.Default;
                 }
@@ -939,6 +942,7 @@ namespace FlightRecorder
 
             //on peut préparer un nouveau vol
             cbImmat.Enabled = true;
+            tbEndICAO.Enabled = true;
             lbPayload.Enabled = true;
 
             btnSubmit.Enabled = false;

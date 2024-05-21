@@ -37,8 +37,8 @@ namespace FlightRecorder.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJF" +
-            "CQm0s06OnVfr8KrSD8RgBtCux9Tg/exec")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://script.google.com/macros/s/AKfycbyhK_pky8u_OUPNwtQJtpRSiWwE0gF64zHHkbbDJu" +
+            "Y6I9-3jjegoiIIfJfV0QKcVC2IAg/exec")]
         public string GSheetAPIUrl {
             get {
                 return ((string)(this["GSheetAPIUrl"]));

@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="GSheetAPIUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://script.google.com/macros/s/AKfycbwndkLVndehcRiBI8vEJ7ocdRz8RDo2BGLQ2YlhJFCQm0s06OnVfr8KrSD8RgBtCux9Tg/exec</Value>
+      <Value Profile="(Default)">https://script.google.com/macros/s/AKfycbyhK_pky8u_OUPNwtQJtpRSiWwE0gF64zHHkbbDJuY6I9-3jjegoiIIfJfV0QKcVC2IAg/exec</Value>
     </Setting>
     <Setting Name="lastImmat" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
