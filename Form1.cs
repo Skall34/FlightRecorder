@@ -65,7 +65,7 @@ namespace FlightRecorder
         public Form1()
         {
             InitializeComponent();
-
+            this.tbEndICAO.TextChanged += new System.EventHandler(this.tbEndICAO_TextChanged);
             //initialize the trace mechanism
             Logger.init();
 
@@ -727,6 +727,33 @@ namespace FlightRecorder
         {
             saveFlight();
         }
+
+        private void tbEndICAO_TextChanged(object sender, EventArgs e)
+        {
+            // Obtenir le texte actuel
+            string text = tbEndICAO.Text;
+
+            // Transformer en majuscules
+            text = text.ToUpper();
+
+            // Garder uniquement les lettres majuscules et les chiffres
+            text = new string(text.Where(c => char.IsUpper(c) || char.IsDigit(c)).ToArray());
+
+            // Limiter la longueur du texte à 4 caractères
+            if (text.Length > 4)
+            {
+                text = text.Substring(0, 4);
+            }
+
+            // Mettre à jour le texte de la TextBox si nécessaire
+            if (text != tbEndICAO.Text)
+            {
+                int selectionStart = tbEndICAO.SelectionStart; // Sauvegarder la position du curseur
+                tbEndICAO.Text = text;
+                tbEndICAO.SelectionStart = selectionStart > text.Length ? text.Length : selectionStart; // Restaurer la position du curseur
+            }
+        }
+
 
         private async void UpdatePlaneStatus(int isFlying)
         {

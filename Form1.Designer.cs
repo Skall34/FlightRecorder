@@ -74,6 +74,8 @@ namespace FlightRecorder
             label12 = new Label();
             lbFret = new Label();
             groupBox3 = new GroupBox();
+            lbEndICAO = new Label();
+            tbEndICAO = new TextBox();
             label5 = new Label();
             lbLibelleAvion = new Label();
             lbPayload = new Label();
@@ -86,8 +88,6 @@ namespace FlightRecorder
             submitFlightToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             submitBugToolStripMenuItem = new ToolStripMenuItem();
-            tbEndICAO = new TextBox();
-            lbEndICAO = new Label();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -534,6 +534,28 @@ namespace FlightRecorder
             groupBox3.TabStop = false;
             groupBox3.Text = "Static data";
             // 
+            // lbEndICAO
+            // 
+            lbEndICAO.AutoSize = true;
+            lbEndICAO.Font = new Font("Arial", 10F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lbEndICAO.Location = new Point(360, 127);
+            lbEndICAO.Margin = new Padding(4, 0, 4, 0);
+            lbEndICAO.Name = "lbEndICAO";
+            lbEndICAO.Size = new Size(104, 16);
+            lbEndICAO.TabIndex = 49;
+            lbEndICAO.Text = "Opt: End ICAO";
+            // 
+            // tbEndICAO
+            // 
+            tbEndICAO.BackColor = Color.White;
+            tbEndICAO.Location = new Point(400, 145);
+            tbEndICAO.Margin = new Padding(4);
+            tbEndICAO.Name = "tbEndICAO";
+            tbEndICAO.ShortcutsEnabled = false;
+            tbEndICAO.Size = new Size(63, 25);
+            tbEndICAO.TabIndex = 48;
+            tbEndICAO.TextAlign = HorizontalAlignment.Right;
+            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -623,28 +645,6 @@ namespace FlightRecorder
             submitBugToolStripMenuItem.Size = new Size(136, 22);
             submitBugToolStripMenuItem.Text = "Submit bug";
             submitBugToolStripMenuItem.Click += submitBugToolStripMenuItem_Click;
-            // 
-            // tbEndICAO
-            // 
-            tbEndICAO.BackColor = Color.White;
-            tbEndICAO.Location = new Point(352, 145);
-            tbEndICAO.Margin = new Padding(4);
-            tbEndICAO.Name = "tbEndICAO";
-            tbEndICAO.ShortcutsEnabled = false;
-            tbEndICAO.Size = new Size(111, 25);
-            tbEndICAO.TabIndex = 48;
-            tbEndICAO.TextAlign = HorizontalAlignment.Right;
-            // 
-            // lbEndICAO
-            // 
-            lbEndICAO.AutoSize = true;
-            lbEndICAO.Font = new Font("Arial", 10F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            lbEndICAO.Location = new Point(360, 127);
-            lbEndICAO.Margin = new Padding(4, 0, 4, 0);
-            lbEndICAO.Name = "lbEndICAO";
-            lbEndICAO.Size = new Size(104, 16);
-            lbEndICAO.TabIndex = 49;
-            lbEndICAO.Text = "Opt: End ICAO";
             // 
             // Form1
             // 
