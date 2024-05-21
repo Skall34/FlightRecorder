@@ -120,18 +120,26 @@ function doPost(e) {
       var immat = jsonData.plane;
       var sicao = jsonData.sicao;
       var flying = jsonData.flying;
+      var endICAO = jsonData.endIcao;
 
-      //create a new entry in the flight log book.
-      var ongletFormulaire = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("FLOTTE");
+      //update FLOTTE sheet
+      var ongletFlotte = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("FLOTTE");
       //chercher la ligne du pilote
-      var values = ongletFormulaire.getDataRange().getValues();
+      var values = ongletFlotte.getDataRange().getValues();
 
       for (var i=0;i<values.length;i++) {
         if (values[i][3] == immat) {
           var ligne = i+1;
-          ongletFormulaire.getRange("J"+ligne).setValue(callsign);
-          ongletFormulaire.getRange("E"+ligne).setValue(sicao);
-          ongletFormulaire.getRange("M"+ligne).setValue(flying);
+          ongletFlotte.getRange("J"+ligne).setValue(callsign);
+          ongletFlotte.getRange("E"+ligne).setValue(sicao);
+          ongletFlotte.getRange("M"+ligne).setValue(flying);
+          if (flying === 1) {
+            ongletFlotte.getRange("O"+ligne).setValue(sicao);
+            ongletFlotte.getRange("P"+ligne).setValue(endICAO);
+          } else {
+            ongletFlotte.getRange("O"+ligne).clearContent();
+            ongletFlotte.getRange("P"+ligne).clearContent();
+          }
         }
       }           
       result="OK";
