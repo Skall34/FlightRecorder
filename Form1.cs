@@ -407,6 +407,7 @@ namespace FlightRecorder
                         this.lbFret.Visible = false;
                         //on grise le bouton save flight en vol
                         btnSubmit.Enabled = false;
+                        submitFlightToolStripMenuItem.Enabled = false;
                         //just incase of rebound during takeoff, reset the onground label
                         lbTimeOnGround.Text = "--:--";
 
@@ -435,6 +436,7 @@ namespace FlightRecorder
 
                         //enable the save button
                         btnSubmit.Enabled = true;
+                        submitFlightToolStripMenuItem.Enabled = true;
                     }
 
                     //si on est au sol, et moteur arretés, alors on continue de rafraichir les données statiques.
@@ -713,6 +715,7 @@ namespace FlightRecorder
                 }
                 // On grise le bouton save flight pour éviter les doubles envois
                 btnSubmit.Enabled = false;
+                submitFlightToolStripMenuItem.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -939,6 +942,7 @@ namespace FlightRecorder
             lbPayload.Enabled = true;
 
             btnSubmit.Enabled = false;
+            submitFlightToolStripMenuItem.Enabled = false;
 
 
             Logger.WriteLine("Flight reset");
