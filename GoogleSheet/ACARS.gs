@@ -112,10 +112,32 @@ function doPost(e) {
       result="OK";
 
     }
-  }
-  
-  return ContentService.createTextOutput(result).setMimeType(ContentService.MimeType.TEXT);
-  
+    //in case of badly formulated query, return the query expressed in json.
+    var jsonResponse = e;
+    if (jsonData.query == "updatePlaneStatus") {
+      //get the values of the flight
+      var callsign = jsonData.cs;
+      var immat = jsonData.plane;
+      var sicao = jsonData.sicao;
+      var flying = jsonData.flying;
+
+      //create a new entry in the flight log book.
+      var ongletFormulaire = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("FLOTTE");
+      //chercher la ligne du pilote
+      var values = ongletFormulaire.getDataRange().getValues();
+
+      for (var i=0;i<values.length;i++) {
+        if (values[i][3] == immat) {
+          var ligne = i+1;
+          ongletFormulaire.getRange("J"+ligne).setValue(callsign);
+          ongletFormulaire.getRange("E"+ligne).setValue(sicao);
+          ongletFormulaire.getRange("M"+ligne).setValue(flying);
+        }
+      }           
+      result="OK";
+    }
+  } 
+  return ContentService.createTextOutput(result).setMimeType(ContentService.MimeType.TEXT);  
 }
 
 // *** envoie des données vers l'ACARS *** ///
@@ -202,18 +224,18 @@ function getHTMLFleet() {
   result+="<table>";
   //write the table header
   var header=fleet[0];
-    result+="<tr>"
+    result+="<tr>";
   for (var c=0; c<header.length;c++) {
     result+="<th>"+header[c]+"</th>";
   }
-  result+="</tr>"
+  result+="</tr>";
   //pour chaque ligne
   for (var l=1; l<fleet.length;l++) {
-  result+="<tr>";
-  for (var c=0; c<header.length;c++) {
-    result+="<td>"+fleet[l][c]+"</td>";
-  }
-  result+="</tr>";
+    result+="<tr>";
+    for (var c=0; c<header.length;c++) {
+      result+="<td>"+fleet[l][c]+"</td>";
+    }
+    result+="</tr>";
   }
   result+="</table>";
   result+="</div>";
