@@ -210,7 +210,7 @@ namespace FlightRecorder
 
         private async void ReadStaticValues()
         {
-            Logger.WriteLine("Reading static values");
+            //Logger.WriteLine("Reading static values");
 
             if ((null != _simData) && (_simData.isConnected))
             {
@@ -286,7 +286,7 @@ namespace FlightRecorder
 
         private void getStartOfFlightData()
         {
-            endDisabled = 300;
+            endDisabled = 1;
             lbEndFuel.Enabled = false;
             lbEndPosition.Enabled = false;
             lbEndTime.Enabled = false;
@@ -514,30 +514,31 @@ namespace FlightRecorder
                 //on va memoriser les etats de carburant, et l'heure. On récupere aussi quel est l'aeroport.
                 if ((!_previousEngineStatus && atLeastOneEngineFiring) && (startDisabled == 0))
                 {
-                    Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
-                    this.WindowState = FormWindowState.Minimized;
-                    getStartOfFlightData();
+                    if (engineStopTimer.Enabled)
+                    {
+                        engineStopTimer.Stop();
+                    }
+                    else
+                    {
+                        Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
+                        this.WindowState = FormWindowState.Minimized;
+                        getStartOfFlightData();
 
-                    //Update the google sheet database indicating that this plane is being used
-                    UpdatePlaneStatus(1);
-                    cbImmat.Enabled = false;
-                    tbEndICAO.Enabled = false;
-
+                        //Update the google sheet database indicating that this plane is being used
+                        UpdatePlaneStatus(1);
+                        cbImmat.Enabled = false;
+                        tbEndICAO.Enabled = false;
+                    }
                 }
 
-                //Si on est au sol ET au moins un moteur tournait, mais que plus aucun moteur ne tourne, c'est la fin du vol.
-                if (onGround && (_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
+                if (onGround && (_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0) )
                 {
-                    Logger.WriteLine("Last engine stop detected");
-                    this.WindowState = FormWindowState.Normal;
-                    getEndOfFlightData();
-
-                    //Update the google sheet database indicating that this plane is no more used
-                    UpdatePlaneStatus(0);
-                    cbImmat.Enabled = true;
-                    tbEndICAO.Enabled = true;
+                    engineStopTimer.Start();
                 }
+                else
+                {
 
+                }
             }
             catch (Exception ex)
             {
@@ -997,8 +998,24 @@ namespace FlightRecorder
             List<string> allLog = Logger.getFullLog();
             Logger.restart();
 
-            BugForm bf = new BugForm(tbCallsign.Text, allLog);
+            BugForm bf = new BugForm(tbCallsign.Text, allLog,BASERURL);
             bf.ShowDialog();
+
+        }
+
+        private void engineStopTimer_Tick(object sender, EventArgs e)
+        {
+            //if this happen, then the engine are definitively stopped.
+            Logger.WriteLine("Last engine stop detected");
+            this.WindowState = FormWindowState.Normal;
+            getEndOfFlightData();
+
+            //Update the google sheet database indicating that this plane is no more used
+            UpdatePlaneStatus(0);
+            cbImmat.Enabled = true;
+            tbEndICAO.Enabled = true;
+            //stop this timer
+            engineStopTimer.Stop();
 
         }
     }

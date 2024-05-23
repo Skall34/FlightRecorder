@@ -14,7 +14,9 @@ namespace FlightRecorder
 {
     public partial class BugForm : Form
     {
-        public BugForm(string callsign,List<string> data)
+        private string githubtoken;
+        private string googleSheetUrl;
+        public BugForm(string callsign,List<string> data,string baseUrl)
         {
             InitializeComponent();
             tbTitle.Text = callsign + " problem : ";
@@ -23,6 +25,18 @@ namespace FlightRecorder
             {
                 tbDesc.Text += l+"\r\n";
             }
+            googleSheetUrl = baseUrl;
+            
+        }
+
+        public async Task<string> getGitHubToken()
+        {
+            string url = googleSheetUrl + "?query=github_token";
+            UrlDeserializer dataReader = new UrlDeserializer(url);
+            string? token;
+            Logger.WriteLine("Fechting airport informations from server");
+            token = await dataReader.FetchGithubTokenAsync();
+            return token;
         }
 
         private async void btnSend_Click(object sender, EventArgs e)
@@ -30,12 +44,12 @@ namespace FlightRecorder
             // Replace these with your GitHub credentials and repository details
             var owner = "Skall34";
             var repoName = "FlightRecorder";
-            var personalAccessToken = "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";
-
+            //var personalAccessToken = "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";
+            string githubtoken = await getGitHubToken();
             // Initialize the GitHub client
             var client = new GitHubClient(new ProductHeaderValue("FlightRecorder"))
             {
-                Credentials = new Credentials(personalAccessToken)
+                Credentials = new Credentials(githubtoken)
             };
 
             // Create a new issue
@@ -47,10 +61,11 @@ namespace FlightRecorder
             {
                 var issue = await client.Issue.Create(owner, repoName, newIssue);
                 Console.WriteLine($"Issue created: {issue.HtmlUrl}");
+                MessageBox.Show($"Nous essaierons de le traiter au plus vite", "Bug envoyé !");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating issue: {ex.Message}");
+                MessageBox.Show($"{ex.Message}","Erreur lors de l'envoi du bug");
             }
             this.Close();
         }

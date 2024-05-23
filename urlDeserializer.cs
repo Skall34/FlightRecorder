@@ -171,6 +171,54 @@ namespace FlightRecorder
         }
 
         [Serializable]
+        public class GithubToken
+        {
+            public string? token;
+        }
+
+        public async Task<string> FetchGithubTokenAsync()
+        {
+            string result = string.Empty;
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(_url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonString = await response.Content.ReadAsStringAsync();
+                        // Désérialisation du JSON
+                        GithubToken? githubtoken = JsonConvert.DeserializeObject<GithubToken>(jsonString);
+                        //if we received airports, store them locally
+                        if (githubtoken == null)
+                        {
+                            result = string.Empty;
+                        }
+                        else
+                        {
+                            result =  githubtoken.token;
+                        }
+                        
+                    }
+                    else
+                    {
+                        result = string.Empty;
+                        // Gérer les erreurs si la requête n'a pas réussi
+                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = string.Empty;
+                    // Gérer les exceptions
+                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                }
+            }
+            return result;
+        }
+
+
+        [Serializable]
         public class SaveFlightQuery
         {
             public string? qtype { get; set; }
