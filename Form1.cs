@@ -87,8 +87,8 @@ namespace FlightRecorder
                     version = new Version("unknown");
                 }
                 // Set the form's title to include the version number
-                this.Text = $"FlightRecorder - Version {version}";
-                Logger.WriteLine($"Version : {version}");
+                this.Text = $"FlightRecorder - Version {version.ToString(3)}";
+                Logger.WriteLine($"Version : {version.ToString(3)}");
             }
 
             this.Cursor = Cursors.WaitCursor;
@@ -876,7 +876,7 @@ namespace FlightRecorder
             {
                 tbCommentaires.Text = comment;
             }
-            tbCommentaires.Text += " (F.R. V" + version + ")";
+            tbCommentaires.Text += " (F.R. V" + version.ToString(3) + ")";
 
             int note = flightPerfs.getFlightNote();
             cbNote.Text = note.ToString();
