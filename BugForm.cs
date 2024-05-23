@@ -44,7 +44,7 @@ namespace FlightRecorder
             // Replace these with your GitHub credentials and repository details
             var owner = "Skall34";
             var repoName = "FlightRecorder";
-            //var personalAccessToken = "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";
+            
             string githubtoken = await getGitHubToken();
             // Initialize the GitHub client
             var client = new GitHubClient(new ProductHeaderValue("FlightRecorder"))
