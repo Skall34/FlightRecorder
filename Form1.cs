@@ -984,7 +984,11 @@ namespace FlightRecorder
 
         private void resetFlightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            resetFlight();
+           DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
+            if (res == DialogResult.OK)
+            {
+                resetFlight();
+            }
         }
 
         private void submitFlightToolStripMenuItem_Click(object sender, EventArgs e)
