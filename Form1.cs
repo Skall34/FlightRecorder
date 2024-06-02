@@ -47,7 +47,7 @@ namespace FlightRecorder
         public bool onGround;
         private bool gearIsUp;
         private uint flapsPosition;
-
+        private bool _planeReserved;
 
 
         private readonly List<Mission> missions;
@@ -527,11 +527,11 @@ namespace FlightRecorder
                         //Update the google sheet database indicating that this plane is being used
                         UpdatePlaneStatus(1);
                         cbImmat.Enabled = false;
-                        tbEndICAO.Enabled = false;
+                        //tbEndICAO.Enabled = false;
                     }
                 }
 
-                if (onGround && (_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0) )
+                if (onGround && (_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
                 {
                     engineStopTimer.Start();
                 }
@@ -591,7 +591,7 @@ namespace FlightRecorder
                     // on ne le fait que si un moteur tourne encore ==> vol interrompu avant la fin
                     UpdatePlaneStatus(0);
                     cbImmat.Enabled = true;
-                    tbEndICAO.Enabled = true;
+                    //tbEndICAO.Enabled = true;
                     System.Threading.Thread.Sleep(2000);
                     this.Cursor = Cursors.Default;
                 }
@@ -787,7 +787,14 @@ namespace FlightRecorder
                     //si tout va bien...
                     this.lblConnectionStatus.Text = "Plane data updated";
                     this.lblConnectionStatus.ForeColor = Color.Green;
-
+                    if (isFlying == 1)
+                    {
+                        _planeReserved = true;
+                    }
+                    else
+                    {
+                        _planeReserved = false;
+                    }
                 }
                 else
                 {
@@ -984,7 +991,7 @@ namespace FlightRecorder
 
         private void resetFlightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
+            DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
             if (res == DialogResult.OK)
             {
                 resetFlight();
@@ -1002,7 +1009,7 @@ namespace FlightRecorder
             List<string> allLog = Logger.getFullLog();
             Logger.restart();
 
-            BugForm bf = new BugForm(tbCallsign.Text, allLog,BASERURL);
+            BugForm bf = new BugForm(tbCallsign.Text, allLog, BASERURL);
             bf.ShowDialog();
 
         }
@@ -1021,6 +1028,16 @@ namespace FlightRecorder
             //stop this timer
             engineStopTimer.Stop();
 
+        }
+
+        private void tbEndICAO_TextChanged_1(object sender, EventArgs e)
+        {
+            string value = tbEndICAO.Text;
+            //only send the update if the text is long enough
+            if (value.Length==4)
+            {
+                UpdatePlaneStatus(_planeReserved ? 1 : 0);
+            }
         }
     }
 }
