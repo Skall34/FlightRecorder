@@ -48,7 +48,8 @@ namespace FlightRecorder
         private bool gearIsUp;
         private uint flapsPosition;
         private bool _planeReserved;
-
+        private double _currentFuel;
+        private bool _refuelDetected;
 
         private readonly List<Mission> missions;
         private readonly List<Avion> avions;
@@ -117,6 +118,9 @@ namespace FlightRecorder
 
             _startFuel = 0;
             _endFuel = 0;
+            _currentFuel = 0;
+            _refuelDetected = false;
+
             lbStartFuel.Text = "Not Yet Available";
             lbEndFuel.Text = "Waiting end flight ...";
             lbStartIata.Text = "Not Yet Available";
@@ -384,6 +388,7 @@ namespace FlightRecorder
 
                 // Airspeed
                 double airspeedKnots = _simData.GetAirSpeed();
+                double currentFuel = _simData.GetFuelWeight();
 
                 //check if we are in the air
                 if (_simData.GetOnground() == 0)
@@ -445,7 +450,23 @@ namespace FlightRecorder
                     {
                         ReadStaticValues();
                     }
+
+                    //si on est au sol, et qu'on a lu une valeur de fuel, ET le fuel augmente, on detecte un refuel !
+                    if (!_refuelDetected && (_currentFuel>0)&&(currentFuel>_currentFuel))
+                    {
+                        _refuelDetected = true;
+                        //on detecte un refuel !
+                        //il faut peut-être faire un reset ?
+                        Logger.WriteLine("Refuel detected !");
+                        this.WindowState = FormWindowState.Normal;
+                        _currentFuel = currentFuel;
+                        MessageBox.Show("Refuel detected ! you should reset the flight !");
+                    }
+
                 }
+
+                //keep new value of current fuel quantity
+                _currentFuel = currentFuel;
 
                 if (_simData.GetGearRetractableFlag() == 1)
                 {
@@ -947,6 +968,7 @@ namespace FlightRecorder
             //reenable start detection at next timer tick
             startDisabled = 1;
             endDisabled = 1;
+            _refuelDetected = false;
 
             //on peut préparer un nouveau vol
             cbImmat.Enabled = true;
