@@ -557,6 +557,7 @@ namespace FlightRecorder
             tbEndICAO.TabIndex = 48;
             tbEndICAO.TextAlign = HorizontalAlignment.Right;
             tbEndICAO.TextChanged += tbEndICAO_TextChanged_1;
+            tbEndICAO.MouseHover += tbEndICAO_MouseHover;
             // 
             // label5
             // 

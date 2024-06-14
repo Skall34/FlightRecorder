@@ -32,6 +32,7 @@ namespace FlightRecorder
         private bool atLeastOneEngineFiring;
         private double _startFuel;
         private double _endFuel;
+        private double _endPayload;
 
         private DateTime _startTime;
         private DateTime _endTime;
@@ -120,6 +121,7 @@ namespace FlightRecorder
             _endFuel = 0;
             _currentFuel = 0;
             _refuelDetected = false;
+            _endPayload = 0;
 
             lbStartFuel.Text = "Not Yet Available";
             lbEndFuel.Text = "Waiting end flight ...";
@@ -345,7 +347,7 @@ namespace FlightRecorder
             this.lbEndTime.Text = _endTime.ToShortTimeString();
             //0.00 => only keep 2 decimals for the fuel
             this.lbEndFuel.Text = _endFuel.ToString("0.00");
-
+            _endPayload = _simData.GetPayload();
             //compute the note of the flight
             AnalyseFlight();
         }
@@ -452,7 +454,7 @@ namespace FlightRecorder
                     }
 
                     //si on est au sol, et qu'on a lu une valeur de fuel, ET le fuel augmente, on detecte un refuel !
-                    if (!_refuelDetected && (_currentFuel>0)&&(currentFuel>_currentFuel))
+                    if (!_refuelDetected && (_currentFuel > 0) && (currentFuel > _currentFuel))
                     {
                         _refuelDetected = true;
                         //on detecte un refuel !
@@ -719,7 +721,7 @@ namespace FlightRecorder
                     note = cbNote.Text,
                     mission = cbMission.Text,
                     comment = fullComment,
-                    cargo = lbPayload.Text
+                    cargo = _endPayload.ToString("0.00")
                 };
                 UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
                 int result = await urlDeserializer.PushJSonAsync<UrlDeserializer.SaveFlightQuery>(data);
@@ -969,6 +971,7 @@ namespace FlightRecorder
             startDisabled = 1;
             endDisabled = 1;
             _refuelDetected = false;
+            _endPayload = 0;
 
             //on peut préparer un nouveau vol
             cbImmat.Enabled = true;
@@ -1056,10 +1059,25 @@ namespace FlightRecorder
         {
             string value = tbEndICAO.Text;
             //only send the update if the text is long enough
-            if (value.Length==4)
+            if (value.Length == 4)
             {
                 UpdatePlaneStatus(_planeReserved ? 1 : 0);
+                //todo ! search for this airport in the database.
+                //if found, udate the tooltip with the airport name.
+
             }
+        }
+
+        private void tbEndICAO_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.ToolTipTitle = "destination airport";
+            Aeroport? dest = aeroports.FirstOrDefault(a => a.ident == tbEndICAO.Text);
+            if (null!= dest)
+            {
+                toolTip1.SetToolTip((Control)sender, dest.name);
+                toolTip1.Show(dest.name, this, 5000);
+            }
+
         }
     }
 }
