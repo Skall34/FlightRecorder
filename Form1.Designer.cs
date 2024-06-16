@@ -598,12 +598,14 @@ namespace FlightRecorder
             // 
             // cbImmat
             // 
+            cbImmat.DrawMode = DrawMode.OwnerDrawFixed;
             cbImmat.DropDownStyle = ComboBoxStyle.DropDownList;
             cbImmat.FormattingEnabled = true;
             cbImmat.Location = new Point(118, 46);
             cbImmat.Name = "cbImmat";
             cbImmat.Size = new Size(109, 26);
             cbImmat.TabIndex = 2;
+            cbImmat.DrawItem += cbImmat_DrawItem;
             cbImmat.SelectedIndexChanged += CbImmat_SelectedIndexChanged;
             // 
             // btnReset

@@ -22,8 +22,11 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace FlightRecorder
 {
+
+
     public partial class Form1 : Form
     {
+
         //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
         FsPositionSnapshot? _currentPosition;
         FsPositionSnapshot? _startPosition;
@@ -68,6 +71,11 @@ namespace FlightRecorder
         {
             InitializeComponent();
             this.tbEndICAO.TextChanged += new System.EventHandler(this.tbEndICAO_TextChanged);
+
+            //utilisation de la nouvelle classe de combobox item pour mettre des elements non selectionables
+            this.cbImmat.ValueMember = "Immat";
+            this.cbImmat.DisplayMember = "Immat";
+
             //initialize the trace mechanism
             Logger.init();
 
@@ -177,7 +185,8 @@ namespace FlightRecorder
             UrlDeserializer dataReader = new UrlDeserializer(url);
 
             (List<Avion> avions, List<Mission> missions) = await dataReader.FetchDataAsync();
-
+            this.avions.Clear();
+            this.missions.Clear();
             this.avions.AddRange(avions);
             this.missions.AddRange(missions);
 
@@ -840,45 +849,39 @@ namespace FlightRecorder
             lbFret.Text = "Acars initializing ..... please wait";
             // Effacez les éléments existants dans la combobox
             cbImmat.Items.Clear();
-
-            // Créez une liste pour stocker les immatriculations
-            List<string> immatriculations = new List<string>();
-
-            // Parcourez la liste des avions
-            foreach (var avion in avions)
+            if (avions != null)
             {
-                // Vérifiez si le statut de l'avion est égal à 1
-                if (avion.Status == 1 || avion.Status == 2 || avion.EnVol == 1)
+                avions.Sort();
+                // Parcourez la liste des avions
+                foreach (Avion? avion in avions)
                 {
-                    // Si le statut est égal à 1 ou 2, il est en maintenance,
-                    // passez à l'itération suivante
-                    // Si l'avion est en vol, on ne le liste pas
-                    continue;
+                    //// Vérifiez si le statut de l'avion est égal à 1
+                    //if (avion.Status == 1 || avion.Status == 2 || ((avion.EnVol == 1) && (avion.DernierUtilisateur != tbCallsign.Text)))
+                    //{
+                    //    // Si le statut est égal à 1 ou 2, il est en maintenance,
+                    //    // passez à l'itération suivante
+                    //    // Si l'avion est en vol, on ne le liste pas (execption, si l'utilisateur courant est celui qui a laissé l'avion en vol)
+                    //    // (permet de libérer un avion qui serait bloqué en vol suite à un crash du simulateur)
+                    //    continue;
+                    //}
+                    // Ajoutez l'immatriculation de l'avion à la liste des immatriculations
+                    if (null != avion.Immat)
+                    {
+                        //immatriculations.Add(avion.Immat);
+                        cbImmat.Items.Add(avion);
+                    }
                 }
-                // Ajoutez l'immatriculation de l'avion à la liste des immatriculations
-                if (null != avion.Immat)
+                cbImmat.DisplayMember = "Immat";
+
+
+                //pre-select the last used immat (stored as setting)
+                string lastImmat = Settings.Default.lastImmat;
+                if (lastImmat != string.Empty)
                 {
-                    immatriculations.Add(avion.Immat);
+                    cbImmat.SelectedItem = lastImmat;
                 }
             }
 
-            // Tri de la liste des immatriculations
-            immatriculations.Sort();
-
-            // Ajout des immatriculations triées à la ComboBox
-            foreach (var immat in immatriculations)
-            {
-                cbImmat.Items.Add(immat);
-            }
-
-            //pre-select the last used immat (stored as setting)
-            string lastImmat = Settings.Default.lastImmat;
-            if ((lastImmat != string.Empty) && (immatriculations.Contains(lastImmat)))
-            {
-                cbImmat.SelectedItem = lastImmat;
-            }
-
-            cbImmat.DisplayMember = "Immat";
             this.Cursor = Cursors.Default;
         }
 
@@ -997,11 +1000,31 @@ namespace FlightRecorder
 
         private void CbImmat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string planeDesign = this.avions.Where(a => a.Immat == cbImmat.Text).First().Designation;
-            lbDesignationAvion.Text = planeDesign;
-            // #34 sauvegarder la derniere immat utilisée
-            Settings.Default.lastImmat = cbImmat.Text;
-            Settings.Default.Save();
+            Avion? selectedPlane = this.avions.Where(a => a.Immat == cbImmat.Text).FirstOrDefault();
+            if (selectedPlane != null)
+            {
+                if ((selectedPlane.Status == 1)|| (selectedPlane.Status == 2) || ((selectedPlane.EnVol == 1) && (selectedPlane.DernierUtilisateur != tbCallsign.Text)))
+                {
+                    cbImmat.SelectedItem = null;
+                    lbDesignationAvion.Text = "<no plane selected>";
+                }
+                else
+                {
+                    string? planeDesign = selectedPlane.Designation;
+                    lbDesignationAvion.Text = planeDesign;
+                    // #34 sauvegarder la derniere immat utilisée
+                    Settings.Default.lastImmat = cbImmat.Text;
+                    Settings.Default.Save();
+
+                    //si cet avion est marqué comme deja en vol, c'est par l'utilisateur courant. 
+                    //marque cet avion comme n'etant plus en vol.
+                    if ((selectedPlane.EnVol == 1) && selectedPlane.DernierUtilisateur == tbCallsign.Text)
+                    {
+                        Logger.WriteLine("Freeing the airplane on the sheet");
+                        UpdatePlaneStatus(0);
+                    }
+                }
+            }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -1072,12 +1095,60 @@ namespace FlightRecorder
         {
             toolTip1.ToolTipTitle = "destination airport";
             Aeroport? dest = aeroports.FirstOrDefault(a => a.ident == tbEndICAO.Text);
-            if (null!= dest)
+            if (null != dest)
             {
                 toolTip1.SetToolTip((Control)sender, dest.name);
                 toolTip1.Show(dest.name, this, 5000);
             }
 
+        }
+
+        private void cbImmat_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // Draw the background of the ListBox control for each item.
+            e.DrawBackground();
+            // Define the default color of the brush as black.
+            Brush myBrush = Brushes.Black;
+
+            // Determine the color of the brush to draw each item based 
+            // on the index of the item to draw.
+
+
+            // Draw the current item text based on the current Font 
+            // and the custom brush settings.
+            if (e.Index >= 0)
+            {
+                Avion item = (Avion)cbImmat.Items[e.Index];
+                switch (item.Status)
+                {
+                    case 0:
+                        myBrush = Brushes.Black; //avion disponible
+                        break;
+                    case 1:
+                        myBrush = Brushes.LightGray; //avion non disponible (en maintenance).
+                        break;
+                    case 2:
+                        myBrush = Brushes.LightGray;//avion non disponible (en maintenance).
+                        break;
+                }
+
+                if (item.EnVol==1)
+                {
+                     if (item.DernierUtilisateur != tbCallsign.Text)
+                    {
+                        myBrush = Brushes.LightGray; //avion non disponible (utilisé par qqun d'autre).
+                    }
+                    else
+                    {
+                        myBrush = Brushes.Blue; //avion non disponible (deja pris par moi).
+                    }
+                }
+
+                e.Graphics.DrawString(item.Immat,
+                    e.Font, myBrush, e.Bounds, StringFormat.GenericDefault);
+            }
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
         }
     }
 }
