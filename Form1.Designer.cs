@@ -89,6 +89,7 @@ namespace FlightRecorder
             toolStripSeparator1 = new ToolStripSeparator();
             submitBugToolStripMenuItem = new ToolStripMenuItem();
             engineStopTimer = new System.Windows.Forms.Timer(components);
+            contextMenuStrip2 = new ContextMenuStrip(components);
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -556,7 +557,7 @@ namespace FlightRecorder
             tbEndICAO.Size = new Size(63, 25);
             tbEndICAO.TabIndex = 48;
             tbEndICAO.TextAlign = HorizontalAlignment.Right;
-            tbEndICAO.TextChanged += tbEndICAO_TextChanged_1;
+            tbEndICAO.TextChanged += tbEndICAO_TextChanged;
             tbEndICAO.MouseHover += tbEndICAO_MouseHover;
             // 
             // label5
@@ -657,6 +658,11 @@ namespace FlightRecorder
             engineStopTimer.Interval = 3000;
             engineStopTimer.Tick += engineStopTimer_Tick;
             // 
+            // contextMenuStrip2
+            // 
+            contextMenuStrip2.Name = "contextMenuStrip2";
+            contextMenuStrip2.Size = new Size(61, 4);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(9F, 18F);
@@ -754,6 +760,7 @@ namespace FlightRecorder
         private TextBox tbEndICAO;
         private Label lbEndICAO;
         private System.Windows.Forms.Timer engineStopTimer;
+        private ContextMenuStrip contextMenuStrip2;
     }
 }
 

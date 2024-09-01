@@ -16,6 +16,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
@@ -64,13 +65,12 @@ namespace FlightRecorder
         private int endDisabled;
 
         private readonly string BASERURL;
-        Version version;
+        Version? version;
 
         //private bool modifiedFuel;
         public Form1()
         {
             InitializeComponent();
-            this.tbEndICAO.TextChanged += new System.EventHandler(this.tbEndICAO_TextChanged);
 
             //utilisation de la nouvelle classe de combobox item pour mettre des elements non selectionables
             this.cbImmat.ValueMember = "Immat";
@@ -88,17 +88,18 @@ namespace FlightRecorder
             Assembly? assembly = Assembly.GetEntryAssembly();
             if (null != assembly)
             {
-                if (assembly.GetName().Version! != null)
-                {
-                    version = assembly.GetName().Version;
-                }
-                else
-                {
+                version = assembly.GetName().Version;
+                if (null == version )
+                { 
                     version = new Version("unknown");
                 }
                 // Set the form's title to include the version number
                 this.Text = $"FlightRecorder - Version {version.ToString(3)}";
                 Logger.WriteLine($"Version : {version.ToString(3)}");
+            }
+            else
+            {
+                version = new Version("unknown");
             }
 
             this.Cursor = Cursors.WaitCursor;
@@ -226,40 +227,46 @@ namespace FlightRecorder
         private async void ReadStaticValues()
         {
             //Logger.WriteLine("Reading static values");
-
-            if ((null != _simData) && (_simData.isConnected))
+            try
             {
-                //commence à lire qq variables du simu : fuel & cargo, immat avion...
-                this.lbPayload.Text = _simData.GetPayload().ToString("0.00");
-
-                //recupere l'emplacement courant :
-                _currentPosition = _simData.GetPosition(); ;
-
-                //Recupere le libellé de l'avion
-                string planeNomComplet = _simData.GetAircraftType();
-                lbLibelleAvion.Text = planeNomComplet;
-
-                double lat = _currentPosition.Location.Latitude.DecimalDegrees;
-                double lon = _currentPosition.Location.Longitude.DecimalDegrees;
-
-                if ((aeroports != null) && (aeroports.Count > 0))
+                if ((null != _simData) && (_simData.isConnected))
                 {
-                    Aeroport? currentAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
-                    if ((currentAirport != null) && (currentAirport != localAirport))
-                    {
-                        localAirport = currentAirport;
-                        string? startAirportname = localAirport.name;
+                    //commence à lire qq variables du simu : fuel & cargo, immat avion...
+                    this.lbPayload.Text = _simData.GetPayload().ToString("0.00");
 
-                        if ((this.aeroports != null) && (startAirportname != null))
+                    //recupere l'emplacement courant :
+                    _currentPosition = _simData.GetPosition(); ;
+
+                    //Recupere le libellé de l'avion
+                    string planeNomComplet = _simData.GetAircraftType();
+                    lbLibelleAvion.Text = planeNomComplet;
+
+                    double lat = _currentPosition.Location.Latitude.DecimalDegrees;
+                    double lon = _currentPosition.Location.Longitude.DecimalDegrees;
+
+                    if ((aeroports != null) && (aeroports.Count > 0))
+                    {
+                        Aeroport? currentAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
+                        if ((currentAirport != null) && (currentAirport != localAirport))
                         {
-                            // Votre code pour utiliser les avions et les aéroports
-                            float fretOnAirport = await GetFretOnAirport(localAirport.ident);
-                            //lbFret.Text = fretOnAirport.ToString() + " Kg available " + startAirportname;
+                            localAirport = currentAirport;
+                            string? startAirportname = localAirport.name;
+
+                            if ((this.aeroports != null) && (startAirportname != null))
+                            {
+                                // Votre code pour utiliser les avions et les aéroports
+                                float fretOnAirport = await GetFretOnAirport(localAirport.ident);
+                                //lbFret.Text = fretOnAirport.ToString() + " Kg available " + startAirportname;
+                            }
                         }
                     }
+                    //recupere le type d'avion donné par le simu.
+                    Logger.WriteLine("Simulator aircraft loaded : " + _simData.GetAircraftType());
                 }
-                //recupere le type d'avion donné par le simu.
-                Logger.WriteLine("Simulator aircraft loaded : " + _simData.GetAircraftType());
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine("Exception caught : " + ex.Message);
             }
         }
 
@@ -762,7 +769,7 @@ namespace FlightRecorder
 
         }
         //envoi des données au google form
-        private async void BtnSubmit_Click(object sender, EventArgs e)
+        private void BtnSubmit_Click(object sender, EventArgs e)
         {
             saveFlight();
         }
@@ -790,6 +797,14 @@ namespace FlightRecorder
                 int selectionStart = tbEndICAO.SelectionStart; // Sauvegarder la position du curseur
                 tbEndICAO.Text = text;
                 tbEndICAO.SelectionStart = selectionStart > text.Length ? text.Length : selectionStart; // Restaurer la position du curseur
+            }
+
+            //only send the update if the text is long enough
+            if (text.Length == 4)
+            {
+                UpdatePlaneStatus(_planeReserved ? 1 : 0);
+                //todo ! search for this airport in the database.
+                //if found, udate the tooltip with the airport name.
             }
         }
 
@@ -878,7 +893,8 @@ namespace FlightRecorder
                 string lastImmat = Settings.Default.lastImmat;
                 if (lastImmat != string.Empty)
                 {
-                    cbImmat.SelectedItem = lastImmat;
+                    Avion selected = avions.Where(a => a.Immat == lastImmat).First();
+                    cbImmat.SelectedItem = selected;
                 }
             }
 
@@ -1003,7 +1019,7 @@ namespace FlightRecorder
             Avion? selectedPlane = this.avions.Where(a => a.Immat == cbImmat.Text).FirstOrDefault();
             if (selectedPlane != null)
             {
-                if ((selectedPlane.Status == 1)|| (selectedPlane.Status == 2) || ((selectedPlane.EnVol == 1) && (selectedPlane.DernierUtilisateur != tbCallsign.Text)))
+                if ((selectedPlane.Status == 1) || (selectedPlane.Status == 2) || ((selectedPlane.EnVol == 1) && (selectedPlane.DernierUtilisateur != tbCallsign.Text)))
                 {
                     cbImmat.SelectedItem = null;
                     lbDesignationAvion.Text = "<no plane selected>";
@@ -1075,20 +1091,6 @@ namespace FlightRecorder
             tbEndICAO.Enabled = true;
             //stop this timer
             engineStopTimer.Stop();
-
-        }
-
-        private void tbEndICAO_TextChanged_1(object sender, EventArgs e)
-        {
-            string value = tbEndICAO.Text;
-            //only send the update if the text is long enough
-            if (value.Length == 4)
-            {
-                UpdatePlaneStatus(_planeReserved ? 1 : 0);
-                //todo ! search for this airport in the database.
-                //if found, udate the tooltip with the airport name.
-
-            }
         }
 
         private void tbEndICAO_MouseHover(object sender, EventArgs e)
@@ -1132,9 +1134,9 @@ namespace FlightRecorder
                         break;
                 }
 
-                if (item.EnVol==1)
+                if (item.EnVol == 1)
                 {
-                     if (item.DernierUtilisateur != tbCallsign.Text)
+                    if (item.DernierUtilisateur != tbCallsign.Text)
                     {
                         myBrush = Brushes.LightGray; //avion non disponible (utilisé par qqun d'autre).
                     }
@@ -1150,5 +1152,6 @@ namespace FlightRecorder
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
         }
+
     }
 }
