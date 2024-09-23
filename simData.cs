@@ -114,6 +114,7 @@ namespace FlightRecorder
             }catch(Exception)
             {
                 _isConnected=false;
+                throw;
             }
         }
 

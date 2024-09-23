@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlightRecorder": {
+      "commandName": "Project",
+      "commandLineArgs": "-auto"
+    }
+  }
+}

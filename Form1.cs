@@ -27,6 +27,7 @@ namespace FlightRecorder
 
     public partial class Form1 : Form
     {
+        private bool autostart = false;
 
         //private Offset<short> parkingBrake = new Offset<short>(0x0BC8);
         FsPositionSnapshot? _currentPosition;
@@ -67,11 +68,29 @@ namespace FlightRecorder
         private readonly string BASERURL;
         Version? version;
 
+        public static bool isAutoStart()
+        {
+            // Récupérer les paramètres de la ligne de commande
+            string[] args = Environment.GetCommandLineArgs();
+
+            // Vérifier si "-auto" est présent dans les arguments
+            foreach (string arg in args)
+            {
+                if (arg.Equals("-auto", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true; // Retourne true si "-auto" est trouvé
+                }
+            }
+
+            return false; // Retourne false si "-auto" n'est pas trouvé
+        }
+
         //private bool modifiedFuel;
         public Form1()
         {
             InitializeComponent();
-
+            
+            autostart = isAutoStart();
             //utilisation de la nouvelle classe de combobox item pour mettre des elements non selectionables
             this.cbImmat.ValueMember = "Immat";
             this.cbImmat.DisplayMember = "Immat";
@@ -80,6 +99,9 @@ namespace FlightRecorder
             Logger.init();
 
             Logger.WriteLine("Starting flightrecorder");
+            if (autostart) {
+                Logger.WriteLine("Autostarted");
+            }
 
             //get the google sheet API url from the app settings
             BASERURL = Settings.Default.GSheetAPIUrl;
@@ -95,6 +117,10 @@ namespace FlightRecorder
                 }
                 // Set the form's title to include the version number
                 this.Text = $"FlightRecorder - Version {version.ToString(3)}";
+                if (autostart)
+                {
+                    this.Text += " autostarted";
+                }
                 Logger.WriteLine($"Version : {version.ToString(3)}");
             }
             else
@@ -303,6 +329,11 @@ namespace FlightRecorder
             catch
             {
                 // No connection found. Don't need to do anything, just keep trying
+                if (autostart)
+                {
+                    //if flight recorder was started automatically by the simulator, then exit when simulator is not there anymore.
+                    System.Windows.Forms.Application.Exit();
+                }
             }
         }
 
@@ -475,7 +506,7 @@ namespace FlightRecorder
                         _refuelDetected = true;
                         //on detecte un refuel !
                         //il faut peut-être faire un reset ?
-                        Logger.WriteLine("Refuel detected !");
+                        Logger.WriteLine("Refuel detected ! new fuel "+currentFuel +" > "+_currentFuel + " (old fuel))");
                         this.WindowState = FormWindowState.Normal;
                         _currentFuel = currentFuel;
                         MessageBox.Show("Refuel detected ! you should reset the flight !");
@@ -581,12 +612,13 @@ namespace FlightRecorder
             }
             catch (Exception ex)
             {
+                //log the excepction
+                Logger.WriteLine("Communication with FSUIPC Failed\n\n" + ex.Message);
                 // An error occured. Tell the user and stop this timer.
                 this.timerMain.Stop();
-                MessageBox.Show("Communication with FSUIPC Failed\n\n" + ex.Message, "FSUIPC", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 // Update the connection status
                 ConfigureForm();
-                // start the connection timer
+                // re-start the connection timer
                 this.timerConnection.Start();
             }
         }
@@ -617,9 +649,13 @@ namespace FlightRecorder
                 //Le vol n'a PAS été envoyé
                 message += "\r\n !!! Le vol n'a pas été envoyé !!!";
             }
+            DialogResult res= DialogResult.Cancel;
 
-            DialogResult res = MessageBox.Show(message, "Flight Recorder", MessageBoxButtons.OKCancel);
-            if (res == DialogResult.OK)
+            if (!autostart)
+            {
+                res = MessageBox.Show(message, "Flight Recorder", MessageBoxButtons.OKCancel);
+            }
+            if ((res == DialogResult.OK)||(autostart))
             {
                 if (atLeastOneEngineFiring)
                 {
