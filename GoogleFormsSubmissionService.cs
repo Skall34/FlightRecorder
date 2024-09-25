@@ -64,12 +64,12 @@ namespace FlightRecorder
             var response = await _client.PostAsync(url, content);
             if (response.IsSuccessStatusCode)
             {
-                Console.Write("Google form data was submitted sucessfully");
+                Logger.WriteLine("Google form data was submitted sucessfully");
             }
             else
             {
                 var fieldText = string.Join(Environment.NewLine, _field.Keys.Select(key => $"{key}={string.Join(",", _field[key])}"));
-                Console.Write($"Failed to submit Google form\n{response.StatusCode}: {response.ReasonPhrase}\n{url}\n{fieldText}");
+                Logger.WriteLine($"Failed to submit Google form\n{response.StatusCode}: {response.ReasonPhrase}\n{url}\n{fieldText}");
             }
 
             return response;

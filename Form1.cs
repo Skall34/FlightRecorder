@@ -655,6 +655,15 @@ namespace FlightRecorder
             {
                 res = MessageBox.Show(message, "Flight Recorder", MessageBoxButtons.OKCancel);
             }
+            else
+            {
+                //si il y a eu un vol, ET que les moteurs sont arretés, envoie le vol vers la google sheet
+                if ( (this.btnSubmit.Enabled == true) && (!atLeastOneEngineFiring) )
+                {
+                    saveFlight();
+                }
+            }
+
             if ((res == DialogResult.OK)||(autostart))
             {
                 if (atLeastOneEngineFiring)
@@ -776,6 +785,10 @@ namespace FlightRecorder
                     cargo = _endPayload.ToString("0.00")
                 };
                 UrlDeserializer urlDeserializer = new UrlDeserializer(BASERURL);
+
+                //sauve le vol dans le fichier "lastflight.json"
+                await urlDeserializer.SaveLocalJsonAsync(data, "lastflight.json");
+                //envoie le vol vers le serveur
                 int result = await urlDeserializer.PushJSonAsync<UrlDeserializer.SaveFlightQuery>(data);
                 //int result = await urlDeserializer.PushFlightAsync(data);
                 if (0 != result)

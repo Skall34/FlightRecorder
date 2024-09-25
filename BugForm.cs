@@ -60,7 +60,7 @@ namespace FlightRecorder
             try
             {
                 var issue = await client.Issue.Create(owner, repoName, newIssue);
-                Console.WriteLine($"Issue created: {issue.HtmlUrl}");
+                Logger.WriteLine($"Issue created: {issue.HtmlUrl}");
                 MessageBox.Show($"Nous essaierons de le traiter au plus vite", "Bug envoyé !");
             }
             catch (Exception ex)

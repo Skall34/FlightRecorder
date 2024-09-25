@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.Serialization;
+
+//using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -78,13 +81,13 @@ namespace FlightRecorder
                     else
                     {
                         // Gérer les erreurs si la requête n'a pas réussi
-                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                        Logger.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
                     }
                 }
                 catch (Exception ex)
                 {
                     // Gérer les exceptions
-                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                    Logger.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
 
@@ -119,8 +122,8 @@ namespace FlightRecorder
                     else
                     {
                         aeroports = new List<Aeroport>();
-                            // Gérer les erreurs si la requête n'a pas réussi
-                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                        // Gérer les erreurs si la requête n'a pas réussi
+                        Logger.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
                     }
                 }
                 catch (Exception ex)
@@ -129,7 +132,7 @@ namespace FlightRecorder
 
                     aeroports = new List<Aeroport>();
                     // Gérer les exceptions
-                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                    Logger.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
 
@@ -157,14 +160,14 @@ namespace FlightRecorder
                     {
                         result = -1;
                         // Gérer les erreurs si la requête n'a pas réussi
-                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                        Logger.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
                     }
                 }
                 catch (Exception ex)
                 {
                     result = -1;
                     // Gérer les exceptions
-                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                    Logger.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
             return result;
@@ -204,14 +207,14 @@ namespace FlightRecorder
                     {
                         result = string.Empty;
                         // Gérer les erreurs si la requête n'a pas réussi
-                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                        Logger.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
                     }
                 }
                 catch (Exception ex)
                 {
                     result = string.Empty;
                     // Gérer les exceptions
-                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                    Logger.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
             return result;
@@ -269,14 +272,14 @@ namespace FlightRecorder
                     {
                         result = 0;
                         // Gérer les erreurs si la requête n'a pas réussi
-                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                        Logger.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
                     }
                 }
                 catch (Exception ex)
                 {
                     result = 0;
                     // Gérer les exceptions
-                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                    Logger.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
             return result;
@@ -302,19 +305,52 @@ namespace FlightRecorder
                     {
                         result = 0;
                         // Gérer les erreurs si la requête n'a pas réussi
-                        Console.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
+                        Logger.WriteLine("Erreur lors de la récupération des données : " + response.StatusCode);
                     }
                 }
                 catch (Exception ex)
                 {
                     result = 0;
                     // Gérer les exceptions
-                    Console.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
+                    Logger.WriteLine("Erreur lors de la récupération des données : " + ex.Message);
                 }
             }
             return result;
         }
 
+        public async Task SaveLocalJsonAsync<Serializable>(Serializable data, string fileName) where Serializable : class
+        {
+            try
+            {
+                // Get the application name
+                string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+
+                // Get the path to the user's AppData folder
+                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+                // Combine the AppData path with the folder name
+                string fullPath = Path.Combine(appDataPath, appName);
+
+                // Ensure the directory exists, if not, create it
+                Directory.CreateDirectory(fullPath);
+
+                string jsonFile = Path.Combine(fullPath, fileName);
+
+                // Sérialiser l'objet en format JSON avec Newtonsoft.Json
+                var jsonString = JsonConvert.SerializeObject(data, Formatting.Indented); // Formatting.Indented pour indenter le JSON
+
+                // Écrire le contenu JSON dans le fichier spécifié de manière asynchrone
+                using (StreamWriter writer = new StreamWriter(jsonFile))
+                {
+                    await writer.WriteAsync(jsonString);
+                }
+                Logger.WriteLine($"Le fichier {jsonFile} a été enregistré avec succès.");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine($"Erreur lors de l'enregistrement du fichier : {ex.Message}");
+            }
+        }
 
     }
 }
