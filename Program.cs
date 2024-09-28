@@ -10,6 +10,7 @@ namespace FlightRecorder
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }

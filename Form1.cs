@@ -16,6 +16,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -89,7 +90,7 @@ namespace FlightRecorder
         public Form1()
         {
             InitializeComponent();
-            
+
             autostart = isAutoStart();
             //utilisation de la nouvelle classe de combobox item pour mettre des elements non selectionables
             this.cbImmat.ValueMember = "Immat";
@@ -99,7 +100,8 @@ namespace FlightRecorder
             Logger.init();
 
             Logger.WriteLine("Starting flightrecorder");
-            if (autostart) {
+            if (autostart)
+            {
                 Logger.WriteLine("Autostarted");
             }
 
@@ -111,8 +113,8 @@ namespace FlightRecorder
             if (null != assembly)
             {
                 version = assembly.GetName().Version;
-                if (null == version )
-                { 
+                if (null == version)
+                {
                     version = new Version("unknown");
                 }
                 // Set the form's title to include the version number
@@ -353,7 +355,7 @@ namespace FlightRecorder
             Aeroport? localAirport = Aeroport.FindClosestAirport(aeroports, lat, lon);
             if (localAirport != null)
             {
-                string startAirportname = localAirport.name;
+                string? startAirportname = localAirport.name;
                 lbStartPosition.Text = startAirportname;
                 lbStartIata.Text = localAirport.ident;
             }
@@ -506,10 +508,29 @@ namespace FlightRecorder
                         _refuelDetected = true;
                         //on detecte un refuel !
                         //il faut peut-être faire un reset ?
-                        Logger.WriteLine("Refuel detected ! new fuel "+currentFuel +" > "+_currentFuel + " (old fuel))");
+                        Logger.WriteLine("Refuel detected ! new fuel " + currentFuel + " > " + _currentFuel + " (old fuel))");
                         this.WindowState = FormWindowState.Normal;
                         _currentFuel = currentFuel;
-                        MessageBox.Show("Refuel detected ! you should reset the flight !");
+                        //si on refuel pendant qu'un moteur tourne, c'est suspect. Envoie la popup pour proposer le reset !
+                        if (atLeastOneEngineFiring)
+                        {
+                            MessageBox.Show("Refuel detected ! you should reset the flight !");
+                        }
+                        else
+                        {
+                            //sinon, refuel sans moteur arreté.
+                            // on reste le vol direct ? et s'il n'a pas été soumis ? 
+                            if (btnSubmit.Enabled)
+                            {
+                                //le bouton submit est encore actif, donc peut-etre que le vol n'a pas été soumis. Demande une confirmation
+                                resetFlight(false);
+                            }
+                            else
+                            {
+                                //le bouton submit est encore inactif, donc le vol a été soumis, on peut reset
+                                resetFlight(true);
+                            }
+                        }
                     }
 
                 }
@@ -649,7 +670,7 @@ namespace FlightRecorder
                 //Le vol n'a PAS été envoyé
                 message += "\r\n !!! Le vol n'a pas été envoyé !!!";
             }
-            DialogResult res= DialogResult.Cancel;
+            DialogResult res = DialogResult.Cancel;
 
             if (!autostart)
             {
@@ -658,13 +679,13 @@ namespace FlightRecorder
             else
             {
                 //si il y a eu un vol, ET que les moteurs sont arretés, envoie le vol vers la google sheet
-                if ( (this.btnSubmit.Enabled == true) && (!atLeastOneEngineFiring) )
+                if ((this.btnSubmit.Enabled == true) && (!atLeastOneEngineFiring))
                 {
                     saveFlight();
                 }
             }
 
-            if ((res == DialogResult.OK)||(autostart))
+            if ((res == DialogResult.OK) || (autostart))
             {
                 if (atLeastOneEngineFiring)
                 {
@@ -798,7 +819,8 @@ namespace FlightRecorder
                     this.lblConnectionStatus.ForeColor = Color.Green;
                     MessageBox.Show("Flight saved. Thank you for flying with SKYWINGS :)", "Flight Recorder");
 
-                    resetFlight();
+                    //reset le vol sans demande de confirmation
+                    resetFlight(true);
                 }
                 else
                 {
@@ -996,71 +1018,79 @@ namespace FlightRecorder
 
         }
 
-        private void resetFlight()
+        private void resetFlight(bool force) //force ==true => pas de demande de confirmation
         {
             Logger.WriteLine("Reseting flight");
-            lbStartIata.Text = string.Empty;
-            lbStartFuel.Text = string.Empty;
-            lbStartPosition.Text = string.Empty;
-            lbStartTime.Text = string.Empty;
+            DialogResult res = DialogResult.OK;
+            if (!force)
+            {
+                res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
+            }
 
-            lbEndTime.Text = string.Empty;
-            lbEndFuel.Text = string.Empty;
-            lbEndIata.Text = string.Empty;
-            lbEndPosition.Text = string.Empty;
+            if (res == DialogResult.OK)
+            {
 
-            tbCommentaires.Text = string.Empty;
-            cbMission.Text = string.Empty;
+                lbStartIata.Text = string.Empty;
+                lbStartFuel.Text = string.Empty;
+                lbStartPosition.Text = string.Empty;
+                lbStartTime.Text = string.Empty;
 
-            tbEndICAO.Text = string.Empty;
+                lbEndTime.Text = string.Empty;
+                lbEndFuel.Text = string.Empty;
+                lbEndIata.Text = string.Empty;
+                lbEndPosition.Text = string.Empty;
 
-            lbStartFuel.Text = "Waiting start";
-            lbEndFuel.Text = "Waiting end ...";
-            lbStartIata.Text = "Waiting start";
-            lbEndIata.Text = "Waiting end ...";
-            lbStartPosition.Text = "Waiting start";
-            lbEndPosition.Text = "Waiting end ...";
-            lbStartTime.Text = "Waiting start";
-            lbEndTime.Text = "Waiting end ...";
-            lbTimeAirborn.Text = "--:--";
-            lbTimeOnGround.Text = "--:--";
-            lbFret.Visible = true;
-            cbNote.SelectedItem = 8;
+                tbCommentaires.Text = string.Empty;
+                cbMission.Text = string.Empty;
 
-            //reset flight infos.
-            flightPerfs.overRunwayCrashed = false;
-            flightPerfs.crashed = false;
-            flightPerfs.stallWarning = false;
-            flightPerfs.overspeed = false;
+                tbEndICAO.Text = string.Empty;
 
-            atLeastOneEngineFiring = false;
+                lbStartFuel.Text = "Waiting start";
+                lbEndFuel.Text = "Waiting end ...";
+                lbStartIata.Text = "Waiting start";
+                lbEndIata.Text = "Waiting end ...";
+                lbStartPosition.Text = "Waiting start";
+                lbEndPosition.Text = "Waiting end ...";
+                lbStartTime.Text = "Waiting start";
+                lbEndTime.Text = "Waiting end ...";
+                lbTimeAirborn.Text = "--:--";
+                lbTimeOnGround.Text = "--:--";
+                lbFret.Visible = true;
+                cbNote.SelectedItem = 8;
 
-            //reenable start detection at next timer tick
-            startDisabled = 1;
-            endDisabled = 1;
-            _refuelDetected = false;
-            _endPayload = 0;
+                //reset flight infos.
+                flightPerfs.overRunwayCrashed = false;
+                flightPerfs.crashed = false;
+                flightPerfs.stallWarning = false;
+                flightPerfs.overspeed = false;
 
-            //on peut préparer un nouveau vol
-            cbImmat.Enabled = true;
-            tbEndICAO.Enabled = true;
-            lbPayload.Enabled = true;
+                atLeastOneEngineFiring = false;
 
-            btnSubmit.Enabled = false;
-            submitFlightToolStripMenuItem.Enabled = false;
+                //reenable start detection at next timer tick
+                startDisabled = 1;
+                endDisabled = 1;
+                _refuelDetected = false;
+                _endPayload = 0;
 
+                //on peut préparer un nouveau vol
+                cbImmat.Enabled = true;
+                tbEndICAO.Enabled = true;
+                lbPayload.Enabled = true;
 
-            Logger.WriteLine("Flight reset");
-
+                btnSubmit.Enabled = false;
+                submitFlightToolStripMenuItem.Enabled = false;
+                Logger.WriteLine("Flight reset");
+            }
+            else
+            {
+                Logger.WriteLine("Flight reset canceled");
+            }
         }
 
         private void BtnReset_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
-            if (res == DialogResult.OK)
-            {
-                resetFlight();
-            }
+            //reset flight avec demande de confirmation
+            resetFlight(false);
         }
 
         private void CbImmat_SelectedIndexChanged(object sender, EventArgs e)
@@ -1104,11 +1134,8 @@ namespace FlightRecorder
 
         private void resetFlightToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("Confirm flight reset ?", "Flight Recorder", MessageBoxButtons.OKCancel);
-            if (res == DialogResult.OK)
-            {
-                resetFlight();
-            }
+            //reset flight avec demande de confirmation
+            resetFlight(false);
         }
 
         private void submitFlightToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1202,5 +1229,145 @@ namespace FlightRecorder
             e.DrawFocusRectangle();
         }
 
+        private bool isAutoStartRegistered()
+        {
+            bool result = false;
+
+            try
+            {
+                // Obtenir le chemin du répertoire AppData\Roaming\MSFS de l'utilisateur courant
+                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string msfsDirectory = Path.Combine(appDataPath, "Microsoft Flight Simulator");
+                string exeXmlPath = Path.Combine(msfsDirectory, "exe.xml");
+
+                // Vérifier si le fichier exe.xml existe
+                if (!File.Exists(exeXmlPath))
+                {
+                    Logger.WriteLine("Le fichier exe.xml n'existe pas dans le répertoire spécifié.");
+                    return false;
+                }
+
+                // Lire le fichier en utilisant l'encodage Windows-1252
+                string xmlContent;
+                using (StreamReader reader = new StreamReader(exeXmlPath, System.Text.Encoding.GetEncoding("Windows-1252")))
+                {
+                    xmlContent = reader.ReadToEnd();
+                }
+
+                // Charger le contenu XML dans l'objet XmlDocument
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xmlContent);
+
+                // Afficher le contenu pour vérification (ou effectuer des modifications si nécessaire)
+                Logger.WriteLine($"Fichier XML chargé depuis : {exeXmlPath}");
+                Logger.WriteLine(xmlDoc.OuterXml);
+
+                // Ici, tu peux ajouter ou modifier des éléments dans le fichier XML si nécessaire
+                // Par exemple : xmlDoc.DocumentElement.AppendChild(newElement);
+                foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
+                {
+                    if (node.Name == "Launch.Addon")
+                    {
+                        if (node.HasChildNodes)
+                        {
+                            foreach (XmlNode childNode in node.ChildNodes)
+                            {
+                                if ((childNode.Name=="Name")&&(childNode.InnerText == "Flight Recorder"))
+                                {
+                                    result = true;
+                                }
+                            }
+                        }
+
+                    }
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine($"Erreur lors de l'ouverture du fichier exe.xml : {ex.Message}");
+            }
+            return result;
+        }
+        private void registerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            try
+            {
+                // Obtenir le chemin du répertoire AppData\Roaming\MSFS de l'utilisateur courant
+                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string msfsDirectory = Path.Combine(appDataPath, "Microsoft Flight Simulator");
+                string exeXmlPath = Path.Combine(msfsDirectory, "exe.xml");
+
+                // Vérifier si le fichier exe.xml existe
+                if (!File.Exists(exeXmlPath))
+                {
+                    Logger.WriteLine("Le fichier exe.xml n'existe pas dans le répertoire spécifié.");
+                    return;
+                }
+
+                // Lire le fichier en utilisant l'encodage Windows-1252
+                string xmlContent;
+                using (StreamReader reader = new StreamReader(exeXmlPath, System.Text.Encoding.GetEncoding("Windows-1252")))
+                {
+                    xmlContent = reader.ReadToEnd();
+                }
+
+                // Charger le contenu XML dans l'objet XmlDocument
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xmlContent);
+
+                // Afficher le contenu pour vérification (ou effectuer des modifications si nécessaire)
+                Logger.WriteLine($"Fichier XML chargé depuis : {exeXmlPath}");
+                Logger.WriteLine(xmlDoc.OuterXml);
+
+                // Ici, tu peux ajouter ou modifier des éléments dans le fichier XML si nécessaire
+                // Par exemple : xmlDoc.DocumentElement.AppendChild(newElement);
+                bool foundFlightRecorder = isAutoStartRegistered();
+
+                if (!foundFlightRecorder)
+                {
+
+                    //si le flight recorder n'a pas été trouvé.
+                    XmlNode newEntry = xmlDoc.CreateNode(XmlNodeType.Element, "Launch.Addon", "");
+                    
+                    XmlNode disabled = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Disabled", ""));
+                    disabled.InnerText = "False";
+                    
+                    XmlNode manualLoad = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "ManualLoad", ""));
+                    manualLoad.InnerText = "False";
+                    
+                    XmlNode name = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Name", ""));
+                    name.InnerText = "Flight Recorder";
+                    
+                    XmlNode path = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Path", ""));
+                    path.InnerText = Process.GetCurrentProcess().MainModule.FileName;
+                    
+                    XmlNode commandline = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "CommandLine", ""));
+                    commandline.InnerText = "-auto";
+
+                    XmlNode newConsole = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "NewConsole", ""));
+                    newConsole.InnerText = "False";
+
+                    xmlDoc.DocumentElement.AppendChild(newEntry);
+
+
+                    // Sauvegarder les modifications (si des modifications ont été faites)
+                    xmlDoc.Save(exeXmlPath);
+                    MessageBox.Show("Demarrage auto enregistré. fermez le flight recorder, et relancez le simulateur.");
+                }
+                else
+                {
+                    MessageBox.Show("Flight recorder est deja enregistré dans l'auto start MSFS.");
+                }
+
+                Logger.WriteLine("Les modifications ont été enregistrées avec succès.");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLine($"Erreur lors de l'ouverture du fichier exe.xml : {ex.Message}");
+                MessageBox.Show("Erreur lors de l'enregistrement de l'auto start");
+            }
+        }
     }
 }

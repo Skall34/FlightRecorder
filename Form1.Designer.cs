@@ -90,6 +90,9 @@ namespace FlightRecorder
             submitBugToolStripMenuItem = new ToolStripMenuItem();
             engineStopTimer = new System.Windows.Forms.Timer(components);
             contextMenuStrip2 = new ContextMenuStrip(components);
+            mSFSAutostartToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            registerToolStripMenuItem = new ToolStripMenuItem();
             statusStrip.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -622,14 +625,14 @@ namespace FlightRecorder
             // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { resetFlightToolStripMenuItem, submitFlightToolStripMenuItem, toolStripSeparator1, submitBugToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { mSFSAutostartToolStripMenuItem, toolStripSeparator2, resetFlightToolStripMenuItem, submitFlightToolStripMenuItem, toolStripSeparator1, submitBugToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(137, 76);
+            contextMenuStrip1.Size = new Size(181, 126);
             // 
             // resetFlightToolStripMenuItem
             // 
             resetFlightToolStripMenuItem.Name = "resetFlightToolStripMenuItem";
-            resetFlightToolStripMenuItem.Size = new Size(136, 22);
+            resetFlightToolStripMenuItem.Size = new Size(180, 22);
             resetFlightToolStripMenuItem.Text = "Reset flight";
             resetFlightToolStripMenuItem.Click += resetFlightToolStripMenuItem_Click;
             // 
@@ -637,19 +640,19 @@ namespace FlightRecorder
             // 
             submitFlightToolStripMenuItem.Enabled = false;
             submitFlightToolStripMenuItem.Name = "submitFlightToolStripMenuItem";
-            submitFlightToolStripMenuItem.Size = new Size(136, 22);
+            submitFlightToolStripMenuItem.Size = new Size(180, 22);
             submitFlightToolStripMenuItem.Text = "Save Flight";
             submitFlightToolStripMenuItem.Click += submitFlightToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(133, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // submitBugToolStripMenuItem
             // 
             submitBugToolStripMenuItem.Name = "submitBugToolStripMenuItem";
-            submitBugToolStripMenuItem.Size = new Size(136, 22);
+            submitBugToolStripMenuItem.Size = new Size(180, 22);
             submitBugToolStripMenuItem.Text = "Submit bug";
             submitBugToolStripMenuItem.Click += submitBugToolStripMenuItem_Click;
             // 
@@ -662,6 +665,25 @@ namespace FlightRecorder
             // 
             contextMenuStrip2.Name = "contextMenuStrip2";
             contextMenuStrip2.Size = new Size(61, 4);
+            // 
+            // mSFSAutostartToolStripMenuItem
+            // 
+            mSFSAutostartToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { registerToolStripMenuItem });
+            mSFSAutostartToolStripMenuItem.Name = "mSFSAutostartToolStripMenuItem";
+            mSFSAutostartToolStripMenuItem.Size = new Size(180, 22);
+            mSFSAutostartToolStripMenuItem.Text = "MSFS autostart";
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(177, 6);
+            // 
+            // registerToolStripMenuItem
+            // 
+            registerToolStripMenuItem.Name = "registerToolStripMenuItem";
+            registerToolStripMenuItem.Size = new Size(180, 22);
+            registerToolStripMenuItem.Text = "Register";
+            registerToolStripMenuItem.Click += registerToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -761,6 +783,9 @@ namespace FlightRecorder
         private Label lbEndICAO;
         private System.Windows.Forms.Timer engineStopTimer;
         private ContextMenuStrip contextMenuStrip2;
+        private ToolStripMenuItem mSFSAutostartToolStripMenuItem;
+        private ToolStripMenuItem registerToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
     }
 }
 
