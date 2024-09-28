@@ -123,7 +123,7 @@ namespace FlightRecorder
             double result = 0;
             if (null != payloadServices)
             {
-                result = payloadServices.FuelWeightKgs;
+                result = Math.Floor(payloadServices.FuelWeightKgs);
             }
             return result;
         }
