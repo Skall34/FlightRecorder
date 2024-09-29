@@ -607,29 +607,46 @@ namespace FlightRecorder
                 {
                     if (engineStopTimer.Enabled)
                     {
+                        Logger.WriteLine("Engine stop canceled. Validation timer stopped");
                         engineStopTimer.Stop();
                     }
                     else
                     {
-                        Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
-                        this.WindowState = FormWindowState.Minimized;
-                        getStartOfFlightData();
+                        if (onGround)
+                        {
+                            Logger.WriteLine("First engine start detected for plane" + cbImmat.Text);
+                            this.WindowState = FormWindowState.Minimized;
+                            getStartOfFlightData();
 
-                        //Update the google sheet database indicating that this plane is being used
-                        UpdatePlaneStatus(1);
-                        cbImmat.Enabled = false;
-                        //tbEndICAO.Enabled = false;
+                            //Update the google sheet database indicating that this plane is being used
+                            UpdatePlaneStatus(1);
+                            cbImmat.Enabled = false;
+                            //tbEndICAO.Enabled = false;
+                        }
+                        else
+                        {
+                            //demarrage des moteur en vol (redémarrage)... ne rien faire.
+                            Logger.WriteLine("Engine start during flight. Do nothing");
+                        }
                     }
                 }
 
-                if (onGround && (_previousEngineStatus && !atLeastOneEngineFiring) && (endDisabled == 0))
+                // si on detecte un arret moteur
+                if (_previousEngineStatus && !atLeastOneEngineFiring)
                 {
-                    engineStopTimer.Start();
+                    // si on est au sol, et qu'on autorise la detection de l'arret moteur
+                    if (onGround && (endDisabled == 0))
+                    {
+                        Logger.WriteLine("Potential engine stop detected. Start validation timer");
+                        engineStopTimer.Start();
+                    }
+                    else
+                    {
+                        //si on est en vol, OU si la detection est desactivée, ne rien faire.
+                        Logger.WriteLine("Potential engine stop detected during flight. Do nothing");
+                    }
                 }
-                else
-                {
 
-                }
             }
             catch (Exception ex)
             {
