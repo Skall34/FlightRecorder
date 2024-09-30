@@ -1246,145 +1246,145 @@ namespace FlightRecorder
             e.DrawFocusRectangle();
         }
 
-        private bool isAutoStartRegistered()
-        {
-            bool result = false;
+        //private bool isAutoStartRegistered()
+        //{
+        //    bool result = false;
 
-            try
-            {
-                // Obtenir le chemin du répertoire AppData\Roaming\MSFS de l'utilisateur courant
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string msfsDirectory = Path.Combine(appDataPath, "Microsoft Flight Simulator");
-                string exeXmlPath = Path.Combine(msfsDirectory, "exe.xml");
+        //    try
+        //    {
+        //        // Obtenir le chemin du répertoire AppData\Roaming\MSFS de l'utilisateur courant
+        //        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        //        string msfsDirectory = Path.Combine(appDataPath, "Microsoft Flight Simulator");
+        //        string exeXmlPath = Path.Combine(msfsDirectory, "exe.xml");
 
-                // Vérifier si le fichier exe.xml existe
-                if (!File.Exists(exeXmlPath))
-                {
-                    Logger.WriteLine("Le fichier exe.xml n'existe pas dans le répertoire spécifié.");
-                    return false;
-                }
+        //        // Vérifier si le fichier exe.xml existe
+        //        if (!File.Exists(exeXmlPath))
+        //        {
+        //            Logger.WriteLine("Le fichier exe.xml n'existe pas dans le répertoire spécifié.");
+        //            return false;
+        //        }
 
-                // Lire le fichier en utilisant l'encodage Windows-1252
-                string xmlContent;
-                using (StreamReader reader = new StreamReader(exeXmlPath, System.Text.Encoding.GetEncoding("Windows-1252")))
-                {
-                    xmlContent = reader.ReadToEnd();
-                }
+        //        // Lire le fichier en utilisant l'encodage Windows-1252
+        //        string xmlContent;
+        //        using (StreamReader reader = new StreamReader(exeXmlPath, System.Text.Encoding.GetEncoding("Windows-1252")))
+        //        {
+        //            xmlContent = reader.ReadToEnd();
+        //        }
 
-                // Charger le contenu XML dans l'objet XmlDocument
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xmlContent);
+        //        // Charger le contenu XML dans l'objet XmlDocument
+        //        XmlDocument xmlDoc = new XmlDocument();
+        //        xmlDoc.LoadXml(xmlContent);
 
-                // Afficher le contenu pour vérification (ou effectuer des modifications si nécessaire)
-                Logger.WriteLine($"Fichier XML chargé depuis : {exeXmlPath}");
-                Logger.WriteLine(xmlDoc.OuterXml);
+        //        // Afficher le contenu pour vérification (ou effectuer des modifications si nécessaire)
+        //        Logger.WriteLine($"Fichier XML chargé depuis : {exeXmlPath}");
+        //        Logger.WriteLine(xmlDoc.OuterXml);
 
-                // Ici, tu peux ajouter ou modifier des éléments dans le fichier XML si nécessaire
-                // Par exemple : xmlDoc.DocumentElement.AppendChild(newElement);
-                foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
-                {
-                    if (node.Name == "Launch.Addon")
-                    {
-                        if (node.HasChildNodes)
-                        {
-                            foreach (XmlNode childNode in node.ChildNodes)
-                            {
-                                if ((childNode.Name=="Name")&&(childNode.InnerText == "Flight Recorder"))
-                                {
-                                    result = true;
-                                }
-                            }
-                        }
+        //        // Ici, tu peux ajouter ou modifier des éléments dans le fichier XML si nécessaire
+        //        // Par exemple : xmlDoc.DocumentElement.AppendChild(newElement);
+        //        foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
+        //        {
+        //            if (node.Name == "Launch.Addon")
+        //            {
+        //                if (node.HasChildNodes)
+        //                {
+        //                    foreach (XmlNode childNode in node.ChildNodes)
+        //                    {
+        //                        if ((childNode.Name=="Name")&&(childNode.InnerText == "Flight Recorder"))
+        //                        {
+        //                            result = true;
+        //                        }
+        //                    }
+        //                }
 
-                    }
-                }
+        //            }
+        //        }
                
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLine($"Erreur lors de l'ouverture du fichier exe.xml : {ex.Message}");
-            }
-            return result;
-        }
-        private void registerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            try
-            {
-                // Obtenir le chemin du répertoire AppData\Roaming\MSFS de l'utilisateur courant
-                string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string msfsDirectory = Path.Combine(appDataPath, "Microsoft Flight Simulator");
-                string exeXmlPath = Path.Combine(msfsDirectory, "exe.xml");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.WriteLine($"Erreur lors de l'ouverture du fichier exe.xml : {ex.Message}");
+        //    }
+        //    return result;
+        //}
+        //private void registerToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        //    try
+        //    {
+        //        // Obtenir le chemin du répertoire AppData\Roaming\MSFS de l'utilisateur courant
+        //        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        //        string msfsDirectory = Path.Combine(appDataPath, "Microsoft Flight Simulator");
+        //        string exeXmlPath = Path.Combine(msfsDirectory, "exe.xml");
 
-                // Vérifier si le fichier exe.xml existe
-                if (!File.Exists(exeXmlPath))
-                {
-                    Logger.WriteLine("Le fichier exe.xml n'existe pas dans le répertoire spécifié.");
-                    return;
-                }
+        //        // Vérifier si le fichier exe.xml existe
+        //        if (!File.Exists(exeXmlPath))
+        //        {
+        //            Logger.WriteLine("Le fichier exe.xml n'existe pas dans le répertoire spécifié.");
+        //            return;
+        //        }
 
-                // Lire le fichier en utilisant l'encodage Windows-1252
-                string xmlContent;
-                using (StreamReader reader = new StreamReader(exeXmlPath, System.Text.Encoding.GetEncoding("Windows-1252")))
-                {
-                    xmlContent = reader.ReadToEnd();
-                }
+        //        // Lire le fichier en utilisant l'encodage Windows-1252
+        //        string xmlContent;
+        //        using (StreamReader reader = new StreamReader(exeXmlPath, System.Text.Encoding.GetEncoding("Windows-1252")))
+        //        {
+        //            xmlContent = reader.ReadToEnd();
+        //        }
 
-                // Charger le contenu XML dans l'objet XmlDocument
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xmlContent);
+        //        // Charger le contenu XML dans l'objet XmlDocument
+        //        XmlDocument xmlDoc = new XmlDocument();
+        //        xmlDoc.LoadXml(xmlContent);
 
-                // Afficher le contenu pour vérification (ou effectuer des modifications si nécessaire)
-                Logger.WriteLine($"Fichier XML chargé depuis : {exeXmlPath}");
-                Logger.WriteLine(xmlDoc.OuterXml);
+        //        // Afficher le contenu pour vérification (ou effectuer des modifications si nécessaire)
+        //        Logger.WriteLine($"Fichier XML chargé depuis : {exeXmlPath}");
+        //        Logger.WriteLine(xmlDoc.OuterXml);
 
-                // Ici, tu peux ajouter ou modifier des éléments dans le fichier XML si nécessaire
-                // Par exemple : xmlDoc.DocumentElement.AppendChild(newElement);
-                bool foundFlightRecorder = isAutoStartRegistered();
+        //        // Ici, tu peux ajouter ou modifier des éléments dans le fichier XML si nécessaire
+        //        // Par exemple : xmlDoc.DocumentElement.AppendChild(newElement);
+        //        bool foundFlightRecorder = isAutoStartRegistered();
 
-                if (!foundFlightRecorder)
-                {
+        //        if (!foundFlightRecorder)
+        //        {
 
-                    //si le flight recorder n'a pas été trouvé.
-                    XmlNode newEntry = xmlDoc.CreateNode(XmlNodeType.Element, "Launch.Addon", "");
+        //            //si le flight recorder n'a pas été trouvé.
+        //            XmlNode newEntry = xmlDoc.CreateNode(XmlNodeType.Element, "Launch.Addon", "");
                     
-                    XmlNode disabled = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Disabled", ""));
-                    disabled.InnerText = "False";
+        //            XmlNode disabled = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Disabled", ""));
+        //            disabled.InnerText = "False";
                     
-                    XmlNode manualLoad = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "ManualLoad", ""));
-                    manualLoad.InnerText = "False";
+        //            XmlNode manualLoad = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "ManualLoad", ""));
+        //            manualLoad.InnerText = "False";
                     
-                    XmlNode name = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Name", ""));
-                    name.InnerText = "Flight Recorder";
+        //            XmlNode name = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Name", ""));
+        //            name.InnerText = "Flight Recorder";
                     
-                    XmlNode path = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Path", ""));
-                    path.InnerText = Process.GetCurrentProcess().MainModule.FileName;
+        //            XmlNode path = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "Path", ""));
+        //            path.InnerText = Process.GetCurrentProcess().MainModule.FileName;
                     
-                    XmlNode commandline = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "CommandLine", ""));
-                    commandline.InnerText = "-auto";
+        //            XmlNode commandline = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "CommandLine", ""));
+        //            commandline.InnerText = "-auto";
 
-                    XmlNode newConsole = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "NewConsole", ""));
-                    newConsole.InnerText = "False";
+        //            XmlNode newConsole = newEntry.AppendChild(xmlDoc.CreateNode(XmlNodeType.Element, "NewConsole", ""));
+        //            newConsole.InnerText = "False";
 
-                    xmlDoc.DocumentElement.AppendChild(newEntry);
+        //            xmlDoc.DocumentElement.AppendChild(newEntry);
 
 
-                    // Sauvegarder les modifications (si des modifications ont été faites)
-                    xmlDoc.Save(exeXmlPath);
-                    MessageBox.Show("Demarrage auto enregistré. fermez le flight recorder, et relancez le simulateur.");
-                }
-                else
-                {
-                    MessageBox.Show("Flight recorder est deja enregistré dans l'auto start MSFS.");
-                }
+        //            // Sauvegarder les modifications (si des modifications ont été faites)
+        //            xmlDoc.Save(exeXmlPath);
+        //            MessageBox.Show("Demarrage auto enregistré. fermez le flight recorder, et relancez le simulateur.");
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Flight recorder est deja enregistré dans l'auto start MSFS.");
+        //        }
 
-                Logger.WriteLine("Les modifications ont été enregistrées avec succès.");
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLine($"Erreur lors de l'ouverture du fichier exe.xml : {ex.Message}");
-                MessageBox.Show("Erreur lors de l'enregistrement de l'auto start");
-            }
-        }
+        //        Logger.WriteLine("Les modifications ont été enregistrées avec succès.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.WriteLine($"Erreur lors de l'ouverture du fichier exe.xml : {ex.Message}");
+        //        MessageBox.Show("Erreur lors de l'enregistrement de l'auto start");
+        //    }
+        //}
     }
 }
