@@ -399,6 +399,7 @@ namespace FlightRecorder
             _endPayload = _simData.GetPayload();
             //compute the note of the flight
             AnalyseFlight();
+            Logger.WriteLine("end of flight data updated");
         }
 
         // This method runs 2 times per second (every 500ms). This is set on the timerMain properties.
@@ -582,11 +583,13 @@ namespace FlightRecorder
                 {
                     Logger.WriteLine("off runway crashed detected");
                     flightPerfs.overRunwayCrashed = true;
+                    getEndOfFlightData();
                 }
                 if (_simData.GetCrashedFlag() != 0)
                 {
                     Logger.WriteLine("crash detected");
                     flightPerfs.crashed = true;
+                    getEndOfFlightData();
                 }
                 if (_simData.GetStallWarning() != 0)
                 {
